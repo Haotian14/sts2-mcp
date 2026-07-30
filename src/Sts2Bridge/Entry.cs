@@ -130,6 +130,8 @@ namespace Sts2Bridge
 
                 sb.AppendLine("================================================================");
                 File.AppendAllText(LogPath, sb.ToString(), Encoding.UTF8);
+
+                ScheduleDeferredInit();
             }
             catch (Exception ex)
             {
@@ -142,6 +144,77 @@ namespace Sts2Bridge
                 }
                 catch { /* 放弃，但绝不抛出 */ }
             }
+        }
+
+        /// <summary>
+        /// 安排真正的初始化。
+        ///
+        /// 【为何必须延迟】
+        /// 本方法运行时，NGame 正处在 _EnterTree 执行途中 —— 静态构造函数
+        /// 被它触发，场景树尚未构建完毕，此刻 Engine.GetMainLoop() 未必可用，
+        /// 更不宜在其中挂信号或启服务。
+        /// CallDeferred 会把调用推迟到当前帧的空闲期，届时场景树已就绪，
+        /// 且仍在主线程上。
+        /// </summary>
+        private static void ScheduleDeferredInit()
+        {
+            try
+            {
+                Godot.Callable.From(DeferredInit).CallDeferred();
+                Log.Write("[Entry] 已通过 CallDeferred 安排延迟初始化");
+            }
+            catch (Exception ex)
+            {
+                // CallDeferred 不可用时退化为轮询等待主循环就绪
+                Log.Error("CallDeferred 不可用，改用轮询", ex);
+                var t = new System.Threading.Thread(PollUntilReady)
+                {
+                    IsBackground = true,
+                    Name = "sts2-mcp-init-poll",
+                };
+                t.Start();
+            }
+        }
+
+        private static void DeferredInit()
+        {
+            try
+            {
+                Log.Write("[Entry] 延迟初始化开始");
+
+                if (!MainThread.Attach())
+                {
+                    // 场景树仍未就绪，再推迟一帧
+                    Log.Write("[Entry] 主循环尚未就绪，顺延一帧重试");
+                    Godot.Callable.From(DeferredInit).CallDeferred();
+                    return;
+                }
+
+                HttpApi.Start();
+                Log.Write("[Entry] 初始化完成 —— 桥接层已就绪");
+            }
+            catch (Exception ex)
+            {
+                Log.Error("延迟初始化", ex);
+            }
+        }
+
+        private static void PollUntilReady()
+        {
+            for (int i = 0; i < 120; i++)          // 最多等 60 秒
+            {
+                try
+                {
+                    if (Godot.Engine.GetMainLoop() != null)
+                    {
+                        Godot.Callable.From(DeferredInit).CallDeferred();
+                        return;
+                    }
+                }
+                catch { /* 主循环尚不可用，继续等 */ }
+                System.Threading.Thread.Sleep(500);
+            }
+            Log.Write("[Entry] 等待主循环超时，桥接层未能启动");
         }
     }
 }
