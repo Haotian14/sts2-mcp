@@ -149,30 +149,37 @@ namespace Sts2Bridge
         /// <summary>
         /// 安排真正的初始化。
         ///
-        /// 【为何必须延迟】
-        /// 本方法运行时，NGame 正处在 _EnterTree 执行途中 —— 静态构造函数
-        /// 被它触发，场景树尚未构建完毕，此刻 Engine.GetMainLoop() 未必可用，
-        /// 更不宜在其中挂信号或启服务。
-        /// CallDeferred 会把调用推迟到当前帧的空闲期，届时场景树已就绪，
-        /// 且仍在主线程上。
+        /// 【为何延迟到后台线程】
+        /// 本方法运行时，NGame 正处在 _EnterTree 执行途中 —— 静态构造函数由它
+        /// 触发，场景树尚未构建完毕。此刻不宜做任何重活：.cctor 里的异常会变成
+        /// TypeInitializationException 并使 NGame 永久不可用，等同游戏必崩。
+        /// 交给后台线程，等游戏自己初始化完成后再启动服务。
+        ///
+        /// 【为何默认不接入帧循环】
+        /// 接入需订阅 Godot 的 ProcessFrame 信号，而信号连接本身也应在主线程
+        /// 完成 —— 存在先有鸡还是先有蛋的问题。上一次同时引入「GodotSharp 编译期
+        /// 引用」与「帧循环接入」两项改动，结果游戏在桥接层加载后 10 毫秒硬崩溃，
+        /// 排查成本很高。故此处遵循一次只引入一个变量：默认仅启动 HTTP 服务，
+        /// 帧循环接入需显式设置环境变量 STS2MCP_ATTACH_FRAME=1 才尝试。
         /// </summary>
         private static void ScheduleDeferredInit()
         {
             try
             {
-                Godot.Callable.From(DeferredInit).CallDeferred();
-                Log.Write("[Entry] 已通过 CallDeferred 安排延迟初始化");
+                // 此刻确实在主线程（调用栈为 NGame._EnterTree -> .cctor），先记下线程 id
+                MainThread.MarkCurrentAsMain();
+
+                var t = new System.Threading.Thread(DeferredInit)
+                {
+                    IsBackground = true,          // 不阻止游戏退出
+                    Name = "sts2-mcp-init",
+                };
+                t.Start();
+                Log.Write("[Entry] 已安排后台延迟初始化");
             }
             catch (Exception ex)
             {
-                // CallDeferred 不可用时退化为轮询等待主循环就绪
-                Log.Error("CallDeferred 不可用，改用轮询", ex);
-                var t = new System.Threading.Thread(PollUntilReady)
-                {
-                    IsBackground = true,
-                    Name = "sts2-mcp-init-poll",
-                };
-                t.Start();
+                Log.Error("安排延迟初始化", ex);
             }
         }
 
@@ -180,14 +187,19 @@ namespace Sts2Bridge
         {
             try
             {
+                // 让游戏先完成自身启动，避免与其初始化过程交错
+                System.Threading.Thread.Sleep(6000);
                 Log.Write("[Entry] 延迟初始化开始");
 
-                if (!MainThread.Attach())
+                if (System.Environment.GetEnvironmentVariable("STS2MCP_ATTACH_FRAME") == "1")
                 {
-                    // 场景树仍未就绪，再推迟一帧
-                    Log.Write("[Entry] 主循环尚未就绪，顺延一帧重试");
-                    Godot.Callable.From(DeferredInit).CallDeferred();
-                    return;
+                    Log.Write("[Entry] 尝试接入帧循环（实验性）");
+                    for (int i = 0; i < 15 && !MainThread.TryAttach(); i++)
+                        System.Threading.Thread.Sleep(1000);
+                }
+                else
+                {
+                    Log.Write("[Entry] 跳过帧循环接入（未设 STS2MCP_ATTACH_FRAME=1），只读查询走降级路径");
                 }
 
                 HttpApi.Start();
@@ -197,24 +209,6 @@ namespace Sts2Bridge
             {
                 Log.Error("延迟初始化", ex);
             }
-        }
-
-        private static void PollUntilReady()
-        {
-            for (int i = 0; i < 120; i++)          // 最多等 60 秒
-            {
-                try
-                {
-                    if (Godot.Engine.GetMainLoop() != null)
-                    {
-                        Godot.Callable.From(DeferredInit).CallDeferred();
-                        return;
-                    }
-                }
-                catch { /* 主循环尚不可用，继续等 */ }
-                System.Threading.Thread.Sleep(500);
-            }
-            Log.Write("[Entry] 等待主循环超时，桥接层未能启动");
         }
     }
 }

@@ -149,6 +149,36 @@ JIT 时序不正确。
 
 ---
 
+### ⚠️ 硬性约束：桥接层不得编译期引用任何游戏侧程序集
+
+**包括 `GodotSharp`。** 2026-07-30 实测，一旦在 `Sts2Bridge.csproj` 中引用
+`GodotSharp`，游戏会在桥接层加载后约 10 毫秒硬崩溃 —— 崩得太早，托管侧的
+异常兜底都来不及写日志。
+
+**根因**：游戏使用自定义 `AssemblyLoadContext` 加载自身程序集，而桥接层由
+注入的 `Assembly.LoadFrom` 载入 **Default ALC**。编译期引用会使 CLR 在
+Default ALC 中**再加载一份** `GodotSharp`，进程内遂存在两个实例、两套类型
+标识，而 Godot 的 native 绑定状态全局唯一 —— 必崩。
+
+诊断证据（`logs/profiler.log` 中同一 dll 出现两个不同 AssemblyID）：
+
+```
+23:15:28.318  GodotSharp.dll  AssemblyID=0x...70CB1DA0   <- 游戏自己的
+23:15:28.696  GodotSharp.dll  AssemblyID=0x...6F146FB0   <- 引用所触发
+```
+
+`<Private>false</Private>` 并不能规避此问题 —— 它只控制是否复制副本到输出
+目录，不影响运行时由哪个 ALC 解析该引用。
+
+**规则：一律通过反射访问 Godot 与 sts2 的类型。** 反射经
+`AppDomain.CurrentDomain.GetAssemblies()` 取到的是游戏 ALC 中已存在的实例，
+不会引入第二份。校验方法：编译后扫描 `Sts2Bridge.dll`，其中不应出现
+`Godot` 字样。
+
+**教训**：该次改动同时引入了「GodotSharp 编译期引用」与「帧循环接入」两项
+变更，导致崩溃后无法直接判定祸首。此后遵循**一次只引入一个变量**：帧循环
+接入现由环境变量 `STS2MCP_ATTACH_FRAME=1` 显式开启，默认关闭。
+
 ## 阶段 1 完成
 
 注入链路：**Profiler (C++, 环境变量启用) → IL 注入 `NGame..cctor` →

@@ -1,56 +1,79 @@
 using System;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Godot;
 
 namespace Sts2Bridge
 {
     /// <summary>
     /// 主线程调度器。
     ///
-    /// 【为什么必须有它】
-    /// Godot 的 API（以及游戏中绝大多数状态）只能在主线程访问，而 HTTP 请求
-    /// 由 HttpListener 在后台线程回调。若直接在后台线程读游戏对象，轻则读到
-    /// 撕裂的中间状态，重则直接使游戏崩溃。
-    /// 所有对游戏的读写都必须经由本类投递到主线程执行。
+    /// 【为什么需要】
+    /// Godot API 与游戏状态只应在主线程访问，而 HTTP 请求由后台线程回调。
+    /// 在后台线程直接读写游戏对象，轻则读到撕裂的中间状态，重则崩溃。
     ///
-    /// 【接入方式：Godot 信号，而非 Harmony】
-    /// 调用栈证明 Entry.Initialize 运行在
-    /// NGame..cctor -> NGame._EnterTree -> Godot.Node.InvokeGodotClassMethod 之下，
-    /// 即本身就在 Godot 主线程上。因此直接挂 SceneTree.ProcessFrame 信号即可
-    /// 接入帧循环，无需引入 Harmony 去 patch 某个逐帧方法。
+    /// 【为什么全程反射】
+    /// 绝不可编译期引用 GodotSharp。游戏用自定义 AssemblyLoadContext 加载
+    /// 自身程序集，而桥接层位于 Default ALC；编译期引用会导致 GodotSharp 在
+    /// Default ALC 中被重复加载，形成两套类型标识，使游戏崩溃（详见 csproj
+    /// 注释与 spec）。反射取到的是游戏 ALC 中已存在的那一份实例。
+    ///
+    /// 【当前状态：降级运行】
+    /// 接入帧循环需订阅 SceneTree.ProcessFrame，而该订阅本身是 Godot 调用，
+    /// 亦须在主线程完成 —— 存在先有鸡还是先有蛋的问题。目前若接入失败则降级：
+    /// 任务在调用线程直接执行。这对阶段 2 的**只读**状态查询是可接受的
+    /// （最坏情况是读到某一帧的中间状态），但阶段 3 执行动作前必须解决。
+    /// 届时的方案是复用已有的 IL 注入能力，向某个逐帧方法注入对 Pump 的调用。
     /// </summary>
     internal static class MainThread
     {
         private static readonly ConcurrentQueue<Action> Queue = new ConcurrentQueue<Action>();
         private static int _mainThreadId = -1;
+        private static int _degradedWarned;
 
         public static bool IsAttached { get; private set; }
         public static bool IsCurrent => System.Environment.CurrentManagedThreadId == _mainThreadId;
         public static long FrameCount { get; private set; }
 
-        /// <summary>必须在主线程调用。</summary>
-        public static bool Attach()
+        /// <summary>记录主线程 id。须在主线程调用。</summary>
+        public static void MarkCurrentAsMain()
+        {
+            _mainThreadId = System.Environment.CurrentManagedThreadId;
+        }
+
+        /// <summary>尝试经反射订阅 Godot 的逐帧信号。失败不致命，转入降级模式。</summary>
+        public static bool TryAttach()
         {
             try
             {
-                _mainThreadId = System.Environment.CurrentManagedThreadId;
+                var engineType = FindGameType("Godot.Engine");
+                if (engineType == null) { Log.Write("[MainThread] 找不到 Godot.Engine"); return false; }
 
-                if (Engine.GetMainLoop() is not SceneTree tree)
+                var mainLoop = engineType
+                    .GetMethod("GetMainLoop", BindingFlags.Public | BindingFlags.Static)
+                    ?.Invoke(null, null);
+                if (mainLoop == null) { Log.Write("[MainThread] GetMainLoop 返回 null（主循环尚未就绪）"); return false; }
+
+                var evt = mainLoop.GetType().GetEvent("ProcessFrame");
+                if (evt?.EventHandlerType == null)
                 {
-                    Log.Write("[MainThread] Engine.GetMainLoop() 尚不可用");
+                    Log.Write($"[MainThread] {mainLoop.GetType().FullName} 上没有 ProcessFrame 事件");
                     return false;
                 }
 
-                tree.ProcessFrame += Pump;
+                var pump = typeof(MainThread).GetMethod(nameof(Pump),
+                    BindingFlags.NonPublic | BindingFlags.Static)!;
+                var handler = Delegate.CreateDelegate(evt.EventHandlerType, pump);
+                evt.AddEventHandler(mainLoop, handler);
+
                 IsAttached = true;
-                Log.Write($"[MainThread] 已接入帧循环 (线程 {_mainThreadId})");
+                Log.Write($"[MainThread] 已接入帧循环 ({mainLoop.GetType().FullName})");
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Error("MainThread.Attach", ex);
+                Log.Error("MainThread.TryAttach", ex);
                 return false;
             }
         }
@@ -58,8 +81,9 @@ namespace Sts2Bridge
         private static void Pump()
         {
             FrameCount++;
+            if (_mainThreadId < 0) _mainThreadId = System.Environment.CurrentManagedThreadId;
 
-            // 每帧限量执行，避免积压任务在单帧内全部跑完而造成掉帧
+            // 每帧限量执行，避免积压任务在单帧内跑完而造成掉帧
             int budget = 32;
             while (budget-- > 0 && Queue.TryDequeue(out var action))
             {
@@ -68,18 +92,16 @@ namespace Sts2Bridge
             }
         }
 
-        /// <summary>把 <paramref name="fn"/> 投递到主线程执行并等待其结果。</summary>
         public static Task<T> Run<T>(Func<T> fn)
         {
-            // 已在主线程时直接执行：避免自我死锁（等待一个只有自己才能排空的队列）
-            if (IsCurrent)
+            if (IsCurrent || !IsAttached)
             {
+                if (!IsAttached && Interlocked.Exchange(ref _degradedWarned, 1) == 0)
+                    Log.Write("[MainThread] 降级：未接入帧循环，任务将在调用线程直接执行");
+
                 try { return Task.FromResult(fn()); }
                 catch (Exception ex) { return Task.FromException<T>(ex); }
             }
-
-            if (!IsAttached)
-                return Task.FromException<T>(new InvalidOperationException("主线程调度器尚未接入帧循环"));
 
             var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
             Queue.Enqueue(() =>
@@ -95,8 +117,23 @@ namespace Sts2Bridge
         {
             var task = Run(fn);
             if (!task.Wait(timeoutMs))
-                throw new TimeoutException($"主线程任务超时 ({timeoutMs} ms) —— 游戏可能已卡死或未在运行");
-            return task.Result;
+                throw new TimeoutException($"主线程任务超时 ({timeoutMs} ms) —— 游戏可能已卡死");
+            return task.GetAwaiter().GetResult();
+        }
+
+        /// <summary>在所有已加载程序集（含游戏自定义 ALC）中查找类型。</summary>
+        internal static Type? FindGameType(string fullName)
+        {
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    var t = asm.GetType(fullName, false);
+                    if (t != null) return t;
+                }
+                catch { }
+            }
+            return null;
         }
     }
 }
