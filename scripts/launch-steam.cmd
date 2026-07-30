@@ -22,6 +22,15 @@ set "CORECLR_PROFILER={27585C9F-BB81-4251-B62F-1B463AB4D58A}"
 set "CORECLR_PROFILER_PATH_64=%REPO%\bin\Sts2Profiler.dll"
 set "CORECLR_PROFILER_PATH=%REPO%\bin\Sts2Profiler.dll"
 
+REM Repo root for the managed bridge. It is loaded from a temp copy and so
+REM cannot derive this from its own assembly location - we already computed
+REM the path above, so just pass it along.
+set "STS2MCP_REPO=%REPO%"
+
+REM Optional overrides (leave unset for defaults):
+REM   set "STS2MCP_PORT=8765"          bridge HTTP port
+REM   set "STS2MCP_ATTACH_FRAME=1"     experimental: hook Godot frame loop
+
 if not exist "%REPO%\logs" mkdir "%REPO%\logs"
 echo [%DATE% %TIME%] launcher invoked>> "%REPO%\logs\launcher.log"
 echo     profiler = %CORECLR_PROFILER_PATH_64%>> "%REPO%\logs\launcher.log"

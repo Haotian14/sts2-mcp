@@ -29,8 +29,23 @@ namespace Sts2Bridge
         public const int DefaultPort = 8765;
         public static int Port { get; private set; }
 
-        public static void Start(int port = DefaultPort)
+        /// <summary>
+        /// 解析监听端口。优先取环境变量 STS2MCP_PORT，便于多开或端口冲突时调整；
+        /// 未设置或非法时回落到 <see cref="DefaultPort"/>。
+        /// 之所以用环境变量而非配置文件：桥接层运行在游戏进程内，启动时序早于
+        /// 一切，读文件需处理路径解析与失败回退；而环境变量本就要由 Steam 启动
+        /// 脚本注入（profiler 三件套已走这条路），顺带传一个端口零成本。
+        /// </summary>
+        public static int ResolvePort()
         {
+            var raw = Environment.GetEnvironmentVariable("STS2MCP_PORT");
+            if (int.TryParse(raw, out var p) && p > 0 && p < 65536) return p;
+            return DefaultPort;
+        }
+
+        public static void Start(int? explicitPort = null)
+        {
+            var port = explicitPort ?? ResolvePort();
             try
             {
                 _listener = new TcpListener(IPAddress.Loopback, port);

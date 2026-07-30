@@ -39,9 +39,8 @@ namespace Sts2Bridge
         /// </summary>
         public Entry() => Initialize();
 
-        private static readonly string LogPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
-            "sts2-mcp", "logs", "bridge.log");
+        // 仓库根由启动脚本经 STS2MCP_REPO 传入，见 Paths
+        private static readonly string LogPath = Path.Combine(Paths.LogDir, "bridge.log");
 
         private static bool _initialized;
 
