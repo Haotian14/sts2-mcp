@@ -6,6 +6,23 @@ using System.Text;
 using System.Threading;
 
 /// <summary>
+/// ============================================================================
+///  【已废弃 —— 本类不会被调用，保留仅作为失败方案的记录】
+///
+///  实测结论：`DOTNET_STARTUP_HOOKS` 对本游戏完全无效。
+///
+///  CoreCLR 的 startup hook 由 StartupHookProvider.ProcessStartupHooks() 在
+///  `coreclr_execute_assembly` 的执行路径中触发；而 Godot 使用 hostfxr 的
+///  `load_assembly_and_get_function_pointer` 加载托管代码，从不调用该函数，
+///  故整段代码路径不可达 —— 属性来自环境变量还是 runtimeconfig.json 均无差别
+///  （两种途径均已实测失败）。
+///
+///  现行方案：CoreCLR Profiler（`src/Sts2Profiler/`）在 CLR 初始化最早期加载，
+///  向 `NGame..cctor` 注入 IL 以载入桥接层。实际入口见 `Entry.cs`。
+///
+///  详见 docs/spec.md 的 1.2 结论。
+/// ============================================================================
+///
 /// .NET 运行时启动钩子入口。
 ///
 /// 硬性契约（由 CoreCLR 强制，不可更改）：
