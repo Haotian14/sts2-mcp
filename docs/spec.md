@@ -22,7 +22,8 @@
 
 | 用途 | API |
 |---|---|
-| 出牌（与 UI 解耦） | `Core.Commands.CardCmd.AutoPlay(PlayerChoiceContext, CardModel, Creature, AutoPlayType, bool, bool)` |
+| ~~出牌~~ ⚠️ 见下方更正 | ~~`Core.Commands.CardCmd.AutoPlay(...)`~~ |
+| **出牌（实测确认）** | 构造 `GameActions.PlayCardAction` → `RunManager.Instance.ActionQueueSet.EnqueueWithoutSynchronizing(action)` → `await action.CompletionTask`（详见 `game-model.md`） |
 | 结束回合 | `Core.Commands.PlayerCmd.EndTurn(Player, bool, Func<Task>)` |
 | 合法性判定 | `Core.Models.CardModel.CanPlay(out UnplayableReason, out AbstractModel)` |
 | 动作时序同步 | `Core.Combat.CombatManager.IsExecutingCardOrPotionEffect(Player)`（配 `Begin/EndCardOrPotionEffect`） |
@@ -330,7 +331,14 @@ pck 中不存在 `gdextension` / `addons/` / `plugin.cfg` 等扩展点。
 
 ### 阶段 3 · 动作执行（C#）
 
-- [ ] 3.1 `play_card(hand_index, target_index)` → 包装 `CardCmd.AutoPlay`（需先厘清 `PlayerChoiceContext` 构造方式）
+- [ ] 3.1 `play_card(hand_index, target_index)` → 构造 `PlayCardAction` 并经
+      `RunManager.Instance.ActionQueueSet.EnqueueWithoutSynchronizing` 入队，
+      等待 `CompletionTask`。
+      **更正**：早期版本此处写的是包装 `CardCmd.AutoPlay`，那是错的 ——
+      官方文档明确其为「for free, non-player-choice card playing effects」
+      （服务于劫掠、复制药水一类自动打出效果，**且不消耗能量**）。
+      `PlayerChoiceContext` 可直接 `new`（基类仅一个用于向远程玩家显示归因的
+      模型栈）。详见 `game-model.md`。
 - [ ] 3.2 `end_turn()` → 包装 `PlayerCmd.EndTurn`
 - [ ] 3.3 `use_potion(i, target)`
 - [ ] 3.4 非战斗动作：选牌/跳过、地图移动、商店买入与除卡、事件选项、休息点、「X 选 1」类效果

@@ -125,6 +125,80 @@ IsRavenous     = False
 即：伤害数字既可从 `Intents` 读取，也可结合 `StateId` 与模型上的具名
 参数推算。前者更通用，应优先。
 
+## 动作执行（阶段 3 的完整路径）
+
+### ⚠️ 不要用 `CardCmd.AutoPlay` 出牌
+
+官方文档明确写道：
+
+> Automatically play a card **for free**. Used for **non-player-choice** card
+> playing effects. Examples: Havoc, Duplication Potion
+
+它服务于「劫掠」「复制药水」这类**自动打出**效果，**且不消耗能量**。
+用它模拟玩家出牌既是作弊，语义也不对。
+
+### 正确路径：构造 GameAction 并入队
+
+```
+RunManager::Instance
+    .ActionQueueSet         : ActionQueueSet      入队
+    .ActionExecutor         : ActionExecutor      自动取出并执行
+    .ActionQueueSynchronizer
+    .NetService             : INetGameService
+```
+
+```csharp
+var rm     = RunManager.Instance;
+var ctx    = new PlayerChoiceContext();
+var action = new PlayCardAction(player, card, target, ctx);
+rm.ActionQueueSet.EnqueueWithoutSynchronizing(action);
+await action.CompletionTask;
+```
+
+此路径与玩家点击出牌一致：正常消耗能量、触发全部 hook。
+
+### `PlayerChoiceContext` 可直接 new
+
+结构极简 —— 基类仅一个字段 `_modelStack : Stack<AbstractModel>`。
+官方注释说明其用途：
+
+> A stack of models that are involved with this choice context... **when we
+> display the context to remote players**, we want to show the Prepared as the
+> model that is involved in the choice, not the Survivor.
+
+即**纯粹是向远程玩家显示归因用的**，不参与游戏逻辑判定。玩家主动出牌时，
+语义上正确的就是一个空栈新实例。
+
+注意其子类 `HookPlayerChoiceContext` 复杂得多（`ActionExecutor`、
+`ActionQueueSet`、三个 `TaskCompletionSource`），那是给 hook 用的，不要混用。
+
+### `EnqueueWithoutSynchronizing` 的警告在单机下不适用
+
+该方法挂有警告：*"Only use this if you really know what you're doing!
+Improper use can lead to state divergence."*
+
+其中 **state divergence 指多人玩家之间的状态分歧**。实测单机运行时：
+
+```
+RunManager.Instance.NetService = NetSingleplayerGameService
+    Type = Singleplayer,  IsConnected = True,  NetId = 1
+```
+
+单机模式下网络服务是空转实现，全部 Synchronizer 均为空操作，不存在对端，
+因而没有分歧风险。**本项目仅用于单机。**
+
+### 执行前后的判据
+
+```
+出牌前： PlayerCombatState.Phase == Play
+        CardModel.IsPlayable
+        CombatManager.Instance.PlayerActionsDisabled == false
+出牌后： await action.CompletionTask
+        并确认 CombatManager.IsExecutingCardOrPotionEffect(player) == false
+        （效果可能嵌套触发，如 Sly 牌被弃置时自动打出）
+选目标： 使用 CombatState.HittableEnemies
+```
+
 ## 尚未探查
 
 - `RunState` 的完整结构（地图、层数、遗物池）
