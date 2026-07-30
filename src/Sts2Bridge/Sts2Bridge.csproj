@@ -26,22 +26,25 @@
   </PropertyGroup>
 
   <!--
-    仅作编译期引用：Private=false 表示不复制副本到输出目录。
-    运行时必须使用游戏进程中**已加载的那一份实例** —— 若复制了副本，
-    CLR 可能加载出第二个实例，类型标识不一致，表现为「明明是同一个类型
-    却转换失败」这类极难排查的问题。
-  -->
-  <ItemGroup>
-    <Reference Include="GodotSharp">
-      <HintPath>$(GameDataDir)\GodotSharp.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-  </ItemGroup>
+    ============================================================
+     不引用任何游戏侧程序集 —— 包括 GodotSharp。这是硬性约束。
+    ============================================================
 
-  <!--
-    刻意不引用 sts2.dll：游戏仍处于抢先体验期，其类型结构随版本变动。
-    编译期强引用会让桥接层在每次游戏更新后直接无法加载；改用反射访问，
-    单个成员失效时只会让对应功能降级，而非整体崩溃。
+    游戏使用自定义 AssemblyLoadContext 加载自身程序集，而桥接层由注入的
+    Assembly.LoadFrom 载入 Default ALC。一旦在此处编译期引用 GodotSharp，
+    CLR 会在 Default ALC 中**再加载一份** GodotSharp，于是进程内存在两个
+    GodotSharp 实例、两套类型标识，而 Godot 的 native 绑定状态是全局唯一的
+    —— 结果是游戏在桥接层加载后约 10 毫秒硬崩溃，且崩得太早，连托管侧的
+    异常兜底都来不及写日志。
+
+    实测证据（logs/profiler.log）：
+      23:15:28.318  GodotSharp.dll  AssemblyID=0x...70CB1DA0   游戏自己的
+      23:15:28.696  GodotSharp.dll  AssemblyID=0x...6F146FB0   引用所触发
+
+    因此对 GodotSharp 与 sts2 一律通过反射访问 —— 反射取到的是游戏 ALC 中
+    已存在的那一份实例，不会引入第二份。此举同时带来另一个好处：游戏处于
+    抢先体验期，类型结构随版本变动，反射下单个成员失效只会让对应功能降级，
+    而非使整个桥接层无法加载。
   -->
 
 </Project>
