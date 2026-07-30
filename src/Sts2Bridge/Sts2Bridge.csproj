@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 必须与游戏一致：sts2.runtimeconfig.json 中 "tfm": "net9.0" -->
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Sts2Bridge</AssemblyName>
+    <RootNamespace>Sts2Bridge</RootNamespace>
+
+    <!-- 这是被注入到别人进程里的库，不需要 deps.json / runtimeconfig.json，
+         也不希望它带任何附属文件。 -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+
+    <!-- 便于调试注入失败：保留 pdb 以便异常带行号 -->
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <!--
+    阶段 1.2 刻意不引用任何外部程序集（sts2.dll / 0Harmony.dll / GodotSharp.dll）。
+    引用它们会引入「解析失败」这一混淆变量，使本次验证无法给出干净的结论。
+    待 1.2 通过后，于阶段 1.4 再按下列形式加入（务必保留 Private=false，
+    表示仅作编译期引用、不复制副本 —— 运行时必须使用游戏进程中已加载的实例）：
+
+    <ItemGroup>
+      <Reference Include="sts2">
+        <HintPath>$(GameDataDir)\sts2.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="0Harmony">
+        <HintPath>$(GameDataDir)\0Harmony.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  -->
+
+</Project>
