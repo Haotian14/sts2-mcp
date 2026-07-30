@@ -19,22 +19,29 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <!--
-    阶段 1.2 刻意不引用任何外部程序集（sts2.dll / 0Harmony.dll / GodotSharp.dll）。
-    引用它们会引入「解析失败」这一混淆变量，使本次验证无法给出干净的结论。
-    待 1.2 通过后，于阶段 1.4 再按下列形式加入（务必保留 Private=false，
-    表示仅作编译期引用、不复制副本 —— 运行时必须使用游戏进程中已加载的实例）：
+  <PropertyGroup>
+    <!-- 可用环境变量 STS2_GAME_DATA_DIR 覆盖，便于换机器 -->
+    <GameDataDir Condition="'$(GameDataDir)' == '' AND '$(STS2_GAME_DATA_DIR)' != ''">$(STS2_GAME_DATA_DIR)</GameDataDir>
+    <GameDataDir Condition="'$(GameDataDir)' == ''">D:\SteamLibrary\steamapps\common\Slay the Spire 2\data_sts2_windows_x86_64</GameDataDir>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Reference Include="sts2">
-        <HintPath>$(GameDataDir)\sts2.dll</HintPath>
-        <Private>false</Private>
-      </Reference>
-      <Reference Include="0Harmony">
-        <HintPath>$(GameDataDir)\0Harmony.dll</HintPath>
-        <Private>false</Private>
-      </Reference>
-    </ItemGroup>
+  <!--
+    仅作编译期引用：Private=false 表示不复制副本到输出目录。
+    运行时必须使用游戏进程中**已加载的那一份实例** —— 若复制了副本，
+    CLR 可能加载出第二个实例，类型标识不一致，表现为「明明是同一个类型
+    却转换失败」这类极难排查的问题。
+  -->
+  <ItemGroup>
+    <Reference Include="GodotSharp">
+      <HintPath>$(GameDataDir)\GodotSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    刻意不引用 sts2.dll：游戏仍处于抢先体验期，其类型结构随版本变动。
+    编译期强引用会让桥接层在每次游戏更新后直接无法加载；改用反射访问，
+    单个成员失效时只会让对应功能降级，而非整体崩溃。
   -->
 
 </Project>

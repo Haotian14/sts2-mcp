@@ -350,8 +350,21 @@ public:
             WCHAR bridgePath[MAX_PATH] = {};
             if (!GetBridgeDllPath(bridgePath, MAX_PATH)) { Log("  [注入] 桥接 dll 路径不可用"); goto cleanup; }
 
+            // Assembly.LoadFrom 会锁定被加载的文件，游戏运行期间无法重新编译
+            // 桥接层（MSB3027：文件被 SlayTheSpire2.exe 锁定）。开发期这个
+            // 「关游戏→编译→重开」的循环会反复出现，故改为加载临时副本，
+            // 让源产物始终保持可写。
+            WCHAR loadPath[MAX_PATH] = {};
+            if (CopyBridgeToTemp(bridgePath, loadPath, MAX_PATH))
+                Log("  [注入] 已复制副本: %s", ToUtf8(loadPath).c_str());
+            else
+            {
+                wcscpy_s(loadPath, MAX_PATH, bridgePath);
+                Log("  [注入] 复制副本失败，直接加载源文件（编译时会被锁）");
+            }
+
             mdString mdPath = mdStringNil;
-            if (FAILED(emit->DefineUserString(bridgePath, static_cast<ULONG>(wcslen(bridgePath)), &mdPath)))
+            if (FAILED(emit->DefineUserString(loadPath, static_cast<ULONG>(wcslen(loadPath)), &mdPath)))
             { Log("  [注入] DefineUserString(path) 失败"); goto cleanup; }
 
             mdString mdTypeName = mdStringNil;
@@ -425,6 +438,35 @@ public:
         if (mdi)     mdi->Release();
         if (emit)    emit->Release();
         return ok;
+    }
+
+    /// 把桥接 dll 复制到 %TEMP%\sts2-mcp\<pid>\ 下并返回副本路径。
+    /// 目的是让 Assembly.LoadFrom 锁住副本而非源产物，使游戏运行期间
+    /// 仍可重新编译桥接层。按 pid 分目录可避免多开实例互相覆盖。
+    static bool CopyBridgeToTemp(const WCHAR* src, WCHAR* out, DWORD cch)
+    {
+        WCHAR tmp[MAX_PATH] = {};
+        if (!GetTempPathW(MAX_PATH, tmp)) return false;
+
+        WCHAR dir[MAX_PATH] = {};
+        _snwprintf_s(dir, MAX_PATH, _TRUNCATE, L"%ssts2-mcp", tmp);
+        CreateDirectoryW(dir, nullptr);
+        _snwprintf_s(dir, MAX_PATH, _TRUNCATE, L"%ssts2-mcp\\%lu", tmp, GetCurrentProcessId());
+        if (!CreateDirectoryW(dir, nullptr) && GetLastError() != ERROR_ALREADY_EXISTS) return false;
+
+        _snwprintf_s(out, cch, _TRUNCATE, L"%s\\Sts2Bridge.dll", dir);
+
+        // 连同 pdb 一起复制，异常堆栈才能带上行号
+        if (!CopyFileW(src, out, FALSE)) return false;
+
+        WCHAR pdbSrc[MAX_PATH] = {}, pdbDst[MAX_PATH] = {};
+        wcscpy_s(pdbSrc, MAX_PATH, src);
+        wcscpy_s(pdbDst, MAX_PATH, out);
+        auto* e1 = wcsrchr(pdbSrc, L'.'); if (e1) wcscpy_s(e1, 5, L".pdb");
+        auto* e2 = wcsrchr(pdbDst, L'.'); if (e2) wcscpy_s(e2, 5, L".pdb");
+        CopyFileW(pdbSrc, pdbDst, FALSE);   // 失败无妨
+
+        return true;
     }
 
     /// 取得 Sts2Bridge.dll 的绝对路径。
