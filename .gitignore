@@ -8,6 +8,13 @@ obj/
 *.suo
 .vs/
 
+# ---- C++ 编译产物 ----
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+
 # ---- Python ----
 __pycache__/
 *.py[cod]
@@ -20,6 +27,11 @@ venv/
 logs/
 *.log
 runs/
+
+# ---- CoreCLR profiling 头文件 ----
+# 第三方代码（dotnet/runtime，MIT），体积较大，
+# 由 scripts/fetch-headers.ps1 按需获取
+src/Sts2Profiler/include/
 
 # ---- 编辑器 / 系统 ----
 .idea/

@@ -28,7 +28,10 @@
 #include <corprof.h>
 
 #include <cstdio>
+#include <cstdarg>   // va_list / va_start —— Log() 需要，缺失会导致 C2447
+#include <cstring>
 #include <ctime>
+#include <new>
 #include <string>
 
 // ---------------------------------------------------------------------------
