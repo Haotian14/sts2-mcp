@@ -1,0 +1,28 @@
+# ---- 本地配置（含各人不同的游戏路径，不进仓库）----
+config.json
+
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# ---- 运行时产物 ----
+logs/
+*.log
+runs/
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
