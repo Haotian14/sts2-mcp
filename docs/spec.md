@@ -88,14 +88,65 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 
 ### 阶段 1 · 注入验证 ⚠️ 唯一的真风险点
 
-- [ ] 1.1 最小 startup hook dll（仅写一行日志）
-- [ ] 1.2 **用 `DOTNET_STARTUP_HOOKS` 启动游戏验证注入** ← 成败在此
-- [ ] 1.3 备选方案（仅 1.2 失败时）：① 排查加载失败原因 ② BepInEx 6 CoreCLR ③ 改 `sts2.deps.json` ④ patch `sts2.dll`（侵入度递增，②及之后均需改动游戏文件夹）
+- [x] 1.1 最小 startup hook dll（零外部依赖，仅写日志）—— `src/Sts2Bridge/StartupHook.cs`
+- [x] 1.2 **用 `DOTNET_STARTUP_HOOKS` 验证注入 → ❌ 失败**
+- [x] 1.2b **经 `runtimeconfig.json` 的 `configProperties` 注入 → ❌ 同样失败**
+- [ ] 1.3 改用其他注入机制（见 §1.2 结论「后续方案」）
 - [ ] 1.4 Harmony hello-world：patch `CombatManager.StartTurn` 并输出日志
 - [ ] 1.5 取得关键单例引用（`RunState` / `CombatState` / `Player`）
 
-> **在 1.2 通过之前，不应编写任何其他代码。** 该步骤要么 20 分钟内通过，
-> 要么必须更换整体方案。
+#### 1.2 结论：`DOTNET_STARTUP_HOOKS` 对本游戏无效
+
+2026-07-30 实测。测试有效性已确认——游戏确实启动并执行了 C# 代码
+（日志含 `MegaCrit.Sts2.Core.Nodes.NGame._EnterTree()` 调用栈），
+但 hook 未被调用，日志文件未生成。
+
+**原因**：游戏日志首行为 `MegaDot v4.5.1.m.12.mono.custom_build`。
+Godot 的 .NET 集成是**原生 exe 先启动，再经 `hostfxr` 嵌入式加载 CoreCLR**
+（`hostfxr_initialize_for_runtime_config` 路径）。而 `DOTNET_STARTUP_HOOKS`
+由 `hostpolicy` 在**标准应用启动路径**（`hostfxr_run_app`）中读取并转为
+`STARTUP_HOOKS` AppContext 属性。嵌入式加载不经过该路径，故环境变量无人读取。
+
+**1.2b 亦失败**：改用 `runtimeconfig.json` 的 `configProperties` 直接设置
+`STARTUP_HOOKS` 属性（经 Steam 启动，`Steamworks initialization succeeded!`，
+C# 正常运行），hook 依然未执行。补丁已还原，游戏目录 SHA256 与备份一致。
+
+**根因（两次失败指向同一处）**：CoreCLR 的 startup hook 由
+`StartupHookProvider.ProcessStartupHooks()` 在 **`coreclr_execute_assembly`**
+的执行路径中触发。Godot 使用 `hostfxr` 的
+`load_assembly_and_get_function_pointer` 加载托管代码，**从不调用该函数**，
+故整段代码路径不可达 —— 属性来自环境变量还是 `configProperties` 均无差别。
+
+这是 Godot .NET 游戏的固有特性，非配置错误。**「零改动 + 纯 C#」目标不成立。**
+
+#### 后续方案（三选一）
+
+| 方案 | 改游戏目录 | 前置 | 说明 |
+|---|---|---|---|
+| **P. CoreCLR Profiler** | 否 | VS Build Tools + Windows SDK（数 GB） | `CORECLR_ENABLE_PROFILING` / `CORECLR_PROFILER` / `CORECLR_PROFILER_PATH` 三个环境变量。Profiler 由 EEStartup 在 CLR 初始化最早期加载，**与 host 启动路径无关** —— 恰好绕开 startup hook 的死穴。需写 native COM dll（C++） |
+| **M. 托管 DLL 代理** | 是（替换 dll） | 无（.NET SDK 已装） | 将游戏依赖的某个托管 dll 换成同名代理程序集，以 `[assembly: TypeForwardedTo]` 转发全部类型至改名后的原 dll，并用 `[ModuleInitializer]` 触发自身初始化。纯 C#，当日可验证。风险：转发遗漏导致游戏崩溃；Steam 验证文件会还原 |
+| **W. 不注入，走外部视觉** | 否 | 无 | 截图 + 模拟点击。零风险、当日可玩，但脆弱、慢、耗 token |
+
+**本机工具链现状**：无 VS Build Tools、无 Windows SDK、无 clang/gcc/rust
+（方案 P 需先行安装）；.NET 9 SDK 9.0.316 已装；Python 3.12 已装。
+
+**`deps.json` 附带发现**：`0Harmony` 2.4.2.0 是 `sts2` 的**直接依赖** ——
+游戏自身就在使用 Harmony，而非仅打包。其余直接依赖：`GodotSharp` 4.5.1、
+`SmartFormat` 3.3.0、`Steamworks.NET`、`Sentry` 5.0.0、`MonoMod.Backports`、
+`JetBrains.Annotations`、`System.IO.Hashing`、`Vortice.DXGI`。
+pck 中不存在 `gdextension` / `addons/` / `plugin.cfg` 等扩展点。
+
+#### 附带发现
+
+- **StS2 的 Steam appid = `2868840`**（据 `controller_config\game_actions_2868840.vdf`
+  及安装体积 2.71 GB 吻合）。可用 `steam://rungameid/2868840` 启动。
+- 直接运行 `SlayTheSpire2.exe` 会因 `Steamworks initialization failed!
+  No appID found` 而在数次重试后退出。测试必须经 Steam 启动，
+  或往游戏目录放 `steam_appid.txt`（后者需改动游戏文件夹）。
+- Godot 日志位于 `%APPDATA%\SlayTheSpire2\logs\godot.log`，含完整 C# 异常栈，
+  是后续调试的主要窗口。
+
+> **在注入通过之前，不应编写任何其他代码。**
 
 ### 阶段 2 · 状态导出（C#）
 
