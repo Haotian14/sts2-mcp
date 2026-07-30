@@ -92,7 +92,106 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 - [x] 1.2 **用 `DOTNET_STARTUP_HOOKS` 验证注入 → ❌ 失败**
 - [x] 1.2b **经 `runtimeconfig.json` 的 `configProperties` 注入 → ❌ 同样失败**
 - [x] 1.3a **CoreCLR Profiler 注入验证 → ✅ 成功（见 §1.3a 结论）**
-- [ ] 1.3b IL 注入：由 profiler 加载托管桥接层
+- [x] 1.3b-1 元数据侦察：确定 IL 注入落点 → ✅ `NGame..cctor`
+- [x] 1.3b-2 **实施 IL 注入，加载托管桥接层 → ✅ 成功**
+
+#### 1.3b-2 结论：注入链路全线打通
+
+调用栈证据（`logs/bridge.log`）：
+
+```
+[0] Sts2Bridge.Entry::Initialize
+[1] System.RuntimeType::CreateInstanceDefaultCtor
+[2] MegaCrit.Sts2.Core.Nodes.NGame::.cctor      <- 注入点
+[3] MegaCrit.Sts2.Core.Nodes.NGame::_EnterTree
+[4] Godot.Node::InvokeGodotClassMethod
+```
+
+`NGame..cctor` 由 27 字节改写为 53 字节（Tiny header 0xD6），注入 26 字节：
+
+```
+ldstr    "<Sts2Bridge.dll 绝对路径>"
+call     Assembly::LoadFrom(string)
+ldstr    "Sts2Bridge.Entry"
+callvirt Assembly::GetType(string)
+call     Activator::CreateInstance(Type)
+pop
+<原 27 字节 IL>
+```
+
+阶段 2/3 所需的关键类型均已确认可反射到：`NGame`、`CombatManager`、
+`RunManager`、`CardCmd`、`PlayerCmd`、`CardModel`、`NetFullCombatState`、
+`JsonSerializationUtility`。
+
+##### 踩坑：注入的 IL 不可直接 call 自有程序集
+
+初版注入的是 `ldstr path; call LoadFrom; pop; call Entry::Initialize()`，
+运行时顺序看似正确，实际抛：
+
+```
+System.IO.FileNotFoundException: Could not load file or assembly 'Sts2Bridge, Version=1.0.0.0'
+```
+
+**方法体是整体 JIT 的**：JIT 编译 `.cctor` 时即需解析其中每一个 `call`
+的目标，该过程发生在同一方法体内 `LoadFrom` 执行**之前**，于是 CLR 按
+默认探测路径去游戏目录寻找 `Sts2Bridge.dll` 而失败。运行时顺序正确，
+JIT 时序不正确。
+
+**规则：注入的 IL 只能引用 BCL 类型，对自有程序集一律走反射。**
+改用 `Assembly.GetType` + `Activator.CreateInstance` 后通过，代价是入口
+类型须可实例化（`Entry` 由 static class 改为 sealed class，构造函数调用
+`Initialize()`）。
+
+##### 踩坑：重新编译前须先结束游戏进程
+
+游戏进程持有 `Sts2Profiler.dll`，未退出时链接会失败：
+`LINK : fatal error LNK1104: 无法打开文件 Sts2Profiler.dll`。
+
+---
+
+## 阶段 1 完成
+
+注入链路：**Profiler (C++, 环境变量启用) → IL 注入 `NGame..cctor` →
+托管桥接层 → 游戏 API**，全程**游戏目录零改动**。
+
+#### 1.3b-1 结论：注入落点为 `MegaCrit.Sts2.Core.Nodes.NGame..cctor`
+
+侦察实测（`ProbeForInjectionSite`）：
+
+```
+NGame.get_Instance         Tiny  code=6   1A 7E F2 05 00 04 2A   ldsfld 0x040005F2; ret
+NGame..cctor               Tiny  code=27  6E 22 00 00 F0 44 ...
+CombatManager..cctor       Tiny  code=11  2E 73 F2 85 00 06 80 6E 2E 00 04 2A
+RunManager..cctor          Tiny  code=11  2E 73 F8 0B 00 06 80 F7 03 00 04 2A
+```
+
+`CombatManager..cctor` 可解为 `newobj CombatManager(); stsfld _instance; ret`，
+语义与字节数吻合，确认解析无误。
+
+**选择 `NGame..cctor` 的理由**（三个条件同时满足）：
+
+| 条件 | 说明 |
+|---|---|
+| 只执行一次 | CLR 保证静态构造函数仅运行一次 → **无需防重入 guard** |
+| Tiny 格式 | Tiny 不允许异常段 → **无需修正异常表绝对偏移**（IL 注入最易崩的地方） |
+| 足够早 | 在 `NGame` 任何静态成员被访问前执行 |
+
+被否决的备选：`get_Instance` 虽同为 Tiny，但每帧被调用多次，注入后每次都会
+执行 `Assembly.LoadFrom`（含文件系统访问），必须额外加 guard；
+`<Module>` 的模块初始化器不存在（`EnumMethods` 返回 S_FALSE）。
+
+预计注入后长度：16（注入）+ 27（原）= 43 字节，仍在 **Tiny 上限 63 字节**
+之内，无需转换为 Fat header。
+
+##### 踩坑：`CorILMethod_FormatMask` 不能用于判断 Tiny/Fat
+
+`corhdr.h` 中 `CorILMethod_FormatMask == 0x7`，但 CLR 自身的
+`IMAGE_COR_ILMETHOD_TINY::IsTiny()` 使用的是 `(CorILMethod_FormatMask >> 1)`
+即 **`0x3`**，且 `GetCodeSize()` 用 `>> (CorILMethod_FormatShift - 1)` 即 `>> 2`。
+
+误用 `0x7` 会将 `b0 = 0x1E / 0x2E / 0x6E` 这类（低 2 位为 2，确属 Tiny）
+误判为未知格式 —— 恰好覆盖了大量 `.cctor` 与 setter，一度让人以为
+`.cctor` 方法体不可读、理想落点不存在。**判断格式只看低 2 位。**
 - [ ] 1.4 Harmony hello-world：patch `CombatManager.StartTurn` 并输出日志
 - [ ] 1.5 取得关键单例引用（`RunState` / `CombatState` / `Player`）
 
