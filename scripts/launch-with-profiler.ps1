@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     带 CoreCLR Profiler 启动《杀戮尖塔 2》。
 

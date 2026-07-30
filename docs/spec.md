@@ -91,9 +91,52 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 - [x] 1.1 最小 startup hook dll（零外部依赖，仅写日志）—— `src/Sts2Bridge/StartupHook.cs`
 - [x] 1.2 **用 `DOTNET_STARTUP_HOOKS` 验证注入 → ❌ 失败**
 - [x] 1.2b **经 `runtimeconfig.json` 的 `configProperties` 注入 → ❌ 同样失败**
-- [ ] 1.3 改用其他注入机制（见 §1.2 结论「后续方案」）
+- [x] 1.3a **CoreCLR Profiler 注入验证 → ✅ 成功（见 §1.3a 结论）**
+- [ ] 1.3b IL 注入：由 profiler 加载托管桥接层
 - [ ] 1.4 Harmony hello-world：patch `CombatManager.StartTurn` 并输出日志
 - [ ] 1.5 取得关键单例引用（`RunState` / `CombatState` / `Player`）
+
+#### 1.3a 结论：Profiler 注入成立，游戏目录零改动
+
+2026-07-30 实测通过。`src/Sts2Profiler/`，产物 `bin/Sts2Profiler.dll`（x64）。
+
+```
+[22:17:02.180] DllMain: DLL_PROCESS_ATTACH  (pid=43756)
+[22:17:02.181] ClassFactory::CreateInstance —— CLR 正在请求 profiler 实例
+[22:17:02.181]   PROFILER LOADED  —— Initialize 被调用
+[22:17:02.182] 可用接口      : ICorProfilerInfo8  [✓]
+[22:17:02.182] SetEventMask  : hr=0x00000000 (成功)
+[22:17:02.346] *** 命中目标模块: ...\sts2.dll
+[22:17:02.346]     ModuleID=0x00007FFDC4175380  AssemblyID=0x0000022A40FDB960
+```
+
+| 结论 | 说明 |
+|---|---|
+| profiler 可被加载 | `Initialize` 在进程启动 1 毫秒内被调用 |
+| 可拦截 `sts2.dll` 加载 | 距启动 0.35 秒，取得 `ModuleID` / `AssemblyID` |
+| **`ICorProfilerInfo8` 可用** | 最高接口版本 —— 完整 IL 重写与 ReJIT 能力可用 |
+| 游戏目录改动 | **零**，仅三个环境变量 |
+
+启用方式（Steam 启动选项）：
+
+```
+cmd /C "set CORECLR_ENABLE_PROFILING=1 && set CORECLR_PROFILER={27585C9F-BB81-4251-B62F-1B463AB4D58A} && set CORECLR_PROFILER_PATH_64=<仓库>\bin\Sts2Profiler.dll && %command%"
+```
+
+验证亦可用 `scripts/launch-with-profiler.ps1 -Direct`（直接启动 exe）：
+游戏虽会因缺少 Steam appID 而退出，但 profiler 的 `Initialize` 远早于
+Steamworks 初始化，不影响验证。
+
+#### 构建环境踩坑记录
+
+| 问题 | 现象 | 解法 |
+|---|---|---|
+| Windows SDK 10.0.26100 不含 profiling 头文件 | 无 `cor.h` / `corprof.h` / `corhdr.h` | 取自 `dotnet/runtime` release/9.0，置于 `src/Sts2Profiler/include/`。注意 `cor.h` 与 `corhdr.h` 在 `src/coreclr/inc/`，而 `corprof.h` 与 `corerror.h` 在 `src/coreclr/pal/prebuilt/inc/` |
+| MSVC 按系统代码页(936)读源文件 | C4819 + C2001「常量中有换行符」 | 编译加 `/utf-8` |
+| PowerShell 5.1 按 ANSI 读 `.ps1` | 中文全部乱码、语法报错 | 含非 ASCII 的 `.ps1` **必须存为 UTF-8 with BOM** |
+| `.bat` 用 LF 换行 | cmd 解析多行 `for` 结构崩溃 | 改用 `.ps1`（已弃用 build.bat） |
+| `/Fo:"$OutDir\"` | 结尾反斜杠紧邻引号被解析为转义引号 `\"`，吞掉后续全部参数 | 指定完整 obj 文件名，不用目录形式 |
+| profiler 日志显示乱码 | `/utf-8` 使写出的是 UTF-8 字节 | 读取时 `Get-Content -Encoding UTF8` |
 
 #### 1.2 结论：`DOTNET_STARTUP_HOOKS` 对本游戏无效
 
