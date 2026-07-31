@@ -521,8 +521,16 @@ FromChooseACardScreen / FromChooseABundleScreen         事件类
 非选牌交互才需要退回 UI 点击。
 
 桥接层无法编译期实现游戏的接口，用 BCL 的 `System.Reflection.DispatchProxy`
-在运行时生成实现即可（`DispatchProxy.Create<T,TProxy>` 是泛型方法，
-经 `MakeGenericMethod(ICardSelector 类型, 自有代理类型)` 反射调用）。
+在运行时生成实现即可 —— **已落地**，见 `src/Sts2Bridge/CardChoice.cs`。
+它有三条要求，且全都只在运行时报错：
+
+- `.NET 9` 起 `Create` 有泛型与非泛型两个重载，`GetMethod("Create", …)` 会抛
+  `AmbiguousMatchException`；按签名遍历挑非泛型的 `Create(Type, Type)` 最省事
+- 代理类型**不能 sealed**（DispatchProxy 靠继承它来生成实现）
+- 代理类型**必须是 public 顶层类型**（生成的代理在另一个动态程序集里）
+
+应答时 `SetResult` **必须在主线程**：`TaskCompletionSource` 的后续会在完成它
+的那个线程上就地执行，而那后续是游戏的战斗逻辑。
 
 ### ⚠️ 选择未决时，入队的出牌会被取消
 

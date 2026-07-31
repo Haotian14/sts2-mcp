@@ -33,6 +33,13 @@ REM degraded path, writes do not. Attach is attempted on the main thread first
 REM (inside NGame..cctor), with a background-thread retry as fallback.
 set "STS2MCP_ATTACH_FRAME=1"
 
+REM Take over card selection (discard/search/"choose 1 of X") via the game's own
+REM CardSelectCmd.UseSelector injection point, so choices are answered over MCP
+REM instead of waiting for a mouse click. NOTE: this BYPASSES the selection UI -
+REM with nothing answering, a choice would hang until the bridge's fallback
+REM timeout. Clear this line to restore vanilla click-to-choose.
+set "STS2MCP_CHOICE=1"
+
 REM Optional overrides (leave unset for defaults):
 REM   set "STS2MCP_PORT=8765"          bridge HTTP port
 

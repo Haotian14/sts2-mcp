@@ -33,7 +33,7 @@ Steam 更新与「验证文件完整性」都不会破坏本项目。
 |---|---|
 | 1 注入链路（Profiler → IL 注入 → 托管桥接层） | ✅ |
 | 2 状态导出 | ✅ 战斗内（`/state` + `/glossary`）；2.4 非战斗场景待实现 |
-| 3 动作执行 | ✅ 战斗内（出牌/结束回合/药水）已实机验证；3.4 非战斗待实现 |
+| 3 动作执行 | ✅ 战斗内（出牌/结束回合/药水/选牌）已实机验证；3.4b 非战斗待实现 |
 | 4 传输层（进程内 HTTP） | ✅ |
 | 5 Python MCP server | ✅ 工具已可用；5.4 自动驾驶循环待 3.4 就绪后再做 |
 | 6 决策策略与自动驾驶 | ⬜ |
@@ -86,6 +86,7 @@ GET  /eval?expr=<表达式>         即时求值只读表达式
 POST /action/play_card?card=<手牌下标>[&target=<敌人下标>]
 POST /action/end_turn
 POST /action/use_potion?slot=<药水槽>[&target=<敌人下标>]
+POST /action/choose?cards=<下标,下标…>        应答选牌（弃牌/检索/留牌）
 ```
 
 动作接口（`POST`，读接口一律 `GET`）：
@@ -120,8 +121,9 @@ Invoke-RestMethod -Method Post 'http://127.0.0.1:8765/action/play_card?card=0&ta
   `error` 取值：`not_attached` / `not_in_combat` / `not_ready` /
   `actions_disabled` / `bad_index` / `bad_target` / `unplayable` /
   `empty_slot` / `already_queued` / `awaiting_choice` / `rejected`。
-- **`awaiting_choice` 期间不要下发动作** —— 游戏会把入队的出牌取消掉。
-  `/state` 与动作响应都会给出这个标志；应答选择的接口属阶段 3.4，尚未实现。
+- **`awaiting_choice` 期间其他动作一律被拒**（游戏会把入队的出牌取消掉）。
+  同时带 `choice` 字段时用 `/action/choose` 应答；没有 `choice` 说明是桥接层
+  还接管不了的选择（地图、商店、事件），只能由人操作。
 
 `/state` 与 `/glossary` 的**动静分离**是刻意的：卡面文本每回合一字不变，
 若与状态合并则每个决策点都要重传一遍，token 成本随回合数线性增长。
@@ -152,6 +154,7 @@ python -m pip install -r src\mcp_server\requirements.txt
 | `play_card(card, target?)` | 下标取自 `get_state`；**只有 AnyEnemy/AnyAlly 的牌才传 target** |
 | `end_turn()` | 等敌方回合走完才返回，5~8 秒属正常 |
 | `use_potion(slot, target?)` | 战斗外也可用 |
+| `choose(cards)` | 应答选牌（弃牌/检索/留牌），选项见 `get_state` 的 `choice` |
 | `health()` | 连不上游戏时先用它定位 |
 
 动作工具会自行等到局面稳定，并在返回值里附带执行后的新状态 ——
@@ -171,7 +174,8 @@ python -m pip install -r src\mcp_server\requirements.txt
 |---|---|---|
 | `STS2MCP_REPO` | 由脚本自动计算 | 仓库根目录。桥接层从临时副本加载，无法自行反推，必须传入 |
 | `STS2MCP_PORT` | `8765` | 桥接层 HTTP 端口 |
-| `STS2MCP_ATTACH_FRAME` | 未设 | 设为 `1` 时尝试接入 Godot 帧循环（实验性，见 spec） |
+| `STS2MCP_ATTACH_FRAME` | 未设 | 设为 `1` 时接入 Godot 帧循环。下发动作的硬前置，启动脚本已默认开启 |
+| `STS2MCP_CHOICE` | 未设 | 设为 `1` 时接管选牌（弃牌/检索/留牌）。**会绕过选牌 UI** —— 无人应答时等 180 秒兜底。清掉即恢复手动点选 |
 | `STS2MCP_BRIDGE_DLL` | 自动推导 | 覆盖桥接层 dll 路径，调试用 |
 
 游戏安装位置由 `launch-with-profiler.ps1` 自动探测（注册表取 Steam 根目录 →

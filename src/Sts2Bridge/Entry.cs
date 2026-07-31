@@ -224,6 +224,16 @@ namespace Sts2Bridge
                         System.Threading.Thread.Sleep(1000);
                 }
 
+                // 选牌接管须在主线程装（UseSelector 操作的是一个非线程安全的
+                // 静态栈，且 EnsureInstalled 要读游戏对象）。未接入帧循环时
+                // 装不了，也不该装 —— 应答选牌会就地跑起游戏逻辑。
+                if (!CardChoice.Enabled)
+                    Log.Write("[Entry] 跳过选牌接管（未设 STS2MCP_CHOICE=1），选牌仍由玩家点击应答");
+                else if (MainThread.IsAttached)
+                    MainThread.RunSync(() => { CardChoice.EnsureInstalled(); return true; });
+                else
+                    Log.Write("[Entry] 未接入帧循环，跳过选牌接管");
+
                 HttpApi.Start();
                 Log.Write("[Entry] 初始化完成 —— 桥接层已就绪");
             }
