@@ -105,6 +105,8 @@ server = MCPServer(
         "读取当前游戏状态（约 1.5 KB）。这是做任何决策前的唯一依据。\n"
         "\n"
         "关键字段：\n"
+        "- `in_run`：**为 false 表示游戏停在主菜单，存档尚未载入**，此时所有局内字段都是空的；"
+        "若 `can_resume` 为 true，先调 resume_run。\n"
         "- `in_combat`：是否在战斗中。为 false 时只有 run / player / relics / potions 有内容。\n"
         "- `awaiting_choice`：**为 true 时游戏正等玩家做选择**，此时任何其他动作都会被拒绝。"
         "同时带有 `choice` 字段时用 choose 应答；没有 `choice` 则是桥接层还接管不了的"
@@ -302,6 +304,20 @@ def move(node: int) -> dict[str, Any]:
 )
 def choose(cards: list[int]) -> dict[str, Any]:
     return _request("POST", "/action/choose", {"cards": ",".join(str(c) for c in cards)})
+
+
+@server.tool(
+    description=(
+        "点主菜单的「继续游戏」，载入上一局存档。\n"
+        "\n"
+        "仅当 get_state 的 `in_run` 为 false 且 `can_resume` 为 true 时可用 —— "
+        "游戏刚重启时会停在主菜单，此时没有任何局内状态，**所有字段都是空的**，"
+        "必须先载入存档才能继续。\n"
+        "\n" + _ACTION_RESULT_DOC
+    )
+)
+def resume_run() -> dict[str, Any]:
+    return _request("POST", "/action/resume_run")
 
 
 @server.tool(
