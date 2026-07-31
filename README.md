@@ -75,7 +75,19 @@ dotnet build .\src\Sts2Bridge\Sts2Bridge.csproj -c Release
 "<仓库路径>\scripts\launch-steam.cmd" %command%
 ```
 
-正常从 Steam 启动游戏即可。约 10 秒后桥接层就绪，可访问：
+正常从 Steam 启动游戏即可。约 10 秒后桥接层就绪。
+
+改完桥接层后要重启游戏才能生效（dll 由 profiler 在进程启动那一刻载入）：
+
+```powershell
+.\scripts\restart-game.ps1
+```
+
+它会结束进程、等端口释放、经 Steam 重启、等桥接层接入帧循环，
+并点掉主菜单的「继续游戏」载入存档。**注意会回退到最近的存档点**
+（游戏在房间边界存档，战斗中途重启会退回本场战斗开始前）。
+
+可访问的接口：
 
 ```
 GET  /health                    存活状态
@@ -90,6 +102,7 @@ POST /action/choose?cards=<下标,下标…>        应答选牌（弃牌/检索
 POST /action/move?node=<地图节点下标>         地图移动
 POST /action/pick?i=<界面选项下标>            点击当前界面上的选项（奖励/三选一）
 POST /action/proceed                          按「继续」离开当前界面
+POST /action/resume_run                       点主菜单「继续游戏」载入存档
 ```
 
 动作接口（`POST`，读接口一律 `GET`）：

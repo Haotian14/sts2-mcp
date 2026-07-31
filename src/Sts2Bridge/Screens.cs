@@ -206,6 +206,63 @@ namespace Sts2Bridge
             }
         }
 
+        // ------------------------------------------------------------------
+        //  主菜单
+        //
+        //  重启游戏后会停在主菜单，存档并未载入 —— 自动重启若不连「继续游戏」
+        //  一起点掉，就只做了一半。主菜单不在覆盖层栈里，得从场景树根走。
+        // ------------------------------------------------------------------
+
+        /// <summary>场景树根节点。</summary>
+        private static object? SceneRoot()
+        {
+            var mainLoop = GamePaths.CallStatic("Godot.Engine", "GetMainLoop");
+            return GamePaths.Get(mainLoop, "Root");
+        }
+
+        /// <summary>按名字逐层向下找节点。找不到返回 null。</summary>
+        private static object? NodeAt(object? node, params string[] names)
+        {
+            foreach (var name in names)
+            {
+                object? next = null;
+                foreach (var child in Children(node))
+                    if (GamePaths.Text(child, "Name") == name) { next = child; break; }
+                if (next == null) return null;
+                node = next;
+            }
+            return node;
+        }
+
+        /// <summary>主菜单上的「继续游戏」按钮，不可见或不存在时返回 null。</summary>
+        private static object? ContinueButton()
+        {
+            var button = NodeAt(SceneRoot(), "Game", "RootSceneContainer", "MainMenu",
+                                "MainMenuTextButtons", "ContinueButton");
+            if (button == null) return null;
+            // 没有存档时该按钮存在但不可见
+            return (GamePaths.Bool(button, "Visible") ?? false) ? button : null;
+        }
+
+        /// <summary>是否停在主菜单且可以继续上一局。</summary>
+        public static bool CanResumeRun
+        {
+            get
+            {
+                try { return ContinueButton() != null; }
+                catch (Exception ex) { Log.Error("查找继续按钮", ex); return false; }
+            }
+        }
+
+        /// <summary>点主菜单的「继续游戏」，载入存档。须在主线程调用。</summary>
+        public static string? ResumeRun()
+        {
+            var button = ContinueButton();
+            if (button == null) return "主菜单上没有可用的「继续游戏」按钮（可能已在局中，或没有存档）";
+            GamePaths.Call(button, "ForceClick");
+            return null;
+        }
+
         /// <summary>按「继续」离开奖励界面。须在主线程调用。</summary>
         public static string? Proceed()
         {
