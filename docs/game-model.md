@@ -199,9 +199,115 @@ RunManager.Instance.NetService = NetSingleplayerGameService
 选目标： 使用 CombatState.HittableEnemies
 ```
 
+## 意图 AbstractIntent
+
+```
+AbstractIntent
+    .IntentType              Attack / Debuff / Buff ...
+    .IntentPrefix            例：ATTACK
+    .IntentLabelFormat       LocString，Variables 恒为空（渲染时才填）
+  ├ AttackIntent
+  │     .DamageCalc  : Func<decimal>   ★ 伤害，延迟计算
+  │     .Repeats     : int
+  └ MultiAttackIntent : AttackIntent
+        .Repeats                        实测 2（鞭击 3×2）
+```
+
+**伤害数字只能靠 `DamageCalc.DynamicInvoke()` 取得。**
+`IntentLabelFormat.Variables` 实测恒为空字典 —— 它要到 UI 渲染时才被填充，
+读它永远拿不到数字。调用该委托正是游戏画意图数字走的同一条路，无副作用。
+
+非攻击意图（如 `GOOP_MOVE` 的 Debuff）**没有** `DamageCalc` / `Repeats` 成员，
+读取前须判断存在性，否则会把正常的多态缺失误报成错误。
+
+## 卡牌可打性
+
+```
+CardModel.IsPlayable                                    ✗ 不要用
+CardModel.CanPlay()                              : bool
+CardModel.CanPlay(out UnplayableReason reason,
+                  out AbstractModel preventer)   : bool  ★ 用这个
+CardModel.CanPlayTargeting(Creature target)      : bool
+```
+
+⚠️ **`IsPlayable` 不表示「现在能不能打」**。实测诅咒牌 `AscendersBane`：
+
+```
+IsPlayable            = True     ← 但它的卡面写着「不能被打出」
+EnergyCost.Canonical  = -1       ← 负费用即不可打出标记
+EnergyCost.CostsX     = False    ← 排除 X 费牌的可能
+```
+
+`CanPlay` 才是游戏用来把卡牌置灰的判定，涵盖能量不足、诅咒、敌人封锁等全部
+情形，且 out 参数直接给出原因。
+
+## 文本渲染
+
+卡牌与遗物的描述字段都是**未渲染的 `LocString`**（只有表名与键，如
+`cards / PREPARED.description`），直接读取拿不到文本。两条渲染路径：
+
+```
+卡牌： CardModel.GetDescriptionForPile(PileType pile, Creature target) : string
+       ★ 输出已代入数值的最终文本（含升级、力量、遗物加成）
+       传 (PileType.Hand, null) 即可，目标相关描述退化为通用措辞
+
+通用： LocManager.Instance.SmartFormat(LocString s,
+                                      Dictionary<string,object> vars) : string
+       遗物、药水、增益走这条 —— 它们没有 GetDescriptionFor* 方法
+       vars 传该 LocString 自己的 .Variables
+```
+
+渲染结果含 Godot 的 BBCode 着色标记，须剥除：
+
+```
+获得5点[gold]格挡[/gold]。          →  获得5点格挡。
+额外抽[blue]2[/blue]张牌。          →  额外抽2张牌。
+```
+
+`CardModel.Title` 是**已渲染的 string**（实测「早有准备」），而 `RelicModel.Title`
+是 `LocString` —— 两者不一致，不要想当然。
+
+## 爬塔层面 RunState
+
+战斗外也能取到，故 `/state` 在地图与商店界面同样有效：
+
+```
+MegaCrit.Sts2.Core.Runs.RunManager::Instance
+    .State : RunState        ★ 战斗外唯一入口
+    .IsInProgress / .IsGameOver
+    .ActionQueueSet / .ActionExecutor      阶段 3 用
+```
+
+```
+RunState
+    .CurrentActIndex         0 基，对外 +1
+    .ActFloor / .TotalFloor  实测 2 / 2
+    .AscensionLevel          实测 6
+    .CurrentRoom             例：CombatRoom
+    .RunLocation             例：act 0 coord (2, 1) room 0
+    .Map / .CurrentMapCoord / .VisitedMapCoords     阶段 2.4 用
+    .IsGameOver / .GameMode
+    .Players : List<Player>  与 CombatState.Players 是同一批对象
+```
+
+## 多人同步快照 NetFullCombatState（**不适合状态导出**）
+
+```
+MegaCrit.Sts2.Core.Entities.Multiplayer.NetFullCombatState
+    .Creatures : List<CreatureState>
+         monsterId, playerId, currentHp, maxHp, block, powers
+    .Players   : List<PlayerState>
+         playerId, characterId, turnNumber, phase, energy, stars,
+         maxPotionCount, gold, piles, potions, relics, orbs, rngSet, relicGrabBag
+    .Rng       : SerializableRunRngSet
+```
+
+结构紧凑且本就为序列化设计，但**缺意图、缺可打性、缺卡面文本**，标识全为
+`ModelId` 而非可读名称 —— 决策最需要的三样恰好都不在里面。故仍须手写导出。
+
 ## 尚未探查
 
-- `RunState` 的完整结构（地图、层数、遗物池）
-- `AbstractIntent` 的具体子类与字段
-- 非战斗场景：卡牌奖励、商店、事件、休息点
+- 非战斗场景：卡牌奖励、商店、事件、休息点、Boss 遗物三选一
+- `SavedActMap` / `MapPoint` 的结构（地图可走节点，阶段 2.4）
+- `UnplayableReason` 的完整枚举值
 - `CardCmd.AutoPlay` 所需的 `PlayerChoiceContext` 如何构造

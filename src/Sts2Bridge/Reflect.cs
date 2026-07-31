@@ -176,6 +176,27 @@ namespace Sts2Bridge
             }
             sb.Append(']');
 
+            // 方法签名。/eval 只能读成员，摸不到「该调哪个方法」——
+            // 譬如 LocString 要怎样才能渲染成文本、CardModel 的 CanPlay 收什么
+            // 参数，都只能靠这里看出来。属性的 getter/setter 已在上面列出，排除。
+            sb.Append(",\"methods\":[");
+            first = true;
+            foreach (var m in t.GetMethods(AllInstance | AllStatic).Take(300))
+            {
+                if (m.IsSpecialName) continue;                       // get_X / set_X / op_X
+                if (m.DeclaringType == typeof(object)) continue;     // ToString / Equals 等噪音
+                if (!first) sb.Append(',');
+                first = false;
+                sb.Append('{')
+                  .Append("\"name\":").Append(Str(m.Name))
+                  .Append(",\"returns\":").Append(Str(Simple(m.ReturnType)))
+                  .Append(",\"params\":").Append(Str(string.Join(", ",
+                      m.GetParameters().Select(p => Simple(p.ParameterType) + " " + p.Name))))
+                  .Append(",\"static\":").Append(m.IsStatic ? "true" : "false")
+                  .Append('}');
+            }
+            sb.Append(']');
+
             sb.Append('}');
             return sb.ToString();
         }

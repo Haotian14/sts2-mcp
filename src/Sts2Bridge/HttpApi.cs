@@ -205,6 +205,15 @@ namespace Sts2Bridge
                          + ",\"frame\":" + MainThread.FrameCount
                          + ",\"pid\":" + Environment.ProcessId + "}";
 
+                // 状态导出 —— MCP server 的主要输入
+                case "/state":
+                    return MainThread.RunSync(StateExporter.Export);
+
+                // 卡面文本字典。内容一局之内基本不变，由 MCP server 缓存，
+                // 故不进 /state（见 GlossaryExporter 注释）。
+                case "/glossary":
+                    return MainThread.RunSync(GlossaryExporter.Export, 15000);
+
                 // 即时求值任意只读表达式，用于摸清运行时对象结构。
                 // 例：/eval?expr=MegaCrit.Sts2.Core.Runs.RunManager::Instance.CurrentAct
                 case "/eval":

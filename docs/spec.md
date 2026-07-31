@@ -323,11 +323,69 @@ pck 中不存在 `gdextension` / `addons/` / `plugin.cfg` 等扩展点。
 
 ### 阶段 2 · 状态导出（C#）
 
-- [ ] 2.1 主线程调度器（`ConcurrentQueue<Action>` + 逐帧排空）
-- [ ] 2.2 验证 `NetFullCombatState` 能否直接序列化（若可行则大幅简化 2.3）
-- [ ] 2.3 `StateExporter`：HP/护甲/能量、手牌（名称+费用+描述+`CanPlay` 结果）、牌堆计数、每只怪的 HP/护甲/**意图与伤害数字**/增益、遗物、药水、金币、房间类型
+- [x] 2.1 主线程调度器（`ConcurrentQueue<Action>` + 逐帧排空）
+      —— 已实现，但**仍处降级模式**（未接入帧循环，任务在调用线程直接执行）。
+      只读查询可接受；阶段 3 下发动作前必须解决，见下方「遗留」。
+- [x] 2.2 结论：**`NetFullCombatState` 不可用**
+- [x] 2.3 `StateExporter` → `GET /state`
 - [ ] 2.4 非战斗状态：卡牌奖励、地图可走节点、商店库存、事件选项、休息点、Boss 遗物三选一
-- [ ] 2.5 **状态压缩**：原始状态数十 KB → 压至 1–2 KB。直接决定 token 成本，易被低估
+- [x] 2.5 **状态压缩** —— 实测 `/state` 1.5 KB、`/glossary` 1.6 KB，在预算内
+
+#### 2.2 结论：`NetFullCombatState` 不可用
+
+它确实存在（`MegaCrit.Sts2.Core.Entities.Multiplayer.NetFullCombatState`）且
+结构紧凑，但只有三个成员，装的是多人同步快照：
+
+```
+Creatures : List<CreatureState>   monsterId, playerId, currentHp, maxHp, block, powers
+Players   : List<PlayerState>     characterId, turnNumber, phase, energy, stars,
+                                  gold, piles, potions, relics, orbs, rng...
+Rng       : SerializableRunRngSet
+```
+
+**缺的恰好是决策最需要的三样**：怪物意图与伤害数字、卡牌可打性、卡面文本。
+且标识全是 `ModelId` 而非可读名称。故仍需手写导出，其字段选取可作参照。
+
+#### 2.3 结论：两个接口，动静分离
+
+| 接口 | 内容 | 频次 |
+|---|---|---|
+| `GET /state` | 只发**会变的数字**：HP/能量/意图/手牌索引与可打性/牌堆计数 | 每个决策点 |
+| `GET /glossary` | 只发**不变的文本**：卡牌与遗物的标题和描述 | 一局一次，由 MCP server 缓存 |
+
+拆分的理由是 token 成本：卡面文本每回合一字不变，塞进 `/state` 等于每回合
+重传一遍，成本随回合数线性增长。实测两者各约 1.5 KB，若合并则 `/state`
+每次都要背着那 1.6 KB。
+
+标识一律用**模型类型短名**（`StrikeSilent` / `CorpseSlug`）而非本地化中文：
+稳定、与语言设置无关、可作字典键，也让阶段 6.5 的决策日志能跨局比对。
+
+##### 踩坑：`IsPlayable` 不是「现在能不能打」
+
+实测诅咒牌 `AscendersBane` 的 `IsPlayable` 为 `true`、`EnergyCost.Canonical`
+为 `-1`（而 `CostsX` 为 `false`）。照 `IsPlayable` 做决策，模型会反复尝试
+打出诅咒牌。
+
+正确来源是 `CardModel.CanPlay(out UnplayableReason, out AbstractModel)` ——
+游戏用来把卡牌置灰的那套判定，能量不足、诅咒、被敌人封锁全部涵盖，并顺带
+给出原因，恰好也是 3.6 所需。负费用一律对外输出 `null`，避免模型拿 `-1`
+去做能量运算。
+
+##### 踩坑：意图伤害必须调用委托才有值
+
+`AttackIntent.DamageCalc` 是 `Func<decimal>`，延迟计算；
+`IntentLabelFormat.Variables` 要到渲染时才填，实测恒为空字典，
+拿不到现成数字。必须 `DynamicInvoke()`。
+
+交叉验证：导出的意图为怪 0「3×2」、怪 1「8」，结束回合后玩家 HP 恰好
+`56 → 42`（−14），与预测完全吻合。
+
+##### 遗留：`/state` 仍在降级模式下读取
+
+`MainThread` 未接入帧循环，`/state` 实际在 HTTP 线程直读游戏对象，理论上
+可能读到跨帧的撕裂数据。只读场景下最坏是数字差一帧，故本阶段接受；
+响应中的 `attached` / `frame` 两个字段即为此而留，数据对不上时先看它们。
+**阶段 3 下发动作前必须解决**。
 
 ### 阶段 3 · 动作执行（C#）
 
