@@ -299,7 +299,8 @@ namespace Sts2Bridge
                     // NGameOverScreen 报了 0 个选项、can_proceed 也是 false，
                     // 整个链路彻底卡死 —— 认不出的界面不该等于死路。
                     foreach (var b in FindClickable(top))
-                        result.Add((b, GamePaths.Text(b, "Name"), GamePaths.Bool(b, "IsEnabled")));
+                        result.Add((b, LabelOf(b) ?? GamePaths.Text(b, "Name"),
+                                    GamePaths.Bool(b, "IsEnabled")));
                     break;
             }
             return result;
@@ -334,6 +335,34 @@ namespace Sts2Bridge
 
             foreach (var child in Children(node))
                 CollectClickable(child, found, depth + 1);
+        }
+
+        /// <summary>
+        /// 按钮上的可读文本 —— 从它的后代里找第一个非空的 <c>Text</c>。
+        ///
+        /// 节点名不总是有语义：事件选项的按钮实测叫 `@Control@1132` 这种
+        /// Godot 自动生成的名字，对模型毫无信息量。而事件恰恰是最依赖文本的
+        /// 场景 —— 「献祭 5 点最大生命换一件遗物」和「离开」只能靠读文本区分。
+        ///
+        /// 剥掉 Godot 的 BBCode 着色标记，并截断到 80 字符 —— 事件描述可以很长，
+        /// 而我们只要选项本身。
+        /// </summary>
+        private static string? LabelOf(object? node, int depth = 0)
+        {
+            if (node == null || depth > 4) return null;
+
+            if (GamePaths.TryGet(node, "Text", out var text) && text is string s)
+            {
+                s = System.Text.RegularExpressions.Regex.Replace(s, @"\[/?[a-zA-Z][^\]]*\]", "").Trim();
+                if (s.Length > 0) return s.Length > 80 ? s.Substring(0, 80) + "…" : s;
+            }
+
+            foreach (var child in Children(node))
+            {
+                var found = LabelOf(child, depth + 1);
+                if (found != null) return found;
+            }
+            return null;
         }
 
         /// <summary>运行时类型是否派生自某个类型（按短名比对，不必编译期引用）。</summary>
