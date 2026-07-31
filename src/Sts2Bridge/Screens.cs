@@ -36,6 +36,10 @@ namespace Sts2Bridge
         private const string ProceedButton    = "NProceedButton";
         private const string CardRewardScreen = "NCardRewardSelectionScreen";
         private const string GridCardHolder   = "NGridCardHolder";
+        private const string RestSiteRoom     = "NRestSiteRoom";
+        private const string RestSiteButton   = "NRestSiteButton";
+        private const string TreasureRoom     = "NTreasureRoom";
+        private const string RelicHolder      = "NTreasureRoomRelicHolder";
 
         /// <summary>
         /// 覆盖层栈顶界面，没有则 null。须在主线程调用。
@@ -105,7 +109,96 @@ namespace Sts2Bridge
         }
 
         /// <summary>
-        /// 写入 /state 的 screen 段：栈顶界面的类型，以及它上面可点的选项。
+        /// 当前「可交互上下文」：优先取可见的覆盖界面，没有则取当前房间节点。
+        ///
+        /// 休息点、宝箱这些不是覆盖界面，而是**房间节点**
+        /// （`/root/Game/RootSceneContainer/Run/RoomContainer/<房间>`），
+        /// 只看覆盖层栈会完全看不见它们。对外统一成一个上下文，
+        /// 模型不必区分「这是界面还是房间」。
+        /// </summary>
+        public static object? Context()
+        {
+            // 地图可走 = 游戏在等你选路，此时任何残留界面都不该再抢镜。
+            //
+            // 按下「继续」回到地图后，奖励界面**仍留在覆盖层栈上且仍算可见**
+            // （实测 ScreenCount=1、IsVisibleInTree 为 true，只有「继续」按钮
+            // 变灰了）。仅凭可见性挡不住它，模型会看到一份「既能走地图、又有
+            // 三个奖励可领」的自相矛盾的状态。
+            // 这两件事在语义上互斥，用互斥关系判定比猜界面的可见性可靠。
+            if (MapNav.CanMove) return null;
+
+            var top = Top();
+            if (top != null) return top;
+            return ActiveRoom();
+        }
+
+        /// <summary>
+        /// 场景树转储 —— 开发期诊断用（`GET /tree`）。
+        ///
+        /// 界面工作的全部难点都在「那个节点到底叫什么、在哪一层」，而这一点
+        /// 无法从反编译代码可靠推断（节点名来自 .tscn 场景文件，不在程序集里）。
+        /// 有了它就不必靠猜。
+        /// </summary>
+        public static string DumpTree(string path, int depth)
+        {
+            var node = string.IsNullOrWhiteSpace(path)
+                ? SceneRoot()
+                : NodeAt(SceneRoot(), path.Split('/', StringSplitOptions.RemoveEmptyEntries));
+
+            var w = new JsonWriter();
+            w.BeginObject();
+            w.Prop("path", path);
+            if (node == null)
+            {
+                w.Prop("found", false);
+                w.EndObject();
+                return w.ToString();
+            }
+            w.Prop("found", true);
+            w.Prop("type", GamePaths.Id(node));
+            WriteNode(w, node, depth);
+            w.EndObject();
+            return w.ToString();
+        }
+
+        private static void WriteNode(JsonWriter w, object? node, int depth)
+        {
+            w.BeginArray("children");
+            if (depth > 0)
+            {
+                foreach (var child in Children(node))
+                {
+                    w.BeginObject();
+                    w.Prop("name", GamePaths.Text(child, "Name"));
+                    w.Prop("type", GamePaths.Id(child));
+                    bool visible = false;
+                    try { visible = GamePaths.Call(child, "IsVisibleInTree") is bool v && v; } catch { }
+                    w.Prop("visible", visible);
+                    WriteNode(w, child, depth - 1);
+                    w.EndObject();
+                }
+            }
+            w.EndArray();
+        }
+
+        /// <summary>房间容器下当前可见的那个房间节点。</summary>
+        private static object? ActiveRoom()
+        {
+            var container = NodeAt(SceneRoot(), "Game", "RootSceneContainer", "Run", "RoomContainer");
+            if (container == null) return null;
+            foreach (var room in Children(container))
+            {
+                try
+                {
+                    if (GamePaths.Call(room, "IsVisibleInTree") is bool v && v) return room;
+                }
+                catch { /* 个别节点读不到可见性，跳过 */ }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 写入 /state 的 screen 段：当前上下文的类型，以及它上面可点的选项。
         ///
         /// 两类界面共用「选项 + 下标」这一个形状，模型只需记住一个动作
         /// （<c>pick</c>）而不是每种界面一个。不认识的界面只报类型名 ——
@@ -113,7 +206,7 @@ namespace Sts2Bridge
         /// </summary>
         public static void Describe(JsonWriter w)
         {
-            var top = Top();
+            var top = Context();
             if (top == null) return;
 
             var type = GamePaths.Id(top);
@@ -131,8 +224,10 @@ namespace Sts2Bridge
             }
             w.EndArray();
 
-            // 领完（或决定放弃）后要按「继续」才会回到地图
-            w.Prop("can_proceed", FindAll(top, ProceedButton).Count > 0);
+            // 处理完后要按「继续」才会回到地图。按钮存在但未启用时不算 ——
+            // 宝箱没开、休息点没选之前它是灰的。
+            var proceed = ProceedButtonOf(top);
+            w.Prop("can_proceed", proceed != null && (GamePaths.Bool(proceed, "IsEnabled") ?? true));
             w.EndObject();
         }
 
@@ -157,6 +252,37 @@ namespace Sts2Bridge
                     foreach (var h in FindAll(top, GridCardHolder))
                         result.Add((h, GamePaths.Id(GamePaths.Get(h, "CardModel")), null));
                     break;
+
+                case RestSiteRoom:
+                    // 休息点：烤火回血 / 打铁升级 / …，可用性挂在 Option 上而非按钮上
+                    foreach (var b in FindAll(top, RestSiteButton))
+                    {
+                        var option = GamePaths.Get(b, "Option");
+                        result.Add((b, GamePaths.Text(option, "OptionId") ?? GamePaths.Id(option),
+                                    GamePaths.Bool(option, "IsEnabled")));
+                    }
+                    break;
+
+                case TreasureRoom:
+                    // 宝箱分两步：先开箱，箱开了才有遗物可拿
+                    if (!(GamePaths.Bool(top, "_hasChestBeenOpened") ?? false))
+                    {
+                        var chest = GamePaths.Get(top, "_chestButton");
+                        if (chest != null) result.Add((chest, "Chest", GamePaths.Bool(chest, "IsEnabled")));
+                    }
+                    else
+                    {
+                        foreach (var h in FindAll(top, RelicHolder))
+                        {
+                            bool visible = false;
+                            try { visible = GamePaths.Call(h, "IsVisibleInTree") is bool v && v; } catch { }
+                            if (!visible) continue;
+                            result.Add((h, GamePaths.Id(GamePaths.Get(GamePaths.Get(h, "Relic"), "Model"))
+                                           ?? "Relic",
+                                        GamePaths.Bool(h, "IsEnabled")));
+                        }
+                    }
+                    break;
             }
             return result;
         }
@@ -172,8 +298,8 @@ namespace Sts2Bridge
         /// <summary>点击栈顶界面上的第 index 个选项。须在主线程调用。</summary>
         public static string? Pick(int index)
         {
-            var top = Top();
-            if (top == null) return "当前没有打开的界面";
+            var top = Context();
+            if (top == null) return "当前没有可交互的界面或房间";
 
             var type = GamePaths.Id(top);
             var options = OptionsOf(top, type);
@@ -199,6 +325,12 @@ namespace Sts2Bridge
                     // 界面把它的 Pressed 信号接到了自己的私有方法 SelectCard 上，
                     // 直接调该方法与点击等效（它就是把选中下标塞进 TCS）。
                     GamePaths.Call(top, "SelectCard", node);
+                    return null;
+
+                case RestSiteRoom:
+                case TreasureRoom:
+                    // 休息点按钮、宝箱、遗物架都是 NClickableControl
+                    GamePaths.Call(node, "ForceClick");
                     return null;
 
                 default:
@@ -266,15 +398,29 @@ namespace Sts2Bridge
         /// <summary>按「继续」离开奖励界面。须在主线程调用。</summary>
         public static string? Proceed()
         {
-            var top = Top();
-            if (top == null) return "当前没有打开的界面";
+            var top = Context();
+            if (top == null) return "当前没有可交互的界面或房间";
 
-            var buttons = FindAll(top, ProceedButton);
-            if (buttons.Count == 0)
-                return $"{GamePaths.Id(top)} 上没有「继续」按钮";
+            var button = ProceedButtonOf(top);
+            if (button == null) return $"{GamePaths.Id(top)} 上没有「继续」按钮";
+            if (!(GamePaths.Bool(button, "IsEnabled") ?? true))
+                return "「继续」按钮当前不可用（还有事没做完）";
 
-            GamePaths.Call(buttons[0], "ForceClick");
+            GamePaths.Call(button, "ForceClick");
             return null;
+        }
+
+        /// <summary>
+        /// 上下文里的「继续」按钮。
+        /// 房间实现了 IRoomWithProceedButton，直接有 ProceedButton 属性；
+        /// 覆盖界面没有，只能在节点树里找。
+        /// </summary>
+        private static object? ProceedButtonOf(object? context)
+        {
+            if (GamePaths.TryGet(context, "ProceedButton", out var direct) && direct != null)
+                return direct;
+            var found = FindAll(context, ProceedButton);
+            return found.Count > 0 ? found[0] : null;
         }
     }
 }

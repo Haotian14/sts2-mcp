@@ -95,6 +95,7 @@ GET  /state                     游戏状态（动态数据，约 1.5 KB）
 GET  /glossary                  卡面文本字典（静态数据，一局取一次）
 GET  /describe?type=<类型全名>   列出类型的属性、字段与方法
 GET  /eval?expr=<表达式>         即时求值只读表达式
+GET  /tree?path=<节点路径>&depth=N  转储场景树（做界面时定位节点用）
 POST /action/play_card?card=<手牌下标>[&target=<敌人下标>]
 POST /action/end_turn
 POST /action/use_potion?slot=<药水槽>[&target=<敌人下标>]

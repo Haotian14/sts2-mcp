@@ -235,6 +235,16 @@ namespace Sts2Bridge
                     return "{\"ok\":true,\"expr\":" + Reflect.Str(expr) + ",\"value\":" + dump + "}";
                 }
 
+                // 场景树转储。界面工作的难点全在「那个节点叫什么、在哪一层」，
+                // 而节点名来自 .tscn 场景文件、不在程序集里，反编译也看不到。
+                // 例：/tree?path=Game/RootSceneContainer/Run&depth=2
+                case "/tree":
+                {
+                    q.TryGetValue("path", out var nodePath);
+                    int depth = q.TryGetValue("depth", out var d) && int.TryParse(d, out var dv) ? dv : 2;
+                    return MainThread.RunSync(() => Screens.DumpTree(nodePath ?? "", Math.Min(depth, 6)));
+                }
+
                 // 列出类型的属性与字段，用于发现可用成员
                 case "/describe":
                 {
