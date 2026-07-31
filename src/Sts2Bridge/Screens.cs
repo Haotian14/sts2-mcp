@@ -36,6 +36,9 @@ namespace Sts2Bridge
         private const string ProceedButton    = "NProceedButton";
         private const string CardRewardScreen = "NCardRewardSelectionScreen";
         private const string GridCardHolder   = "NGridCardHolder";
+        private const string CombatRoom       = "NCombatRoom";
+        private const string MerchantRoom     = "NMerchantRoom";
+        private const string MerchantSlot     = "NMerchantSlot";
         private const string RestSiteRoom     = "NRestSiteRoom";
         private const string RestSiteButton   = "NRestSiteButton";
         private const string TreasureRoom     = "NTreasureRoom";
@@ -269,6 +272,22 @@ namespace Sts2Bridge
                     }
                     break;
 
+                case MerchantRoom:
+                    // 商店：每个槽位挂一个 MerchantEntry，价格与「钱够不够」都在它上面。
+                    // 缺货的槽位不列出 —— 卖掉之后槽位还在，但已无内容。
+                    foreach (var slot in FindAll(top, MerchantSlot))
+                    {
+                        var entry = GamePaths.Get(slot, "Entry");
+                        if (entry == null) continue;
+                        if (!(GamePaths.Bool(entry, "IsStocked") ?? false)) continue;
+
+                        var cost = GamePaths.Int(entry, "Cost");
+                        var label = LabelOf(slot) ?? GamePaths.Id(entry);
+                        result.Add((slot, cost.HasValue ? $"{label} ({cost}金)" : label,
+                                    GamePaths.Bool(entry, "EnoughGold")));
+                    }
+                    break;
+
                 case TreasureRoom:
                     // 宝箱分两步：先开箱，箱开了才有遗物可拿
                     if (!(GamePaths.Bool(top, "_hasChestBeenOpened") ?? false))
@@ -290,9 +309,15 @@ namespace Sts2Bridge
                     }
                     break;
 
+                case CombatRoom:
+                    // 战斗房不给选项：出牌走 play_card，房间里那些按钮
+                    // （生物的 Hitbox、结束回合按钮…）落进兜底只会变成噪音。
+                    // 实测战斗刚结束时曾报出 `[0] 0`、`[2] Hitbox` 这种条目。
+                    break;
+
                 default:
                     // 兜底：认不出的界面，就把所有可点、可见、启用的按钮按**节点名**
-                    // 列出来。节点名本身是有语义的（Continue / SingleplayerButton /
+                    // 列出来。节点名本身是有语义（Continue / SingleplayerButton /
                     // ConfirmButton），模型看得懂。
                     //
                     // 这条兜底的价值在 2026-08-01 那次死亡上体现得很清楚：当时
@@ -411,6 +436,11 @@ namespace Sts2Bridge
                     // 界面把它的 Pressed 信号接到了自己的私有方法 SelectCard 上，
                     // 直接调该方法与点击等效（它就是把选中下标塞进 TCS）。
                     GamePaths.Call(top, "SelectCard", node);
+                    return null;
+
+                case MerchantRoom:
+                    // 商店槽位本身不是按钮，可点的是它的 Hitbox
+                    GamePaths.Call(GamePaths.Get(node, "Hitbox") ?? node, "ForceClick");
                     return null;
 
                 default:
