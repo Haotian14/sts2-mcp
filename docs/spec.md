@@ -84,8 +84,29 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 
 - [x] 0.3 建立工作目录与 git 仓库
 - [ ] 0.1 安装 .NET 9 SDK（`winget install Microsoft.DotNet.SDK.9`）
-- [ ] 0.2 安装 ILSpy（可选；`sts2.xml` 只有注释，看实现需反编译）
+- [x] 0.2 **离线反编译工具链**（不是可选项，是必需品 —— 见下）
 - [ ] 0.4 备份存档 `%APPDATA%\SlayTheSpire2\`
+
+#### 0.2 结论：签名必须从元数据核对，不能从文档注释推断
+
+`sts2.xml` 只有 `<summary>`，不含签名细节。阶段 3 动手前照注释推断出的出牌
+路径，实测三处全错（构造函数参数、入队方法、`PlayerChoiceContext` 可否
+new），详见 `game-model.md` 的「更正记录」。**猜的成本远高于装工具的成本。**
+
+```powershell
+dotnet tool install -g ilspycmd --version 9.1.0.7988
+$env:DOTNET_ROLL_FORWARD = 'Major'     # 该版本 target net8.0，本机只有 9
+ilspycmd "<游戏目录>\data_sts2_windows_x86_64\sts2.dll" -o <输出目录>
+```
+
+37 秒产出单个 17.9 MB 的 `sts2.decompiled.cs`，全文可 grep —— 单文件反而
+比按类型拆目录好用，「谁调用了 X」一次搜索即得。
+
+不装 ilspycmd 时，用 `MetadataLoadContext` 写十几行也能列出签名（只读元数据、
+不执行任何游戏代码），够用于「这个方法收什么参数」这类问题。
+
+**游戏目录是自包含运行时**（200 个 dll 全在
+`data_sts2_windows_x86_64\`），反编译时无须额外配置引用路径。
 
 ### 阶段 1 · 注入验证 ⚠️ 唯一的真风险点
 
@@ -330,6 +351,15 @@ pck 中不存在 `gdextension` / `addons/` / `plugin.cfg` 等扩展点。
       **已接入 Godot 帧循环**，不再降级运行。见下方「2.1 结论」。
 - [x] 2.2 结论：**`NetFullCombatState` 不可用**
 - [x] 2.3 `StateExporter` → `GET /state`
+- [x] 2.6 **意图伤害改用 `GetSingleDamage` / `GetTotalDamage`**（原 `DamageCalc`
+      不含力量等修正，见下方踩坑记录）—— 已实机复验
+- [x] 2.7 **血量移出 `if (inCombat)`**：实测战斗外
+      `RunState.Players[0].Creature.CurrentHp` 照样可读（结算界面上仍是 31/70），
+      而地图选路、要不要打精英、休息点烤火还是打铁，每个非战斗决策都要用血量。
+      原先 `/state` 在战斗外只给章节层数与金币，缺了最关键的一项 —— 已实机复验
+- [x] 2.8 **`awaiting_choice` 进 `/state`**：「游戏正等你做选择」是一等一的
+      状态事实，且**无法从状态数字反推**（选择期间手牌张数不变）。
+      不明说上层就只能猜 —— 待实机验证
 - [ ] 2.4 非战斗状态：卡牌奖励、地图可走节点、商店库存、事件选项、休息点、Boss 遗物三选一
 - [x] 2.5 **状态压缩** —— 实测 `/state` 1.5 KB、`/glossary` 1.6 KB，在预算内
 
@@ -432,37 +462,195 @@ Rng       : SerializableRunRngSet
 交叉验证：导出的意图为怪 0「3×2」、怪 1「8」，结束回合后玩家 HP 恰好
 `56 → 42`（−14），与预测完全吻合。
 
+##### 踩坑（续）：上面那次交叉验证，恰好验不出真正的 bug
+
+`DamageCalc` 给的是**基础伤害，不含力量等修正**。上面那次之所以对得上，
+纯粹因为当时两只怪都没有任何伤害修正 —— **一次成功的验证并不能证明公式对，
+只能证明它在那组输入上对。**
+
+2026-08-01 阶段 3 验收时才暴露：噬尸蛞蝓吃掉同伴获得 `StrengthPower 4` 后，
+`/state` 仍报 `3×2`，实际掉血却是 `(3+4)×2 − 3 格挡 = 11`。
+
+正确来源是 `AttackIntent.GetSingleDamage(targets, owner)` /
+`GetTotalDamage(...)` —— 它们内部再走一遍 `Hook.ModifyDamage`，
+那才是游戏画在意图上的数字。详见 `game-model.md`。
+
+**教训**：验证用例必须覆盖「修正生效」的情形。全零修正下的吻合是假阳性。
+这条 bug 的危害是单向的 —— 永远只会低估敌人伤害，且敌人越强低估越多。
+
 ### 阶段 3 · 动作执行（C#）
 
-- [ ] 3.1 `play_card(hand_index, target_index)` → 构造 `PlayCardAction` 并经
-      `RunManager.Instance.ActionQueueSet.EnqueueWithoutSynchronizing` 入队，
-      等待 `CompletionTask`。
-      **更正**：早期版本此处写的是包装 `CardCmd.AutoPlay`，那是错的 ——
-      官方文档明确其为「for free, non-player-choice card playing effects」
-      （服务于劫掠、复制药水一类自动打出效果，**且不消耗能量**）。
-      `PlayerChoiceContext` 可直接 `new`（基类仅一个用于向远程玩家显示归因的
-      模型栈）。详见 `game-model.md`。
-- [ ] 3.2 `end_turn()` → 包装 `PlayerCmd.EndTurn`
-- [ ] 3.3 `use_potion(i, target)`
-- [ ] 3.4 非战斗动作：选牌/跳过、地图移动、商店买入与除卡、事件选项、休息点、「X 选 1」类效果
-- [ ] 3.5 **就绪判据**：动作后须等到 `!IsExecutingCardOrPotionEffect` 且 `PlayerTurnPhase == Play` 方可返回，否则会读到中间状态
-- [ ] 3.6 错误回传：以 `CanPlay` 预检，非法动作返回结构化错误而非崩溃
+实现在 `src/Sts2Bridge/ActionApi.cs`，接口为 `POST /action/<动作>`。
+
+- [x] 3.1 `play_card(card, target?)` → `CardModel.TryManualPlay(target)`
+- [x] 3.2 `end_turn()` → `PlayerCmd.EndTurn(player, false, null)`
+- [x] 3.3 `use_potion(slot, target?)` → `PotionModel.EnqueueManualUse(target)`
+      （**成功路径尚未实机验证** —— 验证时身上没有药水，只验了空槽驳回）
+- [ ] 3.4 非战斗动作：选牌/跳过、地图移动、商店买入与除卡、事件选项、休息点、「X 选 1」类效果。
+      **不必再从零测绘**，两条现成的路（详见 `game-model.md`）：
+      - **选牌一律走 `CardSelectCmd.UseSelector(ICardSelector)`** —— 官方注入点，
+        弃牌/检索/除卡/升级/转化/卡牌奖励/三选一全部收口于此，`options` 与
+        `minSelect/maxSelect` 正是要回报给模型的东西。用 BCL 的
+        `DispatchProxy` 在运行时实现该接口即可
+      - 地图、商店按钮、事件选项这类非选牌交互才退回 UI 点击
+        （`UiHelper.FindAll<T>` 找节点再 `UiHelper.Click`，AutoSlay 就这么干）
+      - 阻塞式选择的应答也一并解决 3.7 那条「有未决选择时动作会被取消」
+- [x] 3.5 **就绪判据**：轮询至队列空、执行器停、`!IsExecutingCardOrPotionEffect`
+      且 `Phase == Play`（或战斗已结束）方返回。见下方「3.5 结论」
+- [x] 3.6 错误回传：以 `CanPlay` / `IsValidTarget` 预检，非法动作返回
+      HTTP 200 + `ok:false` + 结构化 error/reason
+
+#### 3.1–3.2 实机验证（2026-08-01，v0.107.1，静默猎手 A6 第 2 层）
+
+```
+出牌   POST /action/play_card?card=3&target=0    settled=true  379 ms
+       energy 3→2   手牌 7→6   弃牌 0→1   怪0 血 27→21
+结束回合 POST /action/end_turn                    settled=true  6577 ms
+       回合 1→2   阶段 Play   energy →3   我方 HP 56→42
+```
+
+**能量确实被扣掉**，这是「走的是玩家出牌路径而非免费的 `AutoPlay`」的判据。
+HP 恰好 −14 = 预告的 `3×2` + `8`，与 `/state` 导出的意图完全吻合。
+结束回合等了 6.6 秒才返回 —— 它确实把整个敌方回合走完了。
+
+驳回路径六条均已实测：`bad_target`（该给目标不给 / 不该给却给）、
+`bad_index`（手牌越界 / 目标越界）、`empty_slot`、未知动作与 GET 动作各转 400。
+
+#### 3.5 结论：还有第三种「没结束」—— 停下来等玩家选择
+
+最初的就绪判据只有两种归宿：稳定，或超时。实测打出「求生者」
+（获得格挡并弃一张牌）时出现了第三种：动作跑到一半停住，**等玩家选弃哪张牌**，
+于是白等满 20 秒才报一个语焉不详的 `settled:false`。
+
+判据是动作自己的状态，不是队列：
+
+```
+RunManager.Instance.ActionQueueSet.IsEmpty                    = false
+RunManager.Instance.ActionExecutor.IsRunning                  = false   ← 分不清
+RunManager.Instance.ActionExecutor.CurrentlyRunningAction.State
+                                              = GatheringPlayerChoice   ★
+CombatManager.Instance.PlayerActionsDisabled                  = false
+PlayerCombatState.Phase                                       = Play
+```
+
+「队列非空 + 执行器不在跑」既可能是刚入队还没轮到，也可能是停在等选择上，
+两者靠 `GameAction.State` 才分得开。现已改为立即返回
+`awaiting_choice:true` 并附上栈顶界面类型（`NOverlayStack.Instance.Peek()`
+的类型名，正是 AutoSlay 分派界面处理器所用的键），交由阶段 3.4 应答。
+
+需持续 500 ms 才判定 —— 游戏内部也会短暂进入该状态再自行走完。
+
+#### 3.5 复验（2026-08-01，重启后，第 4 层 SludgeSpinnerWeak）
+
+四条修复全部实机通过：
+
+| 验的是什么 | 结果 |
+|---|---|
+| 战斗外血量（2.7） | 地图/结算界面 `/state` 给出 `player.hp = 31/70` |
+| 目标标识 | `target` 为 `SludgeSpinner`，不再是 `Creature` |
+| `awaiting_choice` | 打「求生者」**788 ms 返回**，旧行为是干等 20000 ms |
+| 意图伤害（2.6） | 「中和」挂上虚弱 1 层后，意图 `8 → 6`（8×0.75）。
+若仍走 `DamageCalc` 会纹丝不动停在 8 |
+
+意图那条的判别设计值得留意：**不必等运气碰上带力量的敌人** ——
+自己打一张给虚弱的牌，同样能让完整伤害管线与基础值产生分歧，
+且效果立即可见。找一个能让两条路径give出不同数字的最短输入，比等特定局面快得多。
+
+#### 3.7 新发现：选择未决时入队的动作会被**取消**（已修）
+
+复验途中撞上的：「求生者」的弃牌选择未决时下发「中和」，桥接层报了
+`ok:true`，而牌留在手里、敌人毫发无损、队列随后变空。
+
+根因是 `PlayCardAction` 重写的 `CancelAction` —— 注释直言弹出手牌选择界面
+需要取消已排队的出牌。**报成功而实际没发生，是所有错误里最坏的一种**：
+上层会照着一个从未生效的动作继续往下推。
+
+已在 `ActionApi.Begin` 加前置检查，有未决选择时直接返回
+`error:"awaiting_choice"`，并把该状态一并加进 `/state`
+（见下方 2.8）—— 待实机验证。
+
+##### 踩坑：选择期间手牌张数不变，别拿它推断选择是否完成
+
+弃牌要确认后才生效，选择期间 `/state` 的手牌张数、能量、格挡全都已是终值。
+当时据此判断「选择已解掉」，于是把一次被取消的出牌误读成 bug 现场，
+多绕了一圈。**「在等玩家选择」只能看 `GameAction.State`，不能从状态数字反推**
+—— 这也正是要把它加进 `/state` 的理由：不明说，上层就只能猜，而猜必然会错。
 
 ### 阶段 4 · 传输层（C#）
 
-- [ ] 4.1 游戏内 `HttpListener` on `127.0.0.1:8765`：`GET /state`、`POST /action`、`GET /health`（**仅绑 localhost**）
-- [ ] 4.2 请求 → 主线程队列 → `TaskCompletionSource` 取回结果
-- [ ] 4.3 异常兜底：任何异常均不得导致游戏进程崩溃
+- [x] 4.1 游戏内 HTTP on `127.0.0.1:8765`（**仅绑 loopback**）：
+      `GET /health` `/state` `/glossary` `/eval` `/describe`、
+      `POST /action/<动作>`。
+      **未用 `HttpListener`** —— 它依赖 HTTP.sys，普通权限进程绑定端口前缀
+      常需 netsh 注册 urlacl，而游戏由 Steam 以普通权限启动，不能要求用户
+      额外配置。改用 `TcpListener` 自行实现 GET/POST + JSON 的最小子集。
+- [x] 4.2 请求 → 主线程队列 → `TaskCompletionSource` 取回结果
+- [x] 4.3 异常兜底：任何异常均不得导致游戏进程崩溃
 
 ### 阶段 5 · MCP Server（Python）
 
-- [ ] 5.1 依赖：`mcp`、`httpx`
-- [ ] 5.2 stdio 传输的 MCP server 骨架
-- [ ] 5.3 工具：`get_state` / `get_legal_actions` / `play_card` / `end_turn` / `use_potion` / `choose`
-- [ ] 5.4 **`auto_play_until(stop_on=[...])`** —— 全自动的核心。内部循环：读状态 → 唯一合法动作则本地执行 → 命中停止条件（卡牌奖励/地图/Boss/精英/低血量/死亡）才返回
-- [ ] 5.5 工具 description 的 prompt 工程（MCP 工具描述即模型的说明书，易被低估）
-- [ ] 5.6 注册到 Claude Code（`.mcp.json`）
-- [ ] 5.7 用 MCP Inspector 调试（`npx @modelcontextprotocol/inspector`）
+实现在 `src/mcp_server/server.py`（单文件，约 200 行，刻意做得很薄）。
+
+- [x] 5.1 依赖：`mcp>=2.0`、`httpx`
+- [x] 5.2 stdio 传输的 MCP server 骨架
+- [x] 5.3 工具：`get_state` / `get_glossary` / `play_card` / `end_turn` /
+      `use_potion` / `health`
+- [ ] 5.4 **`auto_play_until(stop_on=[...])`** —— 全自动的核心。内部循环：读状态 → 唯一合法动作则本地执行 → 命中停止条件（卡牌奖励/地图/Boss/精英/低血量/死亡）才返回。
+      **未实现** —— 它的价值取决于阶段 3.4：非战斗场景尚不能自动应答，
+      循环跑到第一个卡牌奖励就会停住，先做它收益有限
+- [x] 5.5 工具 description 的 prompt 工程
+- [x] 5.6 注册到 Claude Code（`.mcp.json`）
+- [ ] 5.7 用 MCP Inspector 调试 —— 未做，已用 `mcp` 自带的 `Client` 走完整
+      stdio 协议自测（见下），比起 Inspector 可脚本化、可回归
+
+#### 5.3 取舍：`get_legal_actions` 与 `choose` 未实现
+
+- `get_legal_actions` 被折叠进 `get_state`：`hand[].playable` 与失败时的
+  `reason` 已经给出全部信息。单独开一个工具意味着同一份事实有两个来源，
+  且第二份会因为下标重排而过期 —— 多一个工具就多一份说明书要写、
+  多一处可能不一致。
+- `choose` 依赖阶段 3.4 的选择应答机制，那边没做完，这边无从实现。
+  目前遇到 `awaiting_choice` 只能由人来点。
+
+#### 5.2 结论：`mcp` 2.0 的 API 与旧版不同
+
+`FastMCP` 已更名为 `MCPServer`，且不在 `mcp.server.fastmcp` 下：
+
+```python
+from mcp.server.mcpserver import MCPServer   # 不是 FastMCP
+server = MCPServer(name="sts2", instructions="…")
+
+@server.tool(description="…")
+def get_state() -> dict: ...
+
+server.run("stdio")
+```
+
+自测客户端侧：`Client` 收的是 Transport 而非 `StdioServerParameters`，
+须传 `stdio_client(params)`；工具的 schema 字段是 `input_schema`（非 `inputSchema`）。
+
+#### 5.x 实机自测（2026-08-01）
+
+用 `mcp` 自带的 `Client` 以 stdio 拉起本 server，走完整协议：
+
+```
+注册工具 6 个，schema 正常
+health        → attached=true
+get_state     → in_combat=true, hp=31/70, 手牌 7 张
+get_glossary  → 卡牌 11 条 / 遗物 2 条；第二次命中缓存
+play_card 99  → ok=false, error=bad_index（游戏状态未变）
+play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
+  ↳ /state 的 awaiting_choice 同步为 true
+  ↳ 此时再下发打击 → ok=false, error=awaiting_choice
+  ↳ **那张打击原封不动还在手里** —— 没有假装成功（对比 3.7 修复前）
+```
+
+#### 踩坑：读超时必须大于桥接层的等待上限
+
+`end_turn` 要等完整个敌方回合（实测 5~8 秒，多怪更久），桥接层默认等到
+20 秒。客户端若先超时，动作其实**已经下发**，模型却收到一个失败 ——
+它会重发，于是多结束了一个回合。故 httpx 的 read timeout 设为 120 秒，
+且超时文案明确要求「先 get_state 确认，不要重发」。
 
 ### 阶段 6 · 让它打得好
 
