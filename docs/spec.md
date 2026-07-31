@@ -909,6 +909,10 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
       导不出的信息就是做不出的决策
 - [ ] 6.3b 把 strategy.md 提炼成决策 prompt 模板
 - [ ] 6.4 整局 runner（Claude Code 交互式跑不完一整局）
+- [ ] 6.4b **实时卡牌伤害**：`/state` 的 `hand[]` 需给出「这张牌此刻打出去是
+      多少伤害」。卡面文本不含力量/虚弱/易伤等修正，拿它算斩杀线会算错 ——
+      2026-08-01 Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §4。
+      线索：`CardModel.GetDescriptionForPile` 输出的是已代入数值的最终文本
 - [ ] 6.5 决策日志 `(state, action, 理由)` —— 唯一能让它变强的东西
 - [x] 6.6a 死亡后可脱身：游戏结束界面 → 主菜单 → 开新局，全程经 `pick`
       （靠通用兜底分支实现，见下方「6.6 结论」）
