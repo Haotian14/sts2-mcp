@@ -129,7 +129,13 @@ namespace Sts2Bridge
 
             var top = Top();
             if (top != null) return top;
-            return ActiveRoom();
+
+            var room = ActiveRoom();
+            if (room != null) return room;
+
+            // 没有房间说明还没进局（主菜单、角色选择）。把主菜单也当作上下文，
+            // 「死了之后怎么开新局」才有路可走 —— 否则整条链路到此为止。
+            return NodeAt(SceneRoot(), "Game", "RootSceneContainer", "MainMenu");
         }
 
         /// <summary>
@@ -182,7 +188,7 @@ namespace Sts2Bridge
         }
 
         /// <summary>房间容器下当前可见的那个房间节点。</summary>
-        private static object? ActiveRoom()
+        internal static object? ActiveRoom()
         {
             var container = NodeAt(SceneRoot(), "Game", "RootSceneContainer", "Run", "RoomContainer");
             if (container == null) return null;
@@ -283,8 +289,59 @@ namespace Sts2Bridge
                         }
                     }
                     break;
+
+                default:
+                    // 兜底：认不出的界面，就把所有可点、可见、启用的按钮按**节点名**
+                    // 列出来。节点名本身是有语义的（Continue / SingleplayerButton /
+                    // ConfirmButton），模型看得懂。
+                    //
+                    // 这条兜底的价值在 2026-08-01 那次死亡上体现得很清楚：当时
+                    // NGameOverScreen 报了 0 个选项、can_proceed 也是 false，
+                    // 整个链路彻底卡死 —— 认不出的界面不该等于死路。
+                    foreach (var b in FindClickable(top))
+                        result.Add((b, GamePaths.Text(b, "Name"), GamePaths.Bool(b, "IsEnabled")));
+                    break;
             }
             return result;
+        }
+
+        /// <summary>
+        /// 上下文里所有可见且启用的可点控件（<c>NClickableControl</c> 的子类）。
+        /// 按场景树顺序，故下标稳定。
+        /// </summary>
+        private static List<object?> FindClickable(object? root)
+        {
+            var found = new List<object?>();
+            CollectClickable(root, found);
+            return found;
+        }
+
+        private static void CollectClickable(object? node, List<object?> found, int depth = 0)
+        {
+            if (node == null || depth > 12 || found.Count >= 24) return;
+
+            if (IsA(node, "NClickableControl"))
+            {
+                bool ok = false;
+                try
+                {
+                    ok = GamePaths.Call(node, "IsVisibleInTree") is bool v && v
+                         && (GamePaths.Bool(node, "IsEnabled") ?? false);
+                }
+                catch { }
+                if (ok) found.Add(node);
+            }
+
+            foreach (var child in Children(node))
+                CollectClickable(child, found, depth + 1);
+        }
+
+        /// <summary>运行时类型是否派生自某个类型（按短名比对，不必编译期引用）。</summary>
+        private static bool IsA(object? node, string baseTypeName)
+        {
+            for (var t = node?.GetType(); t != null; t = t.BaseType)
+                if (t.Name == baseTypeName) return true;
+            return false;
         }
 
         private static int OptionIndex(object? top, string? type, object? node)
@@ -327,14 +384,11 @@ namespace Sts2Bridge
                     GamePaths.Call(top, "SelectCard", node);
                     return null;
 
-                case RestSiteRoom:
-                case TreasureRoom:
-                    // 休息点按钮、宝箱、遗物架都是 NClickableControl
+                default:
+                    // 休息点按钮、宝箱、遗物架，以及兜底分支列出的按钮，
+                    // 都是 NClickableControl，一律 ForceClick
                     GamePaths.Call(node, "ForceClick");
                     return null;
-
-                default:
-                    return $"{type} 不支持点击";
             }
         }
 
