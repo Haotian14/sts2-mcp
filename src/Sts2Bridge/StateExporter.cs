@@ -48,6 +48,14 @@ namespace Sts2Bridge
 
             w.BeginObject();
             w.Prop("ok", true);
+            // 重启游戏后停在主菜单，此时没有 RunState —— 除 in_run 外一切皆空。
+            // 不明说的话，上层只能从「所有字段都是 null」去猜发生了什么。
+            w.Prop("in_run", runState != null);
+            if (runState == null)
+            {
+                try { w.Prop("can_resume", Screens.CanResumeRun); }
+                catch (Exception ex) { g.Note($"继续按钮读取失败: {Brief(ex)}"); }
+            }
             w.Prop("in_combat", inCombat);
 
             // 主线程接入状态。降级模式下本次读取发生在 HTTP 线程，理论上可能

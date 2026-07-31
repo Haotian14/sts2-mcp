@@ -85,7 +85,18 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 - [x] 0.3 建立工作目录与 git 仓库
 - [ ] 0.1 安装 .NET 9 SDK（`winget install Microsoft.DotNet.SDK.9`）
 - [x] 0.2 **离线反编译工具链**（不是可选项，是必需品 —— 见下）
-- [ ] 0.4 备份存档 `%APPDATA%\SlayTheSpire2\`
+- [ ] 0.4 备份存档 `%APPDATA%\SlayTheSpire2\`（**技术债**：调试期重启频繁，
+      每次都回退到最近存档点；跑长局前务必补上）
+- [x] 0.5 **一键重启** `scripts/restart-game.ps1` —— 桥接层由 profiler 在进程
+      启动那一刻载入，每改一次都得重启游戏才能验证。脚本走完：结束进程 →
+      等端口释放 → 经 Steam 启动 → 等接入帧循环 → 点主菜单「继续游戏」。
+      三个踩坑固化其中：
+      - **主菜单加载晚于桥接层就绪**，HTTP 通了主菜单还没构建完，
+        第一次跑误判成「没有存档」。须等 `can_resume` 出现
+      - **重启只做一半不够**：游戏停在主菜单，不点「继续游戏」就一直没有
+        `RunState`。为此加了 `POST /action/resume_run` 与 `/state` 的
+        `in_run` / `can_resume` —— 否则上层只能从「所有字段都是 null」去猜
+      - **`.ps1` 含中文必须存成 UTF-8 with BOM**（仓库早有记录，本次又踩）
 
 #### 0.2 结论：签名必须从元数据核对，不能从文档注释推断
 
@@ -247,8 +258,9 @@ RunManager..cctor          Tiny  code=11  2E 73 F8 0B 00 06 80 F7 03 00 04 2A
 误用 `0x7` 会将 `b0 = 0x1E / 0x2E / 0x6E` 这类（低 2 位为 2，确属 Tiny）
 误判为未知格式 —— 恰好覆盖了大量 `.cctor` 与 setter，一度让人以为
 `.cctor` 方法体不可读、理想落点不存在。**判断格式只看低 2 位。**
-- [ ] 1.4 Harmony hello-world：patch `CombatManager.StartTurn` 并输出日志
-- [ ] 1.5 取得关键单例引用（`RunState` / `CombatState` / `Player`）
+- [~] 1.4 ~~Harmony hello-world~~ —— **作废**。当初设想用 Harmony 打补丁，
+      实际走的是 profiler IL 注入 + 全程反射，从未需要 Harmony
+- [x] 1.5 取得关键单例引用 —— 由 `GamePaths` 达成（见阶段 2/3）
 
 #### 1.3a 结论：Profiler 注入成立，游戏目录零改动
 
@@ -786,8 +798,8 @@ proceed     → can_move=true，可走节点 (2,1)Monster  713 ms
       循环跑到第一个卡牌奖励就会停住，先做它收益有限
 - [x] 5.5 工具 description 的 prompt 工程
 - [x] 5.6 注册到 Claude Code（`.mcp.json`）
-- [ ] 5.7 用 MCP Inspector 调试 —— 未做，已用 `mcp` 自带的 `Client` 走完整
-      stdio 协议自测（见下），比起 Inspector 可脚本化、可回归
+- [~] 5.7 ~~用 MCP Inspector 调试~~ —— **作废**。已用 `mcp` 自带的 `Client`
+      走完整 stdio 协议自测（见下），可脚本化、可回归，比 Inspector 更合用
 
 #### 5.3 取舍：`get_legal_actions` 与 `choose` 未实现
 

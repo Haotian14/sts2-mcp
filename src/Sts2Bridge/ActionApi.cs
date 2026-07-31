@@ -210,6 +210,7 @@ namespace Sts2Bridge
                 case "move":       return BeginMove(q);
                 case "pick":       return BeginPick(q);
                 case "proceed":    return BeginProceed();
+                case "resume_run": return BeginResumeRun();
                 default:
                     throw new ArgumentException(
                         $"未知动作: {verb}（可用: play_card / end_turn / use_potion）");
@@ -308,6 +309,17 @@ namespace Sts2Bridge
             var plan = new Plan { Ok = true, Verb = "pick" };
             plan.Labels.Add(("picked", index.ToString()));
             return plan;
+        }
+
+        /// <summary>
+        /// 点主菜单的「继续游戏」，载入存档。
+        /// 重启游戏后会停在主菜单，不点它就一直没有 RunState。
+        /// </summary>
+        private static Plan BeginResumeRun()
+        {
+            var error = Screens.ResumeRun();
+            if (error != null) return Plan.Reject("cannot_resume", error);
+            return new Plan { Ok = true, Verb = "resume_run" };
         }
 
         /// <summary>按当前界面上的「继续」按钮。</summary>
@@ -441,7 +453,7 @@ namespace Sts2Bridge
 
             // 点 UI 按钮不经动作队列，队列空不代表事情做完了（领奖要跑飞入动画、
             // 界面要移除按钮、「继续」要解锁）。这类动作多观察一会儿再下结论。
-            bool uiClick = plan.Verb is "pick" or "proceed";
+            bool uiClick = plan.Verb is "pick" or "proceed" or "resume_run";
             int minObserve = uiClick ? 700 : MinObserveMs;
 
             while (sw.ElapsedMilliseconds < timeoutMs)
@@ -499,6 +511,8 @@ namespace Sts2Bridge
                 if (uiClick)
                 {
                     if (sw.ElapsedMilliseconds < minObserve) continue;
+                    // 载入存档要好几秒，房间建起来才算真的进去了
+                    if (plan.Verb == "resume_run" && p.Room == null) continue;
                     return new Outcome(true, sw.ElapsedMilliseconds);
                 }
 
