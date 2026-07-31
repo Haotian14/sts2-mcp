@@ -78,6 +78,11 @@ namespace Sts2Bridge
 
             WriteRun(w, g, runState, player);
 
+            // 地图。战斗中也发 —— 体积很小，而「下一个节点是精英还是休息点」
+            // 会影响本场战斗要留多少血。
+            try { MapNav.Describe(w); }
+            catch (Exception ex) { g.Note($"地图读取失败: {Brief(ex)}"); }
+
             // 血量在战斗外同样读得到（实测 RunState.Players[0].Creature.CurrentHp
             // 在结算界面上仍是 31/70），而地图选路、要不要打精英、休息点烤火还是
             // 打铁 —— 每个非战斗决策都要用血量。故不放进 if (inCombat)。

@@ -32,8 +32,8 @@ Steam 更新与「验证文件完整性」都不会破坏本项目。
 | 阶段 | 状态 |
 |---|---|
 | 1 注入链路（Profiler → IL 注入 → 托管桥接层） | ✅ |
-| 2 状态导出 | ✅ 战斗内（`/state` + `/glossary`）；2.4 非战斗场景待实现 |
-| 3 动作执行 | ✅ 战斗内（出牌/结束回合/药水/选牌）已实机验证；3.4b 非战斗待实现 |
+| 2 状态导出 | ✅ 战斗内 + 地图（`/state` + `/glossary`）；奖励/商店/事件待实现 |
+| 3 动作执行 | ✅ 战斗内（出牌/结束回合/药水/选牌）+ 地图移动，均已实机验证 |
 | 4 传输层（进程内 HTTP） | ✅ |
 | 5 Python MCP server | ✅ 工具已可用；5.4 自动驾驶循环待 3.4 就绪后再做 |
 | 6 决策策略与自动驾驶 | ⬜ |
@@ -87,6 +87,7 @@ POST /action/play_card?card=<手牌下标>[&target=<敌人下标>]
 POST /action/end_turn
 POST /action/use_potion?slot=<药水槽>[&target=<敌人下标>]
 POST /action/choose?cards=<下标,下标…>        应答选牌（弃牌/检索/留牌）
+POST /action/move?node=<地图节点下标>         地图移动
 ```
 
 动作接口（`POST`，读接口一律 `GET`）：
@@ -155,6 +156,7 @@ python -m pip install -r src\mcp_server\requirements.txt
 | `end_turn()` | 等敌方回合走完才返回，5~8 秒属正常 |
 | `use_potion(slot, target?)` | 战斗外也可用 |
 | `choose(cards)` | 应答选牌（弃牌/检索/留牌），选项见 `get_state` 的 `choice` |
+| `move(node)` | 地图移动，选项见 `get_state` 的 `map.options` |
 | `health()` | 连不上游戏时先用它定位 |
 
 动作工具会自行等到局面稳定，并在返回值里附带执行后的新状态 ——

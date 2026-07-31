@@ -476,11 +476,44 @@ NMapPoint（UI 节点）
 RunManager.Instance.RoomEntered   事件，进房完成的信号
 ```
 
-AutoSlay 的走法：`VisitedMapCoords` 为空则选 `row == 0` 的任一点；
-否则取最后一个已访问坐标对应的 `NMapPoint`，从其 `Point.Children` 里挑，
-再在 UI 节点表里按 coord 找到对应的 `NMapPoint` 点击。
+AutoSlay 的走法是点 UI 节点，但**我们不必照办** —— 移动有纯模型层的路：
 
-阶段 2.4 的地图导出照此即可：可走节点 = 当前坐标的 `Children`。
+```csharp
+// MapSelectionSynchronizer.MoveToMapCoord()，玩家点完节点后游戏自己走的
+var action = new MoveToMapCoordAction(LocalContext.GetMe(runState), coord);
+actionQueueSynchronizer.RequestEnqueue(action);
+```
+
+与出牌完全同形。`MoveToMapCoordAction(Player, MapCoord)` 的 `ExecuteAction`
+内部再去驱动 `NMapScreen.TravelToMapCoord` 与 `RunManager.EnterMapCoord`。
+连 `MapCoord` 都不用自己构造 —— 直接把子节点自带的 `coord` 传回去。
+
+可走节点：`VisitedMapCoords` 为空（本章还没走第一步）时取 `Map.Grid` 里
+`coord.row == 0` 的全部节点，否则取 `CurrentMapPoint.Children`。
+
+### ⚠️ 地图是「界面」不是「房间」
+
+```
+NMapScreen.Instance          = NRun.Instance?.GlobalUi.MapScreen
+    .IsOpen           : bool     ★ 纯托管自动属性，读它不碰原生侧
+    .IsTravelEnabled  : bool     ★ 游戏自己用来控制「此刻能否点节点」
+```
+
+`CurrentRoom is MapRoom` **恒为 false**：打完一个房间后地图界面浮出来，
+而 `CurrentRoom` 仍停在刚打完的那个（实测停在 `EventRoom`、`IsPreFinished=true`）。
+判断能否移动只能用 `IsOpen && IsTravelEnabled`。
+
+### ⚠️ `MapPoint.Children` 是 HashSet，枚举顺序不稳定
+
+对外给下标前必须排序（按 `(row, col)`），且导出与执行要共用同一个排序入口，
+否则模型读到的选项与执行时的下标可能对不上。
+
+### ⚠️ 坐标先于房间就位
+
+移动后 `CurrentMapCoord` 会**早于** `CurrentRoom` 更新。只判坐标会读到
+`room=null, in_combat=false` 的中间态。完成判据须是：
+坐标到位 → `CurrentRoom != null` → 若为 `CombatRoom` 还要等 `IsInProgress`
+且 `Phase == Play`。
 
 ### ★ 玩家选择：`CardSelectCmd.UseSelector` 是官方注入点
 

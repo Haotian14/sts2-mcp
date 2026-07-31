@@ -150,6 +150,9 @@ namespace Sts2Bridge
             public readonly List<(string, string?)> Labels = new List<(string, string?)>();
             /// <summary>结束回合专用：下发前的回合数，用来识别「新回合已经开始」。</summary>
             public int? BaselineTurn;
+            /// <summary>移动专用：目标坐标，用来识别「真的走到了」。</summary>
+            public int TargetRow = -1;
+            public int TargetCol = -1;
 
             public string Summary
             {
@@ -204,6 +207,7 @@ namespace Sts2Bridge
                 case "end_turn":   return BeginEndTurn();
                 case "use_potion": return BeginUsePotion(q);
                 case "choose":     return BeginChoose(q);
+                case "move":       return BeginMove(q);
                 default:
                     throw new ArgumentException(
                         $"未知动作: {verb}（可用: play_card / end_turn / use_potion）");
@@ -289,6 +293,21 @@ namespace Sts2Bridge
 
             var plan = new Plan { Ok = true, Verb = "choose" };
             plan.Labels.Add(("chose", string.Join(",", indices)));
+            return plan;
+        }
+
+        /// <summary>走到地图上的第 <c>node</c> 个可走节点（下标取自 /state 的 map.options[].i）。</summary>
+        private static Plan BeginMove(Dictionary<string, string> q)
+        {
+            int index = RequireInt(q, "node");
+
+            var error = MapNav.Move(index, out int row, out int col);
+            if (error != null) return Plan.Reject("cannot_move", error);
+
+            var plan = new Plan { Ok = true, Verb = "move" };
+            plan.TargetRow = row;
+            plan.TargetCol = col;
+            plan.Labels.Add(("node", $"({row},{col})"));
             return plan;
         }
 
@@ -429,6 +448,22 @@ namespace Sts2Bridge
 
                 if (p.Busy) { sawBusy = true; continue; }
 
+                // 移动要过三道关，少一道都会返回中间态：
+                //
+                //   1. 走到了目标坐标 —— 但坐标**先于**房间就位；
+                //   2. 房间已经建好 —— 实测只判坐标时返回过 room=null、
+                //      in_combat=false 的快照，紧接着的一次调用却报「当前房间
+                //      CombatRoom」，即房间是在我们返回之后才装配起来的；
+                //   3. 若进的是战斗房，还要等战斗开打并进入出牌阶段，
+                //      否则模型会拿到一份牌还没发完的手牌。
+                if (plan.Verb == "move")
+                {
+                    if (p.MapRow != plan.TargetRow || p.MapCol != plan.TargetCol) continue;
+                    if (p.Room == null) continue;
+                    if (p.Room == "CombatRoom" && (!p.InCombat || p.Phase != "Play")) continue;
+                    return new Outcome(true, sw.ElapsedMilliseconds);
+                }
+
                 // 战斗结束（打赢、被打死、逃脱）——不必再等回合阶段
                 if (!p.InCombat) return new Outcome(true, sw.ElapsedMilliseconds);
 
@@ -460,12 +495,18 @@ namespace Sts2Bridge
             public readonly bool AwaitingChoice;
             /// <summary>等选择时栈顶界面的类型名，如 NSimpleCardSelectScreen。</summary>
             public readonly string? Screen;
+            /// <summary>当前地图坐标，未走第一步时为 -1。</summary>
+            public readonly int MapRow;
+            public readonly int MapCol;
+            /// <summary>当前房间类型名。房间切换途中为 null。</summary>
+            public readonly string? Room;
 
             private Probe(bool busy, bool inCombat, string? phase, int? turn,
-                          bool awaitingChoice, string? screen)
+                          bool awaitingChoice, string? screen, int mapRow, int mapCol, string? room)
             {
                 Busy = busy; InCombat = inCombat; Phase = phase; Turn = turn;
                 AwaitingChoice = awaitingChoice; Screen = screen;
+                MapRow = mapRow; MapCol = mapCol; Room = room;
             }
 
             public static Probe Take()
@@ -484,6 +525,14 @@ namespace Sts2Bridge
                 object? cm = GamePaths.GetStatic(CombatManagerType, "Instance");
                 bool inCombat = GamePaths.Bool(cm, "IsInProgress") ?? false;
 
+                // 移动的完成判据。CurrentMapCoord 是可空结构体，未走第一步时为 null。
+                // 房间类型要一并取：坐标先于房间就位，只看坐标会读到中间态。
+                var runState = GamePaths.Get(run, "State");
+                var mapCoord = GamePaths.Get(runState, "CurrentMapCoord");
+                int mapRow = GamePaths.Int(mapCoord, "row") ?? -1;
+                int mapCol = GamePaths.Int(mapCoord, "col") ?? -1;
+                string? room = GamePaths.Id(GamePaths.Get(runState, "CurrentRoom"));
+
                 bool effect = false;
                 string? phase = null;
                 int? turn = null;
@@ -499,7 +548,7 @@ namespace Sts2Bridge
                 }
 
                 return new Probe(queueBusy || executing || effect, inCombat, phase, turn,
-                                 awaiting, screen);
+                                 awaiting, screen, mapRow, mapCol, room);
             }
         }
 
