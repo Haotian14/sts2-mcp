@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "sts2": {
+      "command": "python",
+      "args": ["src/mcp_server/server.py"],
+      "env": {}
+    }
+  }
+}

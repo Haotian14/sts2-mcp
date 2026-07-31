@@ -33,9 +33,9 @@ Steam 更新与「验证文件完整性」都不会破坏本项目。
 |---|---|
 | 1 注入链路（Profiler → IL 注入 → 托管桥接层） | ✅ |
 | 2 状态导出 | ✅ 战斗内（`/state` + `/glossary`）；2.4 非战斗场景待实现 |
-| 3 动作执行 | 📋 路径已测绘确认，待实现 |
+| 3 动作执行 | ✅ 战斗内（出牌/结束回合/药水）已实机验证；3.4 非战斗待实现 |
 | 4 传输层（进程内 HTTP） | ✅ |
-| 5 Python MCP server | ⬜ |
+| 5 Python MCP server | ✅ 工具已可用；5.4 自动驾驶循环待 3.4 就绪后再做 |
 | 6 决策策略与自动驾驶 | ⬜ |
 
 ## 为什么可行
@@ -78,12 +78,50 @@ dotnet build .\src\Sts2Bridge\Sts2Bridge.csproj -c Release
 正常从 Steam 启动游戏即可。约 10 秒后桥接层就绪，可访问：
 
 ```
-http://127.0.0.1:8765/health                    存活状态
-http://127.0.0.1:8765/state                     游戏状态（动态数据，约 1.5 KB）
-http://127.0.0.1:8765/glossary                  卡面文本字典（静态数据，一局取一次）
-http://127.0.0.1:8765/describe?type=<类型全名>   列出类型的属性、字段与方法
-http://127.0.0.1:8765/eval?expr=<表达式>         即时求值只读表达式
+GET  /health                    存活状态
+GET  /state                     游戏状态（动态数据，约 1.5 KB）
+GET  /glossary                  卡面文本字典（静态数据，一局取一次）
+GET  /describe?type=<类型全名>   列出类型的属性、字段与方法
+GET  /eval?expr=<表达式>         即时求值只读表达式
+POST /action/play_card?card=<手牌下标>[&target=<敌人下标>]
+POST /action/end_turn
+POST /action/use_potion?slot=<药水槽>[&target=<敌人下标>]
 ```
+
+动作接口（`POST`，读接口一律 `GET`）：
+
+```powershell
+Invoke-RestMethod -Method Post 'http://127.0.0.1:8765/action/play_card?card=0&target=1'
+```
+
+下标与 `/state` 严格对应：`card` 对 `hand[].i`，`target` 对 `enemies[].i`。
+响应里默认附带一份执行后的新 `/state`（`?state=0` 可关掉），省掉一次往返：
+
+```json
+{"ok":true,"action":"play_card","card":"StrikeSilent","target":"CorpseSlug",
+ "settled":true,"waited_ms":312,"state":{ ... }}
+```
+
+- **动作是同步的**：请求会一直等到局面稳定（队列排空、效果跑完、回合阶段
+  回到 `Play`）才返回。结束回合要等完整个敌方回合，默认上限 20 秒，
+  可用 `?timeout=<毫秒>` 调整。客户端超时须设得比它更长。
+- `settled:false` 表示局面未稳定，随附状态可能是中间态，应重新拉 `/state`
+  再做决策。其中一种情形会额外带上 `awaiting_choice:true` 与 `screen`：
+  动作停下来等玩家做选择了（如「求生者」要弃一张牌），须由上层应答该界面
+  —— 这属于阶段 3.4，尚未实现。
+- 非法动作返回 **HTTP 200 + `ok:false`** 与结构化原因，不是 4xx ——
+  「这步不能走」和「桥接层坏了」必须能分辨：
+
+```json
+{"ok":false,"action":"play_card","error":"unplayable",
+ "reason":"EnergyCostTooHigh","detail":"Backflip 现在打不出","state":{ ... }}
+```
+
+  `error` 取值：`not_attached` / `not_in_combat` / `not_ready` /
+  `actions_disabled` / `bad_index` / `bad_target` / `unplayable` /
+  `empty_slot` / `already_queued` / `awaiting_choice` / `rejected`。
+- **`awaiting_choice` 期间不要下发动作** —— 游戏会把入队的出牌取消掉。
+  `/state` 与动作响应都会给出这个标志；应答选择的接口属阶段 3.4，尚未实现。
 
 `/state` 与 `/glossary` 的**动静分离**是刻意的：卡面文本每回合一字不变，
 若与状态合并则每个决策点都要重传一遍，token 成本随回合数线性增长。
@@ -97,6 +135,29 @@ MCP server 应缓存 `/glossary`，只反复拉取 `/state`。
 ```
 
 不想启用时，把 Steam 启动选项清空即可，游戏恢复原样。
+
+### 在 Claude Code 里玩
+
+```powershell
+python -m pip install -r src\mcp_server\requirements.txt
+```
+
+仓库根目录的 `.mcp.json` 已注册好 MCP server，在本仓库里启动 Claude Code
+即可（首次会提示批准）。工具：
+
+| 工具 | 说明 |
+|---|---|
+| `get_state` | 当前局面，一切决策的依据 |
+| `get_glossary` | 卡面文本，一局取一次（server 侧缓存） |
+| `play_card(card, target?)` | 下标取自 `get_state`；**只有 AnyEnemy/AnyAlly 的牌才传 target** |
+| `end_turn()` | 等敌方回合走完才返回，5~8 秒属正常 |
+| `use_potion(slot, target?)` | 战斗外也可用 |
+| `health()` | 连不上游戏时先用它定位 |
+
+动作工具会自行等到局面稳定，并在返回值里附带执行后的新状态 ——
+**不需要在动作之后再调一次 `get_state`**。
+
+`STS2MCP_URL` 可覆盖桥接层地址（默认 `http://127.0.0.1:8765`）。
 
 ### 配置
 
@@ -121,7 +182,7 @@ MCP server 应缓存 `/glossary`，只反复拉取 `/state`。
 ```
 src/Sts2Profiler/   CoreCLR Profiler (C++)，负责 IL 注入
 src/Sts2Bridge/     游戏内托管桥接层 (C#)
-src/mcp_server/     Python MCP server（待实现）
+src/mcp_server/     Python MCP server（单文件，薄封装）
 scripts/            构建、启动与辅助脚本
 docs/spec.md        设计、任务清单、以及每一处踩坑的根因
 docs/game-model.md  实测得到的游戏运行时数据结构地图
@@ -138,7 +199,10 @@ backup/             试验期间改动过的游戏文件原件（现已全部还
 - **`.cmd` / `.bat` 必须 CRLF**，`.ps1` 含中文时必须 **UTF-8 with BOM**。
   已由 `.gitattributes` 约束换行符，BOM 需自行保证。
 - **不要用 `CardCmd.AutoPlay` 出牌** —— 它是给「劫掠」这类自动打出效果用的，
-  且不消耗能量。正确路径见 `docs/game-model.md`。
+  且不消耗能量。正确路径是 `CardModel.TryManualPlay(target)`，
+  即游戏自己的手动出牌入口，详见 `docs/game-model.md`。
+- **签名一律从程序集元数据核对，不要照 `sts2.xml` 的注释推断** ——
+  注释里没有签名，猜错过三次。工具链见 `docs/spec.md` §0.2。
 - 重新编译 profiler 前须结束游戏进程（桥接层已改为加载临时副本，不受此限）。
 
 ## 边界
