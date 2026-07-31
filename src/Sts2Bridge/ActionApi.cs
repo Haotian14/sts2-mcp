@@ -208,6 +208,8 @@ namespace Sts2Bridge
                 case "use_potion": return BeginUsePotion(q);
                 case "choose":     return BeginChoose(q);
                 case "move":       return BeginMove(q);
+                case "pick":       return BeginPick(q);
+                case "proceed":    return BeginProceed();
                 default:
                     throw new ArgumentException(
                         $"未知动作: {verb}（可用: play_card / end_turn / use_potion）");
@@ -294,6 +296,26 @@ namespace Sts2Bridge
             var plan = new Plan { Ok = true, Verb = "choose" };
             plan.Labels.Add(("chose", string.Join(",", indices)));
             return plan;
+        }
+
+        /// <summary>点击当前界面上的第 <c>i</c> 个选项（奖励、卡牌三选一……）。</summary>
+        private static Plan BeginPick(Dictionary<string, string> q)
+        {
+            int index = RequireInt(q, "i");
+            var error = Screens.Pick(index);
+            if (error != null) return Plan.Reject("cannot_pick", error);
+
+            var plan = new Plan { Ok = true, Verb = "pick" };
+            plan.Labels.Add(("picked", index.ToString()));
+            return plan;
+        }
+
+        /// <summary>按当前界面上的「继续」按钮。</summary>
+        private static Plan BeginProceed()
+        {
+            var error = Screens.Proceed();
+            if (error != null) return Plan.Reject("cannot_proceed", error);
+            return new Plan { Ok = true, Verb = "proceed" };
         }
 
         /// <summary>走到地图上的第 <c>node</c> 个可走节点（下标取自 /state 的 map.options[].i）。</summary>
@@ -417,6 +439,11 @@ namespace Sts2Bridge
             bool sawBusy = false;
             long choiceSince = -1;
 
+            // 点 UI 按钮不经动作队列，队列空不代表事情做完了（领奖要跑飞入动画、
+            // 界面要移除按钮、「继续」要解锁）。这类动作多观察一会儿再下结论。
+            bool uiClick = plan.Verb is "pick" or "proceed";
+            int minObserve = uiClick ? 700 : MinObserveMs;
+
             while (sw.ElapsedMilliseconds < timeoutMs)
             {
                 Thread.Sleep(PollIntervalMs);
@@ -464,6 +491,17 @@ namespace Sts2Bridge
                     return new Outcome(true, sw.ElapsedMilliseconds);
                 }
 
+                // 界面点击必须在「战斗已结束」这条捷径之前处理。
+                // 领奖、按继续都发生在战斗外，若先走到下面那条 !InCombat 的
+                // 提前返回，最短观察时间根本轮不到生效 —— 实测领卡牌奖励在
+                // 121 ms 就返回了，此时三选一界面还没弹出来，模型看到的是
+                // 一份「什么都没发生」的状态。
+                if (uiClick)
+                {
+                    if (sw.ElapsedMilliseconds < minObserve) continue;
+                    return new Outcome(true, sw.ElapsedMilliseconds);
+                }
+
                 // 战斗结束（打赢、被打死、逃脱）——不必再等回合阶段
                 if (!p.InCombat) return new Outcome(true, sw.ElapsedMilliseconds);
 
@@ -475,7 +513,7 @@ namespace Sts2Bridge
                 if (plan.Verb == "end_turn" && plan.BaselineTurn.HasValue &&
                     (p.Turn ?? int.MinValue) <= plan.BaselineTurn.Value) continue;
 
-                if (!sawBusy && sw.ElapsedMilliseconds < MinObserveMs) continue;
+                if (!sawBusy && sw.ElapsedMilliseconds < minObserve) continue;
 
                 return new Outcome(true, sw.ElapsedMilliseconds);
             }

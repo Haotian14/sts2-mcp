@@ -491,7 +491,9 @@ Rng       : SerializableRunRngSet
       归类更正：选牌**不是**非战斗场景，是**战斗内刚需** ——
       静默猎手起手牌组里「生存者」「早有准备」都带弃牌，不接管就寸步难行
 - [x] 3.4b **地图移动**（`POST /action/move`）—— 见下方「3.4b 结论」
-- [ ] 3.4c 非战斗动作：战斗奖励、商店买入与除卡、事件选项、休息点。
+- [x] 3.4c **战斗奖励与卡牌三选一**（`POST /action/pick` + `/action/proceed`）
+      —— 见下方「3.4c 结论」
+- [ ] 3.4d 非战斗动作：商店买入与除卡、事件选项、休息点、宝箱。
       **不必再从零测绘**，两条现成的路（详见 `game-model.md`）：
       - **选牌一律走 `CardSelectCmd.UseSelector(ICardSelector)`** —— 官方注入点，
         弃牌/检索/除卡/升级/转化/卡牌奖励/三选一全部收口于此，`options` 与
@@ -695,6 +697,70 @@ CombatRoom」，即房间是在我们返回之后才装配起来的。
 
 另有一次真实的操作失误：沿用了过期的手牌下标，被 `bad_index` 拦下，
 游戏状态一点没动 —— 结构化错误在人也会犯的错上起了作用。
+
+#### 3.4c 结论：这一步确实得点 UI，但代价很小
+
+领奖没有可用的纯模型层入口。核心 `RewardsSetSynchronizer.SelectLocalReward(reward)`
+确实是模型层的，但只调它会留下一个已领却仍在界面上的按钮，「继续」也不解锁 ——
+整套语义收口在按钮上：
+
+```csharp
+NRewardButton.OnRelease() → GetReward()
+    Disable();
+    if (await RunManager.Instance.RewardsSetSynchronizer.SelectLocalReward(Reward))
+    { …飞入动画…; EmitSignal(RewardClaimed, this); }   ← 界面靠这个移除按钮
+```
+
+而「点击」的成本极低：AutoSlay 的 `UiHelper.Click` 全部实现就是
+`button.ForceClick()`，一个托管方法调用。
+
+##### 澄清：调用 Godot API 并不危险，危险的是编译期引用
+
+此前把「碰 Godot」整体列为高危，**夸大了**。当初让游戏 10 毫秒硬崩溃的是
+**编译期引用 GodotSharp** —— 它使该程序集在 Default ALC 中被重复加载，
+形成两套类型标识。反射调用取到的是游戏 ALC 里**已经存在**的那一份，
+不存在重复加载。真正的约束只有一条：**必须在主线程**。
+
+##### 两种界面，两种点法
+
+| 界面 | 选项节点 | 怎么点 |
+|---|---|---|
+| `NRewardsScreen` | `NRewardButton`（`NClickableControl`） | `ForceClick()` |
+| `NCardRewardSelectionScreen` | `NGridCardHolder`（继承 `Godot.Control`，**没有** `ForceClick`） | 直接调界面的私有方法 `SelectCard(holder)` —— 它正是该节点 `Pressed` 信号的接收端 |
+
+卡牌三选一**不走选牌选择器**：`CardReward` 的代码里 `_currentlyShownScreen != null`
+时压根不问 `CardSelectCmd.Selector`，所以 3.4a 的接管管不到它。
+
+对外统一成 `/state.screen`（`type` + `options[].i` + `can_proceed`）与
+`pick(i)` 一个动作 —— 模型只需记一个动作，而不是每种界面一个。
+不认识的界面报出类型名与空 `options`，让模型知道「卡在一个处理不了的界面上」。
+
+##### 踩坑：等待判据被「战斗已结束」这条捷径吃掉
+
+领卡牌奖励只等了 121 ms 就返回，此时三选一界面还没弹出来，模型看到的是一份
+「什么都没发生」的状态。原因是等待循环里 `if (!InCombat) return settled;`
+排在最短观察时间**之前** —— 而领奖、按继续都发生在战斗外，那段观察窗口
+根本轮不到生效。界面点击现已单独处理并排在该捷径之前，实测稳定在 ~710 ms。
+
+##### 踩坑：界面按完「继续」仍留在覆盖层栈上
+
+回到地图后 `ScreenCount` 依然是 1，只是界面已不可见。只看栈会报出一个
+空选项却又 `can_proceed=true` 的界面，而 `map.can_move` 已是 true ——
+模型会以为还得再按一次继续。判据改为 `IsVisibleInTree()`。
+
+#### 3.x 完整循环实证（2026-08-01）
+
+```
+领金币      99 → 112                          708 ms
+领药水      FruitJuice 入袋                   723 ms
+点卡牌奖励  → NCardRewardSelectionScreen       708 ms
+            PreciseCut / HandTrick / CalculatedGamble
+选 PreciseCut → 回到奖励界面                   723 ms
+proceed     → can_move=true，可走节点 (2,1)Monster  713 ms
+```
+
+至此「战斗 → 奖励 → 三选一 → 继续 → 地图 → 下一场」全链路无需碰鼠标。
+一整局里仍需人工介入的只剩商店、事件、休息点、宝箱。
 
 ### 阶段 4 · 传输层（C#）
 

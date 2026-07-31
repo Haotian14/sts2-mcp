@@ -110,6 +110,9 @@ server = MCPServer(
         "同时带有 `choice` 字段时用 choose 应答；没有 `choice` 则是桥接层还接管不了的"
         "选择（地图、商店、事件），只能由人操作。\n"
         "- `choice`：待答的选牌。`options[].i` 是下标，`min`/`max` 是要选几张。\n"
+        "- `screen`：当前弹出的界面。`type` 是界面类型，`options[].i` 用于 pick，"
+        "`can_proceed` 为 true 时用 proceed 离开。**界面开着时 `map.can_move` 必为 false**，"
+        "处理完按继续才能回到地图。`options` 为空说明桥接层还不支持这个界面，需要人工操作。\n"
         "- `map`：当前坐标与下一步可走的节点。`can_move` 为 true 时可用 move 移动，"
         "`options[].type` 给出房间类型（Monster/Elite/RestSite/Shop/Treasure/Boss…）。\n"
         "- `hand[].i`：出牌用的下标。**每打出一张牌，剩余手牌的下标就会重排**，"
@@ -227,6 +230,38 @@ def use_potion(slot: int, target: int | None = None) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+
+
+@server.tool(
+    description=(
+        "点击当前界面上的一个选项。`i` 取自 get_state 的 `screen.options[].i`。\n"
+        "\n"
+        "两种界面共用这一个动作：\n"
+        "- `NRewardsScreen` 战斗奖励：`id` 为 GoldReward 金币 / PotionReward 药水 /\n"
+        "  RelicReward 遗物 / CardReward 卡牌三选一。**金币和遗物永远该拿**；"
+        "药水栏满时药水会不可领取（`available` 为 false）。\n"
+        "  **不想要卡牌就别点 CardReward，直接 proceed** —— 牌组越薄，关键牌抽到得越勤。\n"
+        "- `NCardRewardSelectionScreen` 卡牌三选一：`id` 是卡牌标识，点一张即加入牌组。\n"
+        "\n"
+        "领完想要的之后，用 proceed 离开回到地图。\n"
+        "\n" + _ACTION_RESULT_DOC
+    )
+)
+def pick(i: int) -> dict[str, Any]:
+    return _request("POST", "/action/pick", {"i": i})
+
+
+@server.tool(
+    description=(
+        "按当前界面上的「继续」按钮，离开该界面回到地图。\n"
+        "\n"
+        "只有在 get_state 的 `screen.can_proceed` 为 true 时才可用。"
+        "**没按继续就回不到地图**，`map.can_move` 会一直是 false。\n"
+        "\n" + _ACTION_RESULT_DOC
+    )
+)
+def proceed() -> dict[str, Any]:
+    return _request("POST", "/action/proceed")
 
 
 @server.tool(

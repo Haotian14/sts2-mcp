@@ -76,6 +76,10 @@ namespace Sts2Bridge
             try { CardChoice.Describe(w); }
             catch (Exception ex) { g.Note($"选牌选项读取失败: {Brief(ex)}"); }
 
+            // 战斗奖励界面。停在这里时 map.can_move 为 false，得先领完再按继续。
+            try { Screens.Describe(w); }
+            catch (Exception ex) { g.Note($"奖励界面读取失败: {Brief(ex)}"); }
+
             WriteRun(w, g, runState, player);
 
             // 地图。战斗中也发 —— 体积很小，而「下一个节点是精英还是休息点」
