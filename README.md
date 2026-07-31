@@ -211,6 +211,7 @@ src/mcp_server/     Python MCP server（单文件，薄封装）
 scripts/            构建、启动与辅助脚本
 docs/spec.md        设计、任务清单、以及每一处踩坑的根因
 docs/game-model.md  实测得到的游戏运行时数据结构地图
+docs/strategy.md    实战验证过的决策策略，每条都注明依赖哪个导出字段
 backup/             试验期间改动过的游戏文件原件（现已全部还原）
 ```
 
