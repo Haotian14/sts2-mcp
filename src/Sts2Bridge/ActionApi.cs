@@ -500,6 +500,15 @@ namespace Sts2Bridge
                     if (p.MapRow != plan.TargetRow || p.MapCol != plan.TargetCol) continue;
                     if (p.Room == null) continue;
                     if (p.Room == "CombatRoom" && (!p.InCombat || p.Phase != "Play")) continue;
+
+                    // 第四道关：场景树里的房间节点也得换好。
+                    // 实测走进商店时，模型层的 CurrentRoom 已是 MerchantRoom，
+                    // 而 RoomContainer 下还挂着上一场的 NCombatRoom —— 此时返回，
+                    // 上层读到的界面是过期的那一个。
+                    // 命名约定是模型名前加 N（CombatRoom → NCombatRoom）。
+                    // 万一某个房间不守这个约定，5 秒后放行，绝不因此挂死。
+                    if (p.RoomNode != "N" + p.Room && sw.ElapsedMilliseconds < 5000) continue;
+
                     return new Outcome(true, sw.ElapsedMilliseconds);
                 }
 
@@ -550,15 +559,18 @@ namespace Sts2Bridge
             /// <summary>当前地图坐标，未走第一步时为 -1。</summary>
             public readonly int MapRow;
             public readonly int MapCol;
-            /// <summary>当前房间类型名。房间切换途中为 null。</summary>
+            /// <summary>模型层的当前房间类型名。房间切换途中为 null。</summary>
             public readonly string? Room;
+            /// <summary>场景树里那个房间节点的类型名，如 NMerchantRoom。</summary>
+            public readonly string? RoomNode;
 
             private Probe(bool busy, bool inCombat, string? phase, int? turn,
-                          bool awaitingChoice, string? screen, int mapRow, int mapCol, string? room)
+                          bool awaitingChoice, string? screen, int mapRow, int mapCol,
+                          string? room, string? roomNode)
             {
                 Busy = busy; InCombat = inCombat; Phase = phase; Turn = turn;
                 AwaitingChoice = awaitingChoice; Screen = screen;
-                MapRow = mapRow; MapCol = mapCol; Room = room;
+                MapRow = mapRow; MapCol = mapCol; Room = room; RoomNode = roomNode;
             }
 
             public static Probe Take()
@@ -584,6 +596,10 @@ namespace Sts2Bridge
                 int mapRow = GamePaths.Int(mapCoord, "row") ?? -1;
                 int mapCol = GamePaths.Int(mapCoord, "col") ?? -1;
                 string? room = GamePaths.Id(GamePaths.Get(runState, "CurrentRoom"));
+                // 场景树里那个房间节点的类型。模型层的 CurrentRoom 会**先于**
+                // 节点换好，两者都看才知道房间是不是真的到位了。
+                string? roomNode = null;
+                try { roomNode = GamePaths.Id(Screens.ActiveRoom()); } catch { }
 
                 bool effect = false;
                 string? phase = null;
@@ -600,7 +616,7 @@ namespace Sts2Bridge
                 }
 
                 return new Probe(queueBusy || executing || effect, inCombat, phase, turn,
-                                 awaiting, screen, mapRow, mapCol, room);
+                                 awaiting, screen, mapRow, mapCol, room, roomNode);
             }
         }
 
