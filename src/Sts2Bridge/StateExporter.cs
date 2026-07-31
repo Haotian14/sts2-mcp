@@ -40,9 +40,11 @@ namespace Sts2Bridge
 
             // 战斗内外都从 Player 取遗物/药水/金币 —— 两处拿到的是同一个对象，
             // 这样 /state 在地图与商店界面也能给出有意义的输出。
+            // 单机下玩家列表只有一个人。ActionApi 必须取到同一个对象，
+            // 否则 /state 给出的手牌下标与 /action 用的对不上。
             object? player = inCombat
-                ? FirstOf(g.Obj(combatState, "Players"))
-                : FirstOf(g.Obj(runState, "Players"));
+                ? GamePaths.First(g.Obj(combatState, "Players"))
+                : GamePaths.First(g.Obj(runState, "Players"));
 
             w.BeginObject();
             w.Prop("ok", true);
@@ -53,13 +55,29 @@ namespace Sts2Bridge
             w.Prop("attached", MainThread.IsAttached);
             w.Prop("frame", MainThread.FrameCount);
 
+            // 「游戏正等你做选择」必须出现在 /state 里，不能只在动作响应里。
+            // 选择未决期间手牌张数不变（弃牌要确认后才生效），从状态数字根本
+            // 推不出来 —— 不明说就只能靠猜，而猜必然会猜错。
+            // 此时下发任何动作都会被游戏取消，见 ActionApi.Begin 的前置检查。
+            bool awaitingChoice = false;
+            string? choiceScreen = null;
+            try { awaitingChoice = PlayerChoice.IsPending(out choiceScreen); }
+            catch (Exception ex) { g.Note($"玩家选择状态读取失败: {Brief(ex)}"); }
+            w.Prop("awaiting_choice", awaitingChoice);
+            // 在手牌里选的那类没有覆盖界面，screen 为 null 时不发这个字段
+            if (choiceScreen != null) w.Prop("screen", choiceScreen);
+
             WriteRun(w, g, runState, player);
+
+            // 血量在战斗外同样读得到（实测 RunState.Players[0].Creature.CurrentHp
+            // 在结算界面上仍是 31/70），而地图选路、要不要打精英、休息点烤火还是
+            // 打铁 —— 每个非战斗决策都要用血量。故不放进 if (inCombat)。
+            WritePlayer(w, g, player);
 
             if (inCombat)
             {
                 object? pcs = g.Obj(player, "PlayerCombatState");
                 WriteCombat(w, g, combatState, pcs);
-                WritePlayer(w, g, player);
                 WriteEnemies(w, g, combatState);
                 WriteHand(w, g, pcs);
                 WritePiles(w, g, pcs);
@@ -144,7 +162,7 @@ namespace Sts2Bridge
                 // 选取目标时用得着：并非所有存活敌人都可指定为目标
                 w.Prop("hittable", g.Bool(enemy, "IsHittable"));
                 WritePowers(w, g, enemy);
-                WriteIntents(w, g, monster);
+                WriteIntents(w, g, enemy, monster);
                 w.EndObject();
             }
             w.EndArray();
@@ -153,14 +171,28 @@ namespace Sts2Bridge
         /// <summary>
         /// 意图 —— 战斗决策最核心的信息。
         ///
-        /// 伤害数字存在 <c>DamageCalc : Func&lt;decimal&gt;</c> 里，是延迟计算的
-        /// 委托，**必须调用才有值**；`IntentLabelFormat.Variables` 要到渲染时
-        /// 才填，实测为空，拿不到现成数字。调用该委托正是游戏 UI 画意图数字
-        /// 走的同一条路，无副作用。
+        /// 【必须用 GetSingleDamage / GetTotalDamage，不能用 DamageCalc】
+        /// <c>AttackIntent.DamageCalc : Func&lt;decimal&gt;</c> 给的是**基础伤害**，
+        /// 不含力量、虚弱、易伤与遗物修正。游戏画在意图上的数字来自
+        /// <c>GetSingleDamage(targets, owner)</c> —— 它内部再走一遍
+        /// <c>Hook.ModifyDamage</c>，那才是完整的伤害管线。
+        ///
+        /// 2026-08-01 实测：噬尸蛞蝓吃掉同伴获得力量 +4 后，`DamageCalc` 仍报
+        /// 3×2，而实际掉血 11 = (3+4)×2 − 3 格挡。照 `DamageCalc` 决策会系统性
+        /// 少挡 —— 敌人越强、力量越高，低估得越离谱。
+        ///
+        /// `targets` 参数在 `GetSingleDamage` 内部并未被使用（它按
+        /// `LocalContext.GetMe(owner.CombatState)` 自己找目标），故传空数组即可。
         /// </summary>
-        private static void WriteIntents(JsonWriter w, Guarded g, object? monster)
+        private static void WriteIntents(JsonWriter w, Guarded g, object? creature, object? monster)
         {
             object? nextMove = g.Obj(monster, "NextMove");
+
+            // Creature[0]：无法编译期引用游戏类型，只能按运行时类型造数组。
+            // 数组协变保证 Creature 的子类数组同样满足 IEnumerable<Creature>。
+            Array? noTargets = creature != null
+                ? Array.CreateInstance(creature.GetType(), 0)
+                : null;
 
             w.BeginArray("intents");
             foreach (var intent in GamePaths.Enumerate(g.Obj(nextMove, "Intents")))
@@ -168,14 +200,28 @@ namespace Sts2Bridge
                 w.BeginObject();
                 w.Prop("type", g.Text(intent, "IntentType"));
 
-                // DamageCalc / Repeats 只存在于攻击类意图，缺失属正常，
-                // 故用 TryGet 静默跳过而非记入 warnings。
-                if (GamePaths.TryGet(intent, "DamageCalc", out var calc) && calc is Delegate d)
+                // 攻击类意图才有 DamageCalc，用它判别类型；非攻击意图没有这些
+                // 成员属正常多态缺失，不该污染 warnings。
+                if (noTargets != null && GamePaths.TryGet(intent, "DamageCalc", out var calc) && calc is Delegate)
                 {
-                    decimal? dmg = null;
-                    try { dmg = Convert.ToDecimal(d.DynamicInvoke()); }
-                    catch (Exception ex) { g.Note($"意图伤害计算失败: {Brief(ex)}"); }
-                    w.Prop("damage", dmg);
+                    // 单次伤害与总伤害都给：决策要总伤害（该挡多少），
+                    // 单次伤害则用于判断能否被格挡逐次吃掉。
+                    var single = g.Invoke(intent, "GetSingleDamage", new[] { (object?)noTargets, creature });
+                    var total  = g.Invoke(intent, "GetTotalDamage",  new[] { (object?)noTargets, creature });
+
+                    if (single is IConvertible sc) w.Prop("damage", (int?)Convert.ToInt32(sc));
+                    else
+                    {
+                        // 兜底：退回基础伤害，并明确标注它不含修正 ——
+                        // 宁可让上层知道数字降级了，也不要悄悄给出偏低的伤害
+                        decimal? raw = null;
+                        try { raw = Convert.ToDecimal(((Delegate)calc).DynamicInvoke()); } catch { }
+                        w.Prop("damage", raw);
+                        w.Prop("damage_is_base", true);
+                        g.Note("GetSingleDamage 不可用，damage 退回 DamageCalc 基础值（不含力量等修正）");
+                    }
+
+                    if (total is IConvertible tc) w.Prop("total", (int?)Convert.ToInt32(tc));
                 }
                 if (GamePaths.TryGet(intent, "Repeats", out var rep) && rep is IConvertible c)
                 {
@@ -300,12 +346,6 @@ namespace Sts2Bridge
         }
 
         // ------------------------------------------------------------------
-
-        private static object? FirstOf(object? collection)
-        {
-            foreach (var item in GamePaths.Enumerate(collection)) return item;
-            return null;
-        }
 
         private static string Brief(Exception ex)
         {

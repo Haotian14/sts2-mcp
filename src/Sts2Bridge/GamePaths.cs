@@ -150,6 +150,20 @@ namespace Sts2Bridge
             return m.Invoke(m.IsStatic ? null : host, args);
         }
 
+        /// <summary>
+        /// 调用静态类上的方法，如 PlayerCmd.EndTurn —— 这类命令类没有实例，
+        /// <see cref="Call"/> 的「由 host 推类型」那条路走不通。
+        ///
+        /// 注意：反射不会代填可选参数的默认值，有几个形参就得传几个实参。
+        /// </summary>
+        public static object? CallStatic(string typeFullName, string name, params object?[] args)
+        {
+            var t = RequireType(typeFullName);
+            var m = FindMethod(t, name, args.Length)
+                    ?? throw new MissingMethodException($"{typeFullName} 上没有 {name}（{args.Length} 参数）");
+            return m.Invoke(null, args);
+        }
+
         /// <summary>枚举值，如 PileType.Hand —— 无法编译期引用游戏的枚举类型。</summary>
         public static object EnumValue(string typeFullName, string name) =>
             Enum.Parse(RequireType(typeFullName), name);
@@ -190,6 +204,28 @@ namespace Sts2Bridge
         {
             if (collection is not IEnumerable en || collection is string) yield break;
             foreach (var item in en) yield return item;
+        }
+
+        /// <summary>集合的第一个元素；空集合或非集合返回 null。</summary>
+        public static object? First(object? collection)
+        {
+            foreach (var item in Enumerate(collection)) return item;
+            return null;
+        }
+
+        /// <summary>
+        /// 按下标取元素，越界返回 null 而非抛异常 —— 下标来自外部请求，
+        /// 越界是可预期的输入错误，应由调用方转成结构化错误回给上层。
+        /// </summary>
+        public static object? At(object? collection, int index)
+        {
+            if (index < 0) return null;
+            if (collection is IList list) return index < list.Count ? list[index] : null;
+
+            int i = 0;
+            foreach (var item in Enumerate(collection))
+                if (i++ == index) return item;
+            return null;
         }
 
         public static int? Count(object? collection)

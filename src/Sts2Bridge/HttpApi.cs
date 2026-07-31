@@ -198,6 +198,15 @@ namespace Sts2Bridge
         // ------------------------------------------------------------------
         private static string Route(string method, string path, Dictionary<string, string> q, string? body)
         {
+            // 动作 —— 唯一会改变游戏状态的入口，故限定 POST：
+            // GET 应当是安全的，浏览器与各类工具会自作主张地预取 GET。
+            if (path.StartsWith("/action/", StringComparison.Ordinal))
+            {
+                if (!string.Equals(method, "POST", StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException($"{path} 只接受 POST（收到 {method}）");
+                return ActionApi.Perform(path.Substring("/action/".Length), q);
+            }
+
             switch (path)
             {
                 case "/health":

@@ -84,6 +84,17 @@ namespace Sts2Bridge
             return this;
         }
 
+        /// <summary>
+        /// 直接嵌入一段已经成形的 JSON，不做转义。
+        /// 用于把 /state 的输出原样塞进动作响应里 —— 状态本就由本类生成，
+        /// 反序列化再序列化一遍纯属浪费。传入非法 JSON 会污染整个响应，
+        /// 故仅供内部拼装使用。
+        /// </summary>
+        public JsonWriter Raw(string name, string json)
+        {
+            Sep(); Key(name); _sb.Append(json); return this;
+        }
+
         /// <summary>数组元素（无键）。</summary>
         public JsonWriter Value(string? v)
         {

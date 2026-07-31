@@ -127,6 +127,9 @@ IsRavenous     = False
 
 ## 动作执行（阶段 3 的完整路径）
 
+> 本节 2026-08-01 由 ILSpy 反编译 `sts2.dll` 逐行核对重写。此前版本是照
+> `sts2.xml` 的文档注释推断的，**三处都错**（见文末「更正记录」）。
+
 ### ⚠️ 不要用 `CardCmd.AutoPlay` 出牌
 
 官方文档明确写道：
@@ -136,89 +139,179 @@ IsRavenous     = False
 
 它服务于「劫掠」「复制药水」这类**自动打出**效果，**且不消耗能量**。
 用它模拟玩家出牌既是作弊，语义也不对。
+（游戏自带的 AutoSlay 冒烟测试用的正是它 —— 那是压力测试，不在乎能量。）
 
-### 正确路径：构造 GameAction 并入队
+### 正确路径：调用游戏自己的手动出牌入口
 
-```
-RunManager::Instance
-    .ActionQueueSet         : ActionQueueSet      入队
-    .ActionExecutor         : ActionExecutor      自动取出并执行
-    .ActionQueueSynchronizer
-    .NetService             : INetGameService
-```
+玩家点击一张牌，走的是这一条：
 
 ```csharp
-var rm     = RunManager.Instance;
-var ctx    = new PlayerChoiceContext();
-var action = new PlayCardAction(player, card, target, ctx);
-rm.ActionQueueSet.EnqueueWithoutSynchronizing(action);
-await action.CompletionTask;
+// CardModel
+public bool TryManualPlay(Creature? target)
+{
+    if (CanPlayTargeting(target)) { EnqueueManualPlay(target); return true; }
+    return false;
+}
+
+private void EnqueueManualPlay(Creature? target)
+{
+    TaskHelper.RunSafely(OnEnqueuePlayVfx(target));                 // 出牌特效
+    RunManager.Instance.ActionQueueSynchronizer
+        .RequestEnqueue(new PlayCardAction(this, target));          // 注意是 Synchronizer
+}
 ```
 
-此路径与玩家点击出牌一致：正常消耗能量、触发全部 hook。
+**桥接层直接调 `TryManualPlay` 即可** —— 合法性判定、特效、入队一步到位，
+没有「哪一步漏了」的问题。
 
-### `PlayerChoiceContext` 可直接 new
+三类动作的入口一览：
 
-结构极简 —— 基类仅一个字段 `_modelStack : Stack<AbstractModel>`。
-官方注释说明其用途：
+| 动作 | 入口 |
+|---|---|
+| 出牌 | `CardModel.TryManualPlay(Creature target)` → bool |
+| 用药水 | `PotionModel.EnqueueManualUse(Creature target)` → void |
+| 结束回合 | `PlayerCmd.EndTurn(Player, canBackOut:false, null)` → void |
 
-> A stack of models that are involved with this choice context... **when we
-> display the context to remote players**, we want to show the Prepared as the
-> model that is involved in the choice, not the Survivor.
+`EndTurn` 的第三参 `actionDuringEnemyTurn` 是测试钩子，传 null。
+**反射调用不会代填可选参数的默认值，三个形参都得给。**
 
-即**纯粹是向远程玩家显示归因用的**，不参与游戏逻辑判定。玩家主动出牌时，
-语义上正确的就是一个空栈新实例。
+### 目标合法性：`IsValidTarget` 的完整规则
 
-注意其子类 `HookPlayerChoiceContext` 复杂得多（`ActionExecutor`、
-`ActionQueueSet`、三个 `TaskCompletionSource`），那是给 hook 用的，不要混用。
-
-### `EnqueueWithoutSynchronizing` 的警告在单机下不适用
-
-该方法挂有警告：*"Only use this if you really know what you're doing!
-Improper use can lead to state divergence."*
-
-其中 **state divergence 指多人玩家之间的状态分歧**。实测单机运行时：
+`CardModel.IsValidTarget`（与 `PotionModel` 的**不一样**，游戏源码专门为此
+写了警告注释）：
 
 ```
-RunManager.Instance.NetService = NetSingleplayerGameService
-    Type = Singleplayer,  IsConnected = True,  NetId = 1
+target == null →  TargetType 不是 AnyEnemy 也不是 AnyAlly 才合法
+target != null →  必须 IsAlive，且
+                  AnyEnemy → target.Side != 自己的 Side
+                  AnyAlly  → target.Side == 自己的 Side
+                  其他一律 false     ← Self / AllEnemies 类的牌不可传目标
 ```
 
-单机模式下网络服务是空转实现，全部 Synchronizer 均为空操作，不存在对端，
-因而没有分歧风险。**本项目仅用于单机。**
+即：**仅 `AnyEnemy` / `AnyAlly` 需要目标，其余传目标反而非法。**
+
+药水的差别在于 `TargetType.Self` **要**传目标（卡牌不传），
+`EnqueueManualUse` 内部有兜底：目标为 null 且自身合法时自动指向自己。
+桥接层复刻了这段兜底，否则「喝一瓶加血药」会被误判为缺目标。
+
+`TargetType` 全部取值：
+`None, Self, AnyEnemy, AllEnemies, RandomEnemy, AnyPlayer, AnyAlly, AllAllies,
+TargetedNoCreature, Osty`
+
+### `UnplayableReason` 全部取值
+
+`CanPlay(out reason, out preventer)` 的 reason 是**按位或**累加的：
+
+```
+None, HasUnplayableKeyword, BlockedByHook, BlockedByCardLogic,
+EnergyCostTooHigh, StarCostTooHigh, NoLivingAllies
+```
+
+判定顺序：`Unplayable` 关键字 → 资源够不够（`HasEnoughResourcesFor`）→
+`AnyAlly` 牌是否还有活着的队友 → hook 是否拦截 → `IsPlayable`。
 
 ### 执行前后的判据
 
 ```
-出牌前： PlayerCombatState.Phase == Play
-        CardModel.IsPlayable
+下发前： PlayerCombatState.Phase == Play          ★ 唯一可下发动作的阶段
         CombatManager.Instance.PlayerActionsDisabled == false
-出牌后： await action.CompletionTask
-        并确认 CombatManager.IsExecutingCardOrPotionEffect(player) == false
-        （效果可能嵌套触发，如 Sly 牌被弃置时自动打出）
-选目标： 使用 CombatState.HittableEnemies
+        CardModel.CanPlay(out reason, out preventer)      ← 不是 IsPlayable
+        CardModel.IsValidTarget(target)
+下发后： 轮询至「不忙」：
+          RunManager.Instance.ActionQueueSet.IsEmpty
+        且 RunManager.Instance.ActionExecutor.IsRunning == false
+        且 CombatManager.IsExecutingCardOrPotionEffect(player) == false
+        且 Phase 回到 Play（或 IsInProgress 已为 false —— 战斗结束了）
+选目标： CombatState.HittableEnemies 是「可打的敌人」，
+        但 /state 与 /action 的下标一律以 CombatState.Enemies 为准 ——
+        两端必须用同一个集合，否则下标对不上
 ```
+
+**为何不 `await action.CompletionTask`**：`TryManualPlay` 只返回 bool，
+拿不到 `GameAction`。且桥接层的等待发生在 HTTP 线程，主线程绝不能阻塞等待
+—— 动作正是要靠后续帧才能跑完的。故一律轮询。
+
+`GameAction.CompletionTask` / `.State`（`None, WaitingForExecution, Executing,
+GatheringPlayerChoice, ReadyToResumeExecuting, Finished, Canceled`）确实存在，
+将来若需要精确到单个动作的完成，可改为自行构造动作以持有引用。
+
+### 更正记录：此前三处推断错误
+
+| 此前写的 | 实际 |
+|---|---|
+| `new PlayCardAction(player, card, target, ctx)` | 构造函数是 `(CardModel, Creature)` 两参；四参那个是给网络同步用的 `(Player, NetCombatCard, ModelId, uint?)` |
+| `ActionQueueSet.EnqueueWithoutSynchronizing(action)` | 游戏自己走 `ActionQueueSynchronizer.RequestEnqueue(action)` |
+| 「`PlayerChoiceContext` 可直接 new」 | 其构造函数是 **protected**，无法直接 new。所幸出牌路径根本不需要它。需要时可用具体子类 `BlockingPlayerChoiceContext` / `ThrowingPlayerChoiceContext` |
+
+教训：`sts2.xml` 只有文档注释，没有签名细节。**签名必须从程序集元数据核对**，
+不能从注释推断。现已有离线反编译工具链（见 `docs/spec.md` 的 §0.2），
+成本几分钟，没有理由再猜。
 
 ## 意图 AbstractIntent
 
 ```
 AbstractIntent
-    .IntentType              Attack / Debuff / Buff ...
+    .IntentType              Attack / Debuff / Buff / Stun ...
     .IntentPrefix            例：ATTACK
     .IntentLabelFormat       LocString，Variables 恒为空（渲染时才填）
   ├ AttackIntent
-  │     .DamageCalc  : Func<decimal>   ★ 伤害，延迟计算
+  │     .DamageCalc  : Func<decimal>            ⚠️ 只是基础伤害，不要直接用
   │     .Repeats     : int
-  └ MultiAttackIntent : AttackIntent
-        .Repeats                        实测 2（鞭击 3×2）
+  │     .GetSingleDamage(IEnumerable<Creature> targets, Creature owner) : int  ★
+  │     .GetTotalDamage (IEnumerable<Creature> targets, Creature owner) : int  ★
+  ├ SingleAttackIntent : AttackIntent           GetTotalDamage = GetSingleDamage
+  └ MultiAttackIntent  : AttackIntent           GetTotalDamage = 单次 × Repeats
 ```
 
-**伤害数字只能靠 `DamageCalc.DynamicInvoke()` 取得。**
-`IntentLabelFormat.Variables` 实测恒为空字典 —— 它要到 UI 渲染时才被填充，
-读它永远拿不到数字。调用该委托正是游戏画意图数字走的同一条路，无副作用。
+### ⚠️ `DamageCalc` 不含力量等修正 —— 必须用 `GetSingleDamage`
 
-非攻击意图（如 `GOOP_MOVE` 的 Debuff）**没有** `DamageCalc` / `Repeats` 成员，
-读取前须判断存在性，否则会把正常的多态缺失误报成错误。
+```csharp
+public int GetSingleDamage(IEnumerable<Creature> targets, Creature owner)
+{
+    decimal num = DamageCalc();
+    Player me = LocalContext.GetMe(owner.CombatState);
+    if (me != null)
+        num = Hook.ModifyDamage(me.RunState, me.Creature.CombatState, me.Creature,
+                                owner, DamageCalc(), ValueProp.Move, null,
+                                ModifyDamageHookType.All, CardPreviewMode.None, out _);
+    return Math.Max(0, (int)num);
+}
+```
+
+`Hook.ModifyDamage` 才是完整的伤害管线（力量、虚弱、易伤、遗物……），
+游戏画在意图上的数字就来自这里。
+
+**2026-08-01 实测判别**：噬尸蛞蝓吃掉同伴后获得 `StrengthPower 4`，
+此时 `DamageCalc()` 仍报 3、`Repeats` 2，而结束回合实际掉血 **11**：
+
+```
+(3 + 4) × 2 − 3 格挡 = 11        ← 与实测吻合
+ 3      × 2 − 3 格挡 =  3        ← 若照 DamageCalc 决策会以为只挨这么多
+```
+
+照 `DamageCalc` 做决策会**系统性少挡**，且敌人力量越高低估得越离谱 ——
+Boss 与精英恰恰是力量最高的地方。
+
+`targets` 参数在 `GetSingleDamage` 内部并未被使用（它按
+`LocalContext.GetMe(owner.CombatState)` 自行确定目标），传空数组即可。
+桥接层无法编译期引用 `Creature`，用 `Array.CreateInstance(creature.GetType(), 0)`
+造零长数组，靠数组协变满足 `IEnumerable<Creature>`。
+
+`IntentLabelFormat.Variables` 实测恒为空字典 —— 它要到 UI 渲染时才被填充，
+读它永远拿不到数字。
+
+非攻击意图（如 `GOOP_MOVE` 的 Debuff、被吃后的 `Stun`）**没有**
+`DamageCalc` / `Repeats` 成员，读取前须判断存在性，否则会把正常的多态缺失
+误报成错误。
+
+### 意图渲染的调用链（供将来核对）
+
+```
+NCreature.UpdateIntent(targets)
+  → NIntent.UpdateIntent(intent, targets, Entity)      Entity 即怪物的 Creature
+      → intent.GetTexture(_targets, _owner)            按 GetTotalDamage 选图标大小
+      → attackIntent.GetIntentLabel(_targets, _owner)  显示的那个数字
+```
 
 ## 卡牌可打性
 
@@ -305,9 +398,168 @@ MegaCrit.Sts2.Core.Entities.Multiplayer.NetFullCombatState
 结构紧凑且本就为序列化设计，但**缺意图、缺可打性、缺卡面文本**，标识全为
 `ModelId` 而非可读名称 —— 决策最需要的三样恰好都不在里面。故仍须手写导出。
 
+## ★ 游戏自带一个完整的自动爬塔器：AutoSlay
+
+命名空间 `MegaCrit.Sts2.Core.AutoSlay`。这是 MegaCrit 自用的冒烟测试 ——
+**能无人值守打完一整局**（25 分钟超时、49 层、失败时 dump 状态并置退出码）。
+
+它不是我们要用的东西（出牌走免费的 `AutoPlay`、选择一律随机、跑完直接退出
+游戏），但它是**一份逐场景的、经官方验证可用的驱动路径清单** ——
+阶段 2.4 / 3.4 里「非战斗场景怎么读、怎么点」的问题，答案全在这里。
+
+```
+AutoSlayer
+  ._roomHandlers    : RoomType -> IRoomHandler
+       Monster / Elite / Boss  → CombatRoomHandler
+       Event                   → EventRoomHandler
+       Shop                    → ShopRoomHandler
+       Treasure                → TreasureRoomHandler
+       RestSite                → RestSiteRoomHandler
+  ._screenHandlers  : Type -> IScreenHandler
+       NRewardsScreen              → RewardsScreenHandler          战斗奖励
+       NCardRewardSelectionScreen  → CardRewardScreenHandler       卡牌三选一
+       NChooseARelicSelection      → ChooseARelicScreenHandler     遗物三选一
+       NDeckUpgradeSelectScreen    → DeckUpgradeScreenHandler      升级
+       NDeckTransformSelectScreen  → DeckTransformScreenHandler
+       NDeckEnchantSelectScreen    → DeckEnchantScreenHandler
+       NDeckCardSelectScreen       → DeckCardSelectScreenHandler
+       NSimpleCardSelectScreen     → SimpleCardSelectScreenHandler 「X 选 1」
+       NChooseACardSelectionScreen → ChooseACardScreenHandler
+       NChooseABundleSelectionScreen → ChooseABundleScreenHandler
+       NGameOverScreen             → GameOverScreenHandler
+       NCrystalSphereScreen        → CrystalSphereScreenHandler
+  ._mapHandler      : MapScreenHandler                             地图导航
+```
+
+### 关键结论：战斗是模型驱动，非战斗是 UI 驱动
+
+`CombatRoomHandler` 全程操作模型层（`CardModel` / `PlayerCmd`），
+而**其余每一个 handler 都是找到 Godot 节点然后点它**：
+
+```csharp
+List<NMapPoint> points = UiHelper.FindAll<NMapPoint>(runNode.GlobalUi.MapScreen);
+await UiHelper.Click(nextRoom);          // NClickableControl
+```
+
+即：非战斗场景没有「模型层 API」可走，官方自己也是点 UI。阶段 3.4 应照办，
+不要试图绕过 UI 去改模型 —— 那会绕开一大堆界面状态机。
+
+所需工具（均在 `MegaCrit.Sts2.Core.AutoSlay.Helpers`）：
+
+```
+UiHelper.FindAll<T>(Node start)    : List<T>     递归找某类型的全部节点
+UiHelper.FindFirst<T>(Node start)  : T
+UiHelper.Click(NClickableControl button, int delayMs = 100) : Task
+WaitHelper.Until(Func<bool>, ct, TimeSpan?, string) : Task
+WaitHelper.ForNode(Node root, string nodePath, ct, TimeSpan?) : Task<T>
+```
+
+节点根路径（`EventRoomHandler` 中写死的那种）形如
+`/root/Game/RootSceneContainer/Run/RoomContainer/EventRoom`；
+覆盖层用 `NOverlayStack.Instance.Peek()` / `.ScreenCount` 取当前界面 ——
+**「现在该做什么决策」的判据就是它**：栈顶界面的类型。
+
+### 地图导航
+
+```
+RunState
+    .Map               : SavedActMap
+        .BossMapPoint / .SecondBossMapPoint
+    .CurrentMapCoord   : MapCoord    (row, col)
+    .VisitedMapCoords  : IReadOnlyList<MapCoord>    空表示本章尚未走第一步
+MapPoint
+    .coord    : MapCoord
+    .Children : IEnumerable<MapPoint>     ★ 下一步的可走节点
+NMapPoint（UI 节点）
+    .Point      : MapPoint
+    .IsEnabled  能否点击
+RunManager.Instance.RoomEntered   事件，进房完成的信号
+```
+
+AutoSlay 的走法：`VisitedMapCoords` 为空则选 `row == 0` 的任一点；
+否则取最后一个已访问坐标对应的 `NMapPoint`，从其 `Point.Children` 里挑，
+再在 UI 节点表里按 coord 找到对应的 `NMapPoint` 点击。
+
+阶段 2.4 的地图导出照此即可：可走节点 = 当前坐标的 `Children`。
+
+### ★ 玩家选择：`CardSelectCmd.UseSelector` 是官方注入点
+
+一切「让玩家挑牌」的场景 —— 弃牌、检索、除卡、升级、转化、卡牌奖励、
+「三选一」—— 最终都收口到一个可替换的接口：
+
+```csharp
+namespace MegaCrit.Sts2.Core.TestSupport;
+public interface ICardSelector
+{
+    Task<IEnumerable<CardModel>> GetSelectedCards(
+        IEnumerable<CardModel> options, int minSelect, int maxSelect);
+    CardRewardSelection GetSelectedCardReward(
+        IReadOnlyList<CardCreationResult> options,
+        IReadOnlyList<CardRewardAlternative> alternatives);
+}
+
+CardSelectCmd.UseSelector(ICardSelector)  : IDisposable    ★ 装上自己的选择器
+CardSelectCmd.PushSelector(ICardSelector) : IDisposable
+CardSelectCmd.Selector                    : ICardSelector
+```
+
+AutoSlay 就是这么做的：`CardSelectCmd.UseSelector(new AutoSlayCardSelector(rng))`。
+
+调用点覆盖了几乎全部选牌场景：
+
+```
+FromHand / FromHandForDiscard / FromHandForUpgrade      手牌内选择（无覆盖界面）
+FromCombatPile                                          从牌堆里选
+FromDeckForRemoval / ForUpgrade / ForTransformation
+      / ForEnchantment / Generic                        商店与休息点
+FromSimpleGrid / FromSimpleGridForRewards               「X 选 1」
+FromChooseACardScreen / FromChooseABundleScreen         事件类
+```
+
+**这比点 UI 干净得多**，且 `options` / `minSelect` / `maxSelect` 正是要回报给
+模型的信息。阶段 3.4 的选牌部分应走这条路，只有地图、商店按钮、事件选项这类
+非选牌交互才需要退回 UI 点击。
+
+桥接层无法编译期实现游戏的接口，用 BCL 的 `System.Reflection.DispatchProxy`
+在运行时生成实现即可（`DispatchProxy.Create<T,TProxy>` 是泛型方法，
+经 `MakeGenericMethod(ICardSelector 类型, 自有代理类型)` 反射调用）。
+
+### ⚠️ 选择未决时，入队的出牌会被取消
+
+`PlayCardAction` 专门重写了 `CancelAction`，注释直言：
+
+> We override this to handle the case where some external action (like showing
+> the hand selection screen) **needs to cancel queued card plays**.
+
+2026-08-01 实测：「求生者」的弃牌选择未决时下发「中和」，桥接层报了
+`ok:true`，而牌原封不动留在手里、敌人毫发无损、队列随后变空 —— 动作被取消了。
+
+**故有未决选择时必须拒绝下发动作，而不是排队等**。桥接层已在
+`ActionApi.Begin` 加了前置检查，返回 `error:"awaiting_choice"`。
+
+判据是 `RunManager.Instance.ActionExecutor.CurrentlyRunningAction.State
+== GatheringPlayerChoice`。
+
+⚠️ **手牌内选择没有覆盖界面**：实测「求生者」弃牌时 `NOverlayStack.ScreenCount`
+为 0，`Peek()` 为 null。只有弹出式界面（`NSimpleCardSelectScreen` 一类）才有。
+故 `screen` 字段可能为空，不能拿它当「有没有未决选择」的判据。
+
+⚠️ **选择期间手牌张数不变** —— 弃牌要确认后才生效。曾据此推断「选择已完成」，
+结论是错的。判断只能看 `GameAction.State`。
+
+### 战斗奖励与「界面栈排空」
+
+`RewardsScreenHandler` 的模式值得照抄：反复找 `NRewardButton`（`IsEnabled`
+且未点过；药水奖励还要先判 `player.HasOpenPotionSlots`），点一个就检查
+`NOverlayStack.Instance.Peek()` 是否变了 —— 变了说明弹出了子界面
+（如卡牌三选一），退出去让外层的排空循环处理。最后点 `NProceedButton`。
+
+`AutoSlayer.DrainOverlayScreensAsync` 是那个外层循环：只要覆盖层非空就取栈顶、
+按类型分派 handler、处理完继续，并带「同一界面处理 3 次仍不关闭即报死循环」
+的保护。**这个结构就是阶段 3.4 的骨架。**
+
 ## 尚未探查
 
-- 非战斗场景：卡牌奖励、商店、事件、休息点、Boss 遗物三选一
-- `SavedActMap` / `MapPoint` 的结构（地图可走节点，阶段 2.4）
-- `UnplayableReason` 的完整枚举值
-- `CardCmd.AutoPlay` 所需的 `PlayerChoiceContext` 如何构造
+- 商店条目的读取与购买（`MerchantEntry` 系列 + `ShopRoomHandler` 的点法）
+- 事件选项的文本与后果（`EventRoomHandler` 只是随机点，读不出语义）
+- 休息点选项集合 `RestSiteOption`
