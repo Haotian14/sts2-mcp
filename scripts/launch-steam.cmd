@@ -27,9 +27,14 @@ REM cannot derive this from its own assembly location - we already computed
 REM the path above, so just pass it along.
 set "STS2MCP_REPO=%REPO%"
 
+REM Frame-loop attach. Required before stage 3: enqueueing game actions from the
+REM HTTP thread would corrupt the action queue. Read-only /state tolerates the
+REM degraded path, writes do not. Attach is attempted on the main thread first
+REM (inside NGame..cctor), with a background-thread retry as fallback.
+set "STS2MCP_ATTACH_FRAME=1"
+
 REM Optional overrides (leave unset for defaults):
 REM   set "STS2MCP_PORT=8765"          bridge HTTP port
-REM   set "STS2MCP_ATTACH_FRAME=1"     experimental: hook Godot frame loop
 
 if not exist "%REPO%\logs" mkdir "%REPO%\logs"
 echo [%DATE% %TIME%] launcher invoked>> "%REPO%\logs\launcher.log"

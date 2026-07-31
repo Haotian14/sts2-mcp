@@ -168,6 +168,23 @@ namespace Sts2Bridge
                 // 此刻确实在主线程（调用栈为 NGame._EnterTree -> .cctor），先记下线程 id
                 MainThread.MarkCurrentAsMain();
 
+                // 就在这里尝试接入帧循环 —— 这是全流程中**唯一**已确证位于主线程
+                // 的时机。订阅 ProcessFrame 本身就是一次 Godot 原生调用，在后台
+                // 线程做才是先前方案真正的隐患所在；此处没有这个问题。
+                //
+                // NGame 正在 _EnterTree 途中，场景树已经存在（「进入树」即此意），
+                // Engine.GetMainLoop() 应当可用。若不可用则返回 false，由后台线程
+                // 稍后重试 —— 两条路都留着，先走安全的那条。
+                //
+                // 本方法整体位于 Initialize 的 try/catch 内，异常不可能逃逸到
+                // .cctor 之外，故即便 Godot 调用抛错也不会波及游戏。
+                if (System.Environment.GetEnvironmentVariable("STS2MCP_ATTACH_FRAME") == "1")
+                {
+                    Log.Write("[Entry] 于主线程尝试接入帧循环");
+                    if (!MainThread.TryAttach())
+                        Log.Write("[Entry] 主线程接入未成功，稍后由后台线程重试");
+                }
+
                 var t = new System.Threading.Thread(DeferredInit)
                 {
                     IsBackground = true,          // 不阻止游戏退出
@@ -190,15 +207,21 @@ namespace Sts2Bridge
                 System.Threading.Thread.Sleep(6000);
                 Log.Write("[Entry] 延迟初始化开始");
 
-                if (System.Environment.GetEnvironmentVariable("STS2MCP_ATTACH_FRAME") == "1")
+                if (System.Environment.GetEnvironmentVariable("STS2MCP_ATTACH_FRAME") != "1")
                 {
-                    Log.Write("[Entry] 尝试接入帧循环（实验性）");
-                    for (int i = 0; i < 15 && !MainThread.TryAttach(); i++)
-                        System.Threading.Thread.Sleep(1000);
+                    Log.Write("[Entry] 跳过帧循环接入（未设 STS2MCP_ATTACH_FRAME=1），只读查询走降级路径");
+                }
+                else if (MainThread.IsAttached)
+                {
+                    Log.Write("[Entry] 帧循环已于主线程接入，无需重试");
                 }
                 else
                 {
-                    Log.Write("[Entry] 跳过帧循环接入（未设 STS2MCP_ATTACH_FRAME=1），只读查询走降级路径");
+                    // 退路：主线程时机太早（场景树未就绪）时在此重试。
+                    // 此处是后台线程，订阅信号有风险，故仅作兜底。
+                    Log.Write("[Entry] 后台线程重试接入帧循环（退路，非首选）");
+                    for (int i = 0; i < 15 && !MainThread.TryAttach(); i++)
+                        System.Threading.Thread.Sleep(1000);
                 }
 
                 HttpApi.Start();

@@ -24,7 +24,9 @@ param(
     [switch]$ClearLog,
     # 自动探测失败时可显式指定游戏 exe
     [string]$GameExe,
-    [int]$Port
+    [int]$Port,
+    # 帧循环接入默认开启（阶段 3 的硬前置）；怀疑它导致问题时用本开关排除
+    [switch]$NoAttachFrame
 )
 
 $ErrorActionPreference = 'Stop'
@@ -104,6 +106,12 @@ if ($Direct) {
     # 桥接层从临时副本加载，无法自行反推仓库位置，需由此传入
     $env:STS2MCP_REPO             = $Root
     if ($Port) { $env:STS2MCP_PORT = "$Port" }
+
+    # 与 launch-steam.cmd 保持一致。两个启动器的环境变量必须同步 ——
+    # 曾因只在 .cmd 里加了 ATTACH_FRAME 而本脚本没加，导致排查了半天
+    # 「代码为何不生效」，实际是走了另一条启动路径。
+    # 需要关闭时传 -NoAttachFrame。
+    if (-not $NoAttachFrame) { $env:STS2MCP_ATTACH_FRAME = '1' }
 
     Write-Host "直接启动游戏（预期会因缺少 Steam appID 而退出，不影响验证）..." -ForegroundColor Yellow
     Start-Process -FilePath $exe -WorkingDirectory (Split-Path $exe)
