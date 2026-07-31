@@ -168,6 +168,10 @@ namespace Sts2Bridge
 
         private static Plan Begin(string verb, Dictionary<string, string> q)
         {
+            // 每次都确认选择器还在：CardSelectCmd.Reset() 会在一局结束时
+            // 清空选择器栈，我们的也会被一并清掉。
+            CardChoice.EnsureInstalled();
+
             // 有未决的玩家选择时一律拒绝下发。
             //
             // 【为什么必须拒绝，而不是排队等】
@@ -179,18 +183,27 @@ namespace Sts2Bridge
             //    needs to cancel queued card plays"
             // 报成功而实际没发生，是所有错误里最坏的一种：上层会照着一个
             // 从未生效的动作继续往下推。
-            if (PlayerChoice.IsPending(out var pendingScreen))
-                return Plan.Reject("awaiting_choice",
-                    "游戏正在等待玩家做出选择（弃牌 / 选牌 / 三选一），"
-                    + "此时下发的动作会被游戏取消。须先应答该选择"
-                    + (pendingScreen != null ? $"（界面 {pendingScreen}）" : "（在手牌中选择，无弹出界面）"),
-                    screen: pendingScreen);
+            // choose 本身就是用来应答选择的，自然不受此限
+            if (verb != "choose")
+            {
+                if (CardChoice.IsPending)
+                    return Plan.Reject("awaiting_choice",
+                        "游戏正在等待选牌。请先用 choose 应答（选项见 /state 的 choice 字段）");
+
+                if (PlayerChoice.IsPending(out var pendingScreen))
+                    return Plan.Reject("awaiting_choice",
+                        "游戏正在等待玩家做出选择（弃牌 / 选牌 / 三选一），"
+                        + "此时下发的动作会被游戏取消。须先应答该选择"
+                        + (pendingScreen != null ? $"（界面 {pendingScreen}）" : "（在手牌中选择，无弹出界面）"),
+                        screen: pendingScreen);
+            }
 
             switch (verb)
             {
                 case "play_card":  return BeginPlayCard(q);
                 case "end_turn":   return BeginEndTurn();
                 case "use_potion": return BeginUsePotion(q);
+                case "choose":     return BeginChoose(q);
                 default:
                     throw new ArgumentException(
                         $"未知动作: {verb}（可用: play_card / end_turn / use_potion）");
@@ -249,6 +262,33 @@ namespace Sts2Bridge
             var plan = new Plan { Ok = true, Verb = "play_card" };
             plan.Labels.Add(("card", GamePaths.Id(card)));
             plan.Labels.Add(("target", CreatureLabel(target)));
+            return plan;
+        }
+
+        /// <summary>
+        /// 应答一次待答的选牌。<c>cards</c> 是逗号分隔的下标，取自
+        /// <c>/state</c> 的 <c>choice.options[].i</c>；允许为空（min 为 0 时即跳过）。
+        /// </summary>
+        private static Plan BeginChoose(Dictionary<string, string> q)
+        {
+            if (!CardChoice.IsPending)
+                return Plan.Reject("no_choice", "当前没有待答的选牌请求");
+
+            var indices = new List<int>();
+            if (q.TryGetValue("cards", out var raw) && raw.Length > 0)
+                foreach (var part in raw.Split(','))
+                {
+                    var trimmed = part.Trim();
+                    if (trimmed.Length > 0) indices.Add(ParseInt(trimmed, "cards"));
+                }
+
+            // Resolve 会就地跑起游戏的后续逻辑 —— 此处已在主线程上（Begin 由
+            // MainThread.RunSync 调度），正是它要求的执行位置。
+            var error = CardChoice.Resolve(indices);
+            if (error != null) return Plan.Reject("bad_choice", error);
+
+            var plan = new Plan { Ok = true, Verb = "choose" };
+            plan.Labels.Add(("chose", string.Join(",", indices)));
             return plan;
         }
 
@@ -435,7 +475,11 @@ namespace Sts2Bridge
                 object? executor = GamePaths.Get(run, "ActionExecutor");
                 bool executing = GamePaths.Bool(executor, "IsRunning") ?? false;
 
-                bool awaiting = PlayerChoice.IsPending(out var screen);
+                // 两种「在等选择」：游戏自己的选牌界面（动作 State 为
+                // GatheringPlayerChoice），以及我们装的选择器登记的待答请求。
+                // 后者不走 SignalPlayerChoiceBegun，动作 State 不会变，
+                // 只看前者会让等待循环一直空转到超时。
+                bool awaiting = PlayerChoice.IsPending(out var screen) || CardChoice.IsPending;
 
                 object? cm = GamePaths.GetStatic(CombatManagerType, "Instance");
                 bool inCombat = GamePaths.Bool(cm, "IsInProgress") ?? false;

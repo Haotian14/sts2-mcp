@@ -486,7 +486,10 @@ Rng       : SerializableRunRngSet
 - [x] 3.2 `end_turn()` → `PlayerCmd.EndTurn(player, false, null)`
 - [x] 3.3 `use_potion(slot, target?)` → `PotionModel.EnqueueManualUse(target)`
       （**成功路径尚未实机验证** —— 验证时身上没有药水，只验了空槽驳回）
-- [ ] 3.4 非战斗动作：选牌/跳过、地图移动、商店买入与除卡、事件选项、休息点、「X 选 1」类效果。
+- [x] 3.4a **选牌应答**（`POST /action/choose`）—— 见下方「3.4a 结论」。
+      归类更正：选牌**不是**非战斗场景，是**战斗内刚需** ——
+      静默猎手起手牌组里「生存者」「早有准备」都带弃牌，不接管就寸步难行
+- [ ] 3.4b 非战斗动作：地图移动、商店买入与除卡、事件选项、休息点。
       **不必再从零测绘**，两条现成的路（详见 `game-model.md`）：
       - **选牌一律走 `CardSelectCmd.UseSelector(ICardSelector)`** —— 官方注入点，
         弃牌/检索/除卡/升级/转化/卡牌奖励/三选一全部收口于此，`options` 与
@@ -575,6 +578,56 @@ PlayerCombatState.Phase                                       = Play
 当时据此判断「选择已解掉」，于是把一次被取消的出牌误读成 bug 现场，
 多绕了一圈。**「在等玩家选择」只能看 `GameAction.State`，不能从状态数字反推**
 —— 这也正是要把它加进 `/state` 的理由：不明说，上层就只能猜，而猜必然会错。
+
+#### 3.4a 结论：走 `CardSelectCmd.UseSelector`，不点 UI
+
+游戏把一切选牌收口到了一个可替换的接口，每个调用点都是同一形状：
+
+```csharp
+if (Selector != null) result = await Selector.GetSelectedCards(options, min, max);
+else                  …弹界面，等玩家点…
+```
+
+装上自己的 `ICardSelector` 即全部接管。新增 `POST /action/choose?cards=0,2`，
+`/state` 多出 `choice` 字段（选项、min/max）。
+
+**卡牌奖励不受影响**：接口另一个方法 `GetSelectedCardReward` 只在
+`_currentlyShownScreen == null` 时才被问到，正常游玩时三选一仍走 UI。
+注意它的返回类型是 **struct**，返回 null 会炸。
+
+实机验证（2026-08-01）：
+
+```
+打出求生者 → awaiting_choice, 708 ms, 格挡 +8
+/state     → choice: 6 选 1，逐项给出 id/cost/type
+应答前打别的牌 → 被拒 (awaiting_choice)
+choose [1] → 88 ms，手牌 6→5，弃牌堆 2
+再打一张打击 → 正常命中，怪 39→33
+```
+
+##### 踩坑：DispatchProxy 的三条要求，全都只在运行时报错
+
+桥接层不能编译期实现游戏的接口，只能用 `DispatchProxy` 运行时生成。
+连踩三次：
+
+| 现象 | 原因 |
+|---|---|
+| `AmbiguousMatchException: Create[T,TProxy]()` | .NET 9 起 `Create` 有泛型与非泛型两个重载，`GetMethod("Create", …)` 无从区分。改为遍历 `GetMethods` 按签名挑 —— 非泛型的 `Create(Type, Type)` 恰好正对我们「接口类型运行时才知道」的场景 |
+| `The base type … cannot be sealed` | DispatchProxy 是**继承**代理类型来生成实现的，故不能 sealed |
+| 可访问性冲突 | 生成的代理位于另一个动态程序集，代理类型必须是 **public 顶层类型**，不能是 internal 或嵌套 |
+
+##### 线程：应答必须回到主线程
+
+`TaskCompletionSource` 的后续会在**完成它的那个线程上就地执行**，
+而这里的后续是游戏的战斗逻辑。在 HTTP 线程 `SetResult`，等于把整个战斗
+搬离主线程。故 `Resolve` 由 `MainThread.RunSync` 调度。
+
+##### 取舍：接管即绕过 UI
+
+装上选择器后选牌界面不再弹出，手动游玩时点不了。故由
+`STS2MCP_CHOICE=1` 控制（两个启动器默认开启，清掉即恢复原样），
+并留了 180 秒兜底：无人应答时取前 min 张放行并大声记日志 ——
+**硬挂起比自动替玩家决定更糟**，玩家还无从得知原因，因为 UI 已被绕过。
 
 ### 阶段 4 · 传输层（C#）
 

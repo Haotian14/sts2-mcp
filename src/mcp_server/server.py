@@ -106,9 +106,10 @@ server = MCPServer(
         "\n"
         "关键字段：\n"
         "- `in_combat`：是否在战斗中。为 false 时只有 run / player / relics / potions 有内容。\n"
-        "- `awaiting_choice`：**为 true 时游戏正等玩家做选择**（弃哪张牌、检索哪张、"
-        "三选一拿哪个）。此时任何动作都会被游戏取消，不要下发 —— "
-        "应答选择的接口尚未实现，需要人来点。\n"
+        "- `awaiting_choice`：**为 true 时游戏正等玩家做选择**，此时任何其他动作都会被拒绝。"
+        "同时带有 `choice` 字段时用 choose 应答；没有 `choice` 则是桥接层还接管不了的"
+        "选择（地图、商店、事件），只能由人操作。\n"
+        "- `choice`：待答的选牌。`options[].i` 是下标，`min`/`max` 是要选几张。\n"
         "- `hand[].i`：出牌用的下标。**每打出一张牌，剩余手牌的下标就会重排**，"
         "所以连续出牌时每次都要以最新状态为准，不能沿用旧下标。\n"
         "- `hand[].playable`：能否打出；为 false 时 `reason` 给出原因"
@@ -224,6 +225,25 @@ def use_potion(slot: int, target: int | None = None) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+
+
+@server.tool(
+    description=(
+        "应答一次待答的选牌 —— 弃哪张、检索哪张、留哪张。\n"
+        "\n"
+        "当 get_state 的 `awaiting_choice` 为 true 且带有 `choice` 字段时使用。"
+        "`choice.options[].i` 是可选项的下标，`choice.min` / `choice.max` 是要选的张数；"
+        "min 为 0 表示可以传空列表跳过。\n"
+        "\n"
+        "**在应答之前，其他动作一律无法下发** —— 游戏正停在这一步等回答。\n"
+        "\n"
+        "`awaiting_choice` 为 true 却没有 `choice` 字段，说明这是桥接层还接管不了的"
+        "选择（如地图、商店、事件），只能由人操作。\n"
+        "\n" + _ACTION_RESULT_DOC
+    )
+)
+def choose(cards: list[int]) -> dict[str, Any]:
+    return _request("POST", "/action/choose", {"cards": ",".join(str(c) for c in cards)})
 
 
 @server.tool(

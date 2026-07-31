@@ -61,11 +61,20 @@ namespace Sts2Bridge
             // 此时下发任何动作都会被游戏取消，见 ActionApi.Begin 的前置检查。
             bool awaitingChoice = false;
             string? choiceScreen = null;
-            try { awaitingChoice = PlayerChoice.IsPending(out choiceScreen); }
+            try
+            {
+                // 顺带确认选择器还装着 —— CardSelectCmd.Reset() 会在一局结束时清空它
+                CardChoice.EnsureInstalled();
+                awaitingChoice = PlayerChoice.IsPending(out choiceScreen) || CardChoice.IsPending;
+            }
             catch (Exception ex) { g.Note($"玩家选择状态读取失败: {Brief(ex)}"); }
             w.Prop("awaiting_choice", awaitingChoice);
             // 在手牌里选的那类没有覆盖界面，screen 为 null 时不发这个字段
             if (choiceScreen != null) w.Prop("screen", choiceScreen);
+            // 待答的选牌请求：选项、要选几张。有它就说明可以用 choose 应答；
+            // 没有它而 awaiting_choice 为 true，说明是我们接管不了的选择，只能人点。
+            try { CardChoice.Describe(w); }
+            catch (Exception ex) { g.Note($"选牌选项读取失败: {Brief(ex)}"); }
 
             WriteRun(w, g, runState, player);
 

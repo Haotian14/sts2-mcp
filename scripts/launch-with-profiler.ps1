@@ -26,7 +26,9 @@ param(
     [string]$GameExe,
     [int]$Port,
     # 帧循环接入默认开启（阶段 3 的硬前置）；怀疑它导致问题时用本开关排除
-    [switch]$NoAttachFrame
+    [switch]$NoAttachFrame,
+    # 选牌接管默认开启；想手动点选牌界面时用本开关关掉
+    [switch]$NoChoice
 )
 
 $ErrorActionPreference = 'Stop'
@@ -112,6 +114,9 @@ if ($Direct) {
     # 「代码为何不生效」，实际是走了另一条启动路径。
     # 需要关闭时传 -NoAttachFrame。
     if (-not $NoAttachFrame) { $env:STS2MCP_ATTACH_FRAME = '1' }
+
+    # 选牌接管。注意它会绕过选牌 UI —— 没人应答时只能等桥接层的兜底超时。
+    if (-not $NoChoice) { $env:STS2MCP_CHOICE = '1' }
 
     Write-Host "直接启动游戏（预期会因缺少 Steam appID 而退出，不影响验证）..." -ForegroundColor Yellow
     Start-Process -FilePath $exe -WorkingDirectory (Split-Path $exe)
