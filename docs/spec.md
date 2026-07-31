@@ -374,7 +374,9 @@ pck 中不存在 `gdextension` / `addons/` / `plugin.cfg` 等扩展点。
       状态事实，且**无法从状态数字反推**（选择期间手牌张数不变）。
       不明说上层就只能猜 —— 待实机验证
 - [x] 2.4a 地图可走节点 → `/state` 的 `map` 段（见 3.4b）
-- [ ] 2.4b 非战斗状态：卡牌奖励、商店库存、事件选项、休息点、Boss 遗物三选一
+- [x] 2.4b 非战斗状态 → 统一为 `/state` 的 `screen` 段：奖励、卡牌三选一、
+      休息点、宝箱、事件、商店（带价格）、主菜单、游戏结束，均已导出。
+      商店与 Boss 遗物待实机验证
 - [x] 2.5 **状态压缩** —— 实测 `/state` 1.5 KB、`/glossary` 1.6 KB，在预算内
 
 #### 2.1 结论：帧循环接入成立，阶段 3 的前置已解除
@@ -499,6 +501,8 @@ Rng       : SerializableRunRngSet
 - [x] 3.1 `play_card(card, target?)` → `CardModel.TryManualPlay(target)`
 - [x] 3.2 `end_turn()` → `PlayerCmd.EndTurn(player, false, null)`
 - [x] 3.3 `use_potion(slot, target?)` → `PotionModel.EnqueueManualUse(target)`
+      **成功路径已实机验证**（2026-08-01 精英战：肌肉药水 → 力量 +5，
+      `target` 正确回报为 `player`，即当初复刻的「目标为空时指向自己」那段兜底）
       （**成功路径尚未实机验证** —— 验证时身上没有药水，只验了空槽驳回）
 - [x] 3.4a **选牌应答**（`POST /action/choose`）—— 见下方「3.4a 结论」。
       归类更正：选牌**不是**非战斗场景，是**战斗内刚需** ——
@@ -519,7 +523,8 @@ Rng       : SerializableRunRngSet
       「失去 9 点生命，选择一张牌变化」只能靠读文本区分。
       故兜底分支会从按钮的后代里找第一个非空 `Text`，剥掉 BBCode 后截断到 80 字。
       实测事件生效：金币 181→147、药水到手
-- [ ] 3.4f 非战斗动作：商店买入与除卡、Boss 遗物三选一
+- [x] 3.4f **商店** —— 槽位带价格与 `EnoughGold`，点 `Hitbox` 购买；**待实机验证**
+- [ ] 3.4g 商店的除卡服务、Boss 遗物三选一（预期已被通用兜底覆盖，待验证）
       **不必再从零测绘**，两条现成的路（详见 `game-model.md`）：
       - **选牌一律走 `CardSelectCmd.UseSelector(ICardSelector)`** —— 官方注入点，
         弃牌/检索/除卡/升级/转化/卡牌奖励/三选一全部收口于此，`options` 与
