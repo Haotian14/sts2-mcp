@@ -121,7 +121,8 @@ ilspycmd "<游戏目录>\data_sts2_windows_x86_64\sts2.dll" -o <输出目录>
 
 ### 阶段 1 · 注入验证 ⚠️ 唯一的真风险点
 
-- [x] 1.1 最小 startup hook dll（零外部依赖，仅写日志）—— `src/Sts2Bridge/StartupHook.cs`
+- [x] 1.1 最小 startup hook dll（零外部依赖，仅写日志）——
+      源文件已删除（该路线经 1.2 证伪，代码无人引用；结论保留在本节）
 - [x] 1.2 **用 `DOTNET_STARTUP_HOOKS` 验证注入 → ❌ 失败**
 - [x] 1.2b **经 `runtimeconfig.json` 的 `configProperties` 注入 → ❌ 同样失败**
 - [x] 1.3a **CoreCLR Profiler 注入验证 → ✅ 成功（见 §1.3a 结论）**
