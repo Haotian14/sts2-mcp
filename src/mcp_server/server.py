@@ -110,6 +110,8 @@ server = MCPServer(
         "同时带有 `choice` 字段时用 choose 应答；没有 `choice` 则是桥接层还接管不了的"
         "选择（地图、商店、事件），只能由人操作。\n"
         "- `choice`：待答的选牌。`options[].i` 是下标，`min`/`max` 是要选几张。\n"
+        "- `map`：当前坐标与下一步可走的节点。`can_move` 为 true 时可用 move 移动，"
+        "`options[].type` 给出房间类型（Monster/Elite/RestSite/Shop/Treasure/Boss…）。\n"
         "- `hand[].i`：出牌用的下标。**每打出一张牌，剩余手牌的下标就会重排**，"
         "所以连续出牌时每次都要以最新状态为准，不能沿用旧下标。\n"
         "- `hand[].playable`：能否打出；为 false 时 `reason` 给出原因"
@@ -225,6 +227,27 @@ def use_potion(slot: int, target: int | None = None) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+
+
+@server.tool(
+    description=(
+        "在地图上移动到下一个房间。\n"
+        "\n"
+        "`node` 取自 get_state 的 `map.options[].i`，仅当 `map.can_move` 为 true 时可用"
+        "（即当前停在地图界面上）。每个选项带 `type`：\n"
+        "Monster 普通战斗 / Elite 精英（高风险高回报）/ RestSite 休息点（回血或升级）/\n"
+        "Shop 商店 / Treasure 宝箱 / Boss / Ancient / Unknown 未知。\n"
+        "\n"
+        "选路是整局最关键的决策之一：残血时避开精英、想强化牌组时抓休息点和商店。"
+        "**先看 `player.hp`**，再决定敢不敢走精英。\n"
+        "\n"
+        "会一直等到真的走进新房间才返回；若目标是战斗房，返回时战斗已经开始"
+        "（`in_combat` 为 true，且已进入出牌阶段）。\n"
+        "\n" + _ACTION_RESULT_DOC
+    )
+)
+def move(node: int) -> dict[str, Any]:
+    return _request("POST", "/action/move", {"node": node})
 
 
 @server.tool(
