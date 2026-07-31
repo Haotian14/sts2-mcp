@@ -175,6 +175,7 @@ python -m pip install -r src\mcp_server\requirements.txt
 | `move(node)` | 地图移动，选项见 `get_state` 的 `map.options` |
 | `pick(i)` | 点击当前界面上的选项（战斗奖励、卡牌三选一），见 `get_state` 的 `screen` |
 | `proceed()` | 按「继续」离开当前界面回到地图 |
+| `resume_run()` | 游戏停在主菜单（`in_run` 为 false）时载入存档 |
 | `health()` | 连不上游戏时先用它定位 |
 
 动作工具会自行等到局面稳定，并在返回值里附带执行后的新状态 ——
