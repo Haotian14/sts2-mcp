@@ -36,6 +36,29 @@ namespace Sts2Bridge
         /// </summary>
         private static readonly string[] DamageKeys = { "Damage", "CalculatedDamage" };
 
+        // CardModel 没有统一的「攻击次数」成员。v0.107.1 的牌实现最终都把次数
+        // 作为参数传给 AttackCommand.WithHitCount：有的写死 2，有的取 RepeatVar，
+        // 有的现场计算。只列反编译后确认会走 WithHitCount 的牌；未知牌不猜次数，
+        // 这样游戏更新后至多低估伤害，不会凭空制造一条假斩杀线。
+        private static readonly HashSet<string> FixedDoubleHitCards = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "AstralPulse", "DaggerSpray", "Maul", "Refract", "RipAndTear",
+            "Thrash", "TwinStrike", "Uproar",
+        };
+
+        private static readonly HashSet<string> RepeatHitCards = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "CelestialMight", "Conflagration", "Exterminate", "FightMe", "GunkUp",
+            "Peck", "Ricochet", "SevenStars", "SovereignBlade", "SwordBoomerang",
+        };
+
+        private static readonly HashSet<string> EnergyXHitCards = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Eradicate", "Skewer", "Volley", "Whirlwind",
+        };
+
+        private const string HookType = "MegaCrit.Sts2.Core.Hooks.Hook";
+
         public static string Export()
         {
             var w = new JsonWriter();
@@ -347,6 +370,11 @@ namespace Sts2Bridge
             foreach (var kv in values) w.Prop(kv.Key, (int?)kv.Value);
             w.EndObject();
 
+            int? flatHits = HitCount(g, card, values, null);
+            // 单段是默认语义，不多发一个字段；0 必须发，否则上层会错当成 1。
+            if (flatHits.HasValue && flatHits.Value != 1)
+                w.Prop("hits", (int?)flatHits.Value);
+
             string? key = null;
             int flat = 0;
             foreach (var k in DamageKeys)
@@ -354,21 +382,130 @@ namespace Sts2Bridge
             if (key == null || enemies.Count == 0) return;
 
             List<int>? perEnemy = new List<int>(enemies.Count);
+            List<int?> perEnemyHits = new List<int?>(enemies.Count);
             foreach (var enemy in enemies)
             {
                 var v = Preview(g, card, enemy);
                 if (v == null || !v.TryGetValue(key, out int d)) { perEnemy = null; break; }
                 perEnemy.Add(d);
+                perEnemyHits.Add(HitCount(g, card, v, enemy));
             }
 
             // 复原成无目标的中性预览：游戏界面读的是同一份 PreviewValue，
             // 别让手牌上停着「针对最后一只怪」的数字
             Preview(g, card, null);
 
-            if (perEnemy == null || perEnemy.TrueForAll(d => d == flat)) return;
-            w.BeginArray("damage_vs");
-            foreach (var d in perEnemy) w.Value(d);
-            w.EndArray();
+            if (perEnemy != null && !perEnemy.TrueForAll(d => d == flat))
+            {
+                w.BeginArray("damage_vs");
+                foreach (var d in perEnemy) w.Value(d);
+                w.EndArray();
+            }
+
+            // Dismantle 是目前唯一按目标改变次数的牌（易伤目标打两次）。与
+            // damage_vs 相同，只有相对无目标预览确有差异时才发送逐敌数组。
+            bool hitsDiffer = false;
+            if (perEnemyHits.Count == enemies.Count)
+            {
+                foreach (var h in perEnemyHits)
+                {
+                    if (!h.HasValue) { hitsDiffer = false; break; }
+                    if (h != flatHits) hitsDiffer = true;
+                }
+            }
+            if (hitsDiffer)
+            {
+                w.BeginArray("hits_vs");
+                foreach (var h in perEnemyHits) w.Value(h!.Value);
+                w.EndArray();
+            }
+        }
+
+        /// <summary>
+        /// 返回这张牌此刻真正传给 <c>AttackCommand.WithHitCount</c> 的次数。
+        /// null 表示反编译清单里没有这张多段牌；1 表示已知是单段，二者不能混淆。
+        /// </summary>
+        private static int? HitCount(Guarded g, object? card,
+            Dictionary<string, int> values, object? target)
+        {
+            string? id = GamePaths.Id(card);
+            if (id == null) return null;
+
+            try
+            {
+                if (FixedDoubleHitCards.Contains(id)) return 2;
+
+                // CalculatedVar.UpdateCardPreview 已调用它自己的 Calculate(target)，
+                // 因而 PreviewValue 就是 OnPlay 随后会取的 CalculatedHits。
+                if (values.TryGetValue("CalculatedHits", out int calculated))
+                    return calculated;
+
+                if (RepeatHitCards.Contains(id))
+                {
+                    object? repeat = GamePaths.Get(GamePaths.Get(card, "DynamicVars"), "Repeat");
+                    return GamePaths.Int(repeat, "IntValue")
+                           ?? (values.TryGetValue("Repeat", out int previewRepeat) ? previewRepeat : (int?)null);
+                }
+
+                if (EnergyXHitCards.Contains(id)) return ResolveXValue(card, stars: false);
+                if (id == "Stardust") return ResolveXValue(card, stars: true);
+
+                if (id == "HeavenlyDrill")
+                {
+                    int? hits = ResolveXValue(card, stars: false);
+                    object? energyVar = GamePaths.Get(GamePaths.Get(card, "DynamicVars"), "Energy");
+                    int? threshold = GamePaths.Int(energyVar, "IntValue");
+                    return hits.HasValue && threshold.HasValue && hits.Value >= threshold.Value
+                        ? hits.Value * 2
+                        : hits;
+                }
+
+                if (id == "FiendFire")
+                {
+                    object? owner = GamePaths.Get(card, "Owner");
+                    object? pcs = GamePaths.Get(owner, "PlayerCombatState");
+                    int? handCount = GamePaths.Count(GamePaths.Get(GamePaths.Get(pcs, "Hand"), "Cards"));
+                    // OnPlay 前 FiendFire 已从手牌移到 Play pile；当前快照里仍在手里。
+                    return handCount.HasValue ? Math.Max(0, handCount.Value - 1) : (int?)null;
+                }
+
+                if (id == "Dismantle")
+                    return target != null && HasPower(target, "VulnerablePower") ? 2 : 1;
+
+                if (id == "Spite")
+                {
+                    object? owner = GamePaths.Get(card, "Owner");
+                    object? creature = GamePaths.Get(owner, "Creature");
+                    bool lostHp = GamePaths.Call(card, "LostHpThisTurn", creature) is bool b && b;
+                    if (!lostHp) return 1;
+                    object? repeat = GamePaths.Get(GamePaths.Get(card, "DynamicVars"), "Repeat");
+                    return GamePaths.Int(repeat, "IntValue");
+                }
+            }
+            catch (Exception ex)
+            {
+                g.Note($"卡牌攻击次数计算失败: {Brief(ex)}");
+            }
+            return null;
+        }
+
+        /// <summary>按出牌当刻可花的能量/星星计算 X，并走 ChemicalX 等修正。</summary>
+        private static int? ResolveXValue(object? card, bool stars)
+        {
+            object? owner = GamePaths.Get(card, "Owner");
+            object? pcs = GamePaths.Get(owner, "PlayerCombatState");
+            int? original = GamePaths.Int(pcs, stars ? "Stars" : "Energy");
+            object? combatState = GamePaths.Get(card, "CombatState");
+            if (!original.HasValue || combatState == null) return null;
+            object? resolved = GamePaths.CallStatic(HookType, "ModifyXValue", combatState, card, original.Value);
+            return resolved is IConvertible c ? Convert.ToInt32(c) : (int?)null;
+        }
+
+        private static bool HasPower(object creature, string powerId)
+        {
+            foreach (var power in GamePaths.Enumerate(GamePaths.Get(creature, "Powers")))
+                if (GamePaths.Id(power) == powerId) return true;
+            return false;
         }
 
         /// <summary>

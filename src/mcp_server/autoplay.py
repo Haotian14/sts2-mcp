@@ -151,17 +151,32 @@ def _unknown_affordable(state: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
-def _damage(card: dict[str, Any], enemy_i: int) -> int:
+def _hits(card: dict[str, Any], enemy_i: int) -> int:
+    """攻击次数；逐目标的条件次数优先，缺字段等于单段。"""
+    vs = card.get("hits_vs")
+    if isinstance(vs, list) and 0 <= enemy_i < len(vs) and isinstance(vs[enemy_i], int):
+        return max(0, vs[enemy_i])
+    hits = card.get("hits", 1)
+    return max(0, hits) if isinstance(hits, int) else 1
+
+
+def _damage(card: dict[str, Any], enemy_i: int, enemy_count: int = 1) -> int:
     """这张牌打在第 enemy_i 只怪身上的**实际**伤害。
 
-    `damage_vs` 含目标侧修正（易伤），只在与 `values.Damage` 不同时才出现 ——
-    没有它就说明对谁都一样。绝不能用 get_glossary 的卡面文本，那是裸值
-    （strategy.md §4，为此死过一局）。
+    `values.Damage` / `damage_vs` 是单段伤害，须乘 `hits` / `hits_vs`。
+    RandomEnemy 的多段攻击在多怪场无法保证落到指定目标，斩杀估算只算一段；
+    只剩一只怪时全部段数必然命中，可以照乘。绝不能用 get_glossary 的卡面
+    文本，那是裸值（strategy.md §4，为此死过一局）。
     """
     vs = card.get("damage_vs")
     if isinstance(vs, list) and 0 <= enemy_i < len(vs) and isinstance(vs[enemy_i], int):
-        return vs[enemy_i]
-    return _base_damage(card)
+        per_hit = vs[enemy_i]
+    else:
+        per_hit = _base_damage(card)
+    hits = _hits(card, enemy_i)
+    if card.get("target") == "RandomEnemy" and enemy_count > 1:
+        hits = min(hits, 1)
+    return per_hit * hits
 
 
 def _base_damage(card: dict[str, Any]) -> int:
@@ -199,7 +214,7 @@ def _blocks(hand: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _killable(hand: list[dict[str, Any]], energy: int, enemy: dict[str, Any],
-              enemy_i: int) -> list[dict[str, Any]] | None:
+              enemy_i: int, enemy_count: int = 1) -> list[dict[str, Any]] | None:
     """能否在本回合内凑出足够伤害打死这只怪？返回要打的牌，凑不出返回 None。
 
     strategy.md §1.1：杀掉一只怪是把它**今后每一回合**的输出都归零，
@@ -222,11 +237,12 @@ def _killable(hand: list[dict[str, Any]], energy: int, enemy: dict[str, Any],
 
     picked: list[dict[str, Any]] = []
     dealt = spent = 0
-    for card in sorted(_attacks(hand), key=lambda c: _damage(c, enemy_i), reverse=True):
+    for card in sorted(_attacks(hand),
+                       key=lambda c: _damage(c, enemy_i, enemy_count), reverse=True):
         if spent + _cost(card) > energy:
             continue
         picked.append(card)
-        dealt += _damage(card, enemy_i)
+        dealt += _damage(card, enemy_i, enemy_count)
         spent += _cost(card)
         if dealt >= need:
             return picked
@@ -316,7 +332,7 @@ def decide(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
 
     for enemy_i in order:
         enemy = enemies[enemy_i]
-        plan = _killable(hand, energy, enemy, enemy_i)
+        plan = _killable(hand, energy, enemy, enemy_i, len(enemies))
         if not plan:
             continue
 
@@ -325,7 +341,7 @@ def decide(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
         if kill_line > block_line:
             continue     # 杀了反而挨得更多，放弃，走下面的格挡分支
 
-        best = max(plan, key=lambda c: _damage(c, enemy_i))
+        best = max(plan, key=lambda c: _damage(c, enemy_i, len(enemies)))
         return act(best, enemy_i,
                    f"斩杀 {enemy.get('id')}（{enemy.get('hp')} 血，本回合打 "
                    f"{_intent_total(enemy)}）—— 斩杀线净挨 {max(0, kill_line)}，"
@@ -347,13 +363,14 @@ def decide(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
         affordable = [c for c in _attacks(hand) if _cost(c) <= energy]
         if not affordable:
             break
-        best = max(affordable, key=lambda c: _damage(c, enemy_i))
+        best = max(affordable, key=lambda c: _damage(c, enemy_i, len(enemies)))
         # 决策日志里写假理由比不写更糟：走到这里可能是「挡够了」，
         # 也可能是「该挡但没有防御牌」，两者必须分得清。
         why = (f"还差 {need} 点格挡但手上没有打得起的防御牌，转为输出"
                if blocked_out else "格挡已满足，剩余能量输出")
         return act(best, enemy_i,
-                   f"{why} → {enemies[enemy_i].get('id')}（{_damage(best, enemy_i)} 点）")
+                   f"{why} → {enemies[enemy_i].get('id')}"
+                   f"（{_damage(best, enemy_i, len(enemies))} 点）")
 
     # 还有打得起的格挡牌就继续叠 —— 总比把能量浪费掉强
     card = _pick_block(hand, energy)

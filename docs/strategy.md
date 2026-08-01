@@ -26,8 +26,9 @@
 `SewerClam` 56 血 + 8 格挡（`PlatingPower` 每回合回满），启发式按
 `28 ≥ 26 血` 判定斩杀，实际两刀先被格挡吃掉、怪没死，那 14 点照样打在脸上。
 
-依赖：`enemies[].hp`、`enemies[].intents[].total`、`hand[].damage_vs`（对这只怪
-的实际伤害，见 §4）、`hand[].cost`、`combat.energy`。
+依赖：`enemies[].hp`、`enemies[].intents[].total`、`hand[].damage_vs`（单段的
+目标侧实际伤害）与 `hand[].hits` / `hits_vs`（见 §4）、`hand[].cost`、
+`combat.energy`。
 
 ### 1.2 凑数字，不要溢出
 
@@ -37,8 +38,8 @@
 > 另一次：怪 12 血，`带毒刺击 6 + 打击 6` 正好清掉。
 > 又一次（力士局）：怪 9 血挂易伤，一张打击 `damage_vs=[9]` 正好结束战斗。
 
-依赖：`hand[].values.Damage` / `hand[].damage_vs` —— **不是** `/glossary` 的
-卡面文本，那是裸值（见 §4）。
+依赖：`hand[].values.Damage` / `hand[].damage_vs`，多段牌再乘 `hits` / `hits_vs`
+—— **不是** `/glossary` 的卡面文本，那是裸值（见 §4）。
 
 ### 1.3 敌人不攻击的回合，一点格挡都不要叠
 
@@ -244,6 +245,8 @@ hand[].values      这张牌此刻的实际数值，含全部自身侧修正
                    {"Damage":6} / {"Block":3} / {"Damage":8,"VulnerablePower":2}
 hand[].damage_vs   对每只敌人的实际伤害，下标与 enemies[].i 对齐
                    只在与 values.Damage 不同时出现（易伤等目标侧修正）
+hand[].hits        攻击次数；省略即单段（1）
+hand[].hits_vs     次数随目标变化时逐敌给出，下标同 enemies[].i
 ```
 
 实机验证（详见 `game-model.md`「卡牌的实时数值」）：
@@ -255,13 +258,14 @@ hand[].damage_vs   对每只敌人的实际伤害，下标与 enemies[].i 对齐
 ```
 
 **判据因此可以做实了**：§1.1 的斩杀判定用
-`damage_vs[i] >= enemies[i].hp + enemies[i].block`，§1.2 的凑数字用
-`values.Damage` 求和 —— 不必再像过去那样留余量。
+`(damage_vs[i] 或 values.Damage) × (hits_vs[i] 或 hits 或 1)
+>= enemies[i].hp + enemies[i].block`，§1.2 的凑数字也按同一总伤害求和 ——
+不必再像过去那样留余量。
 
 ⚠️ `damage_vs` 含的是**目标侧的伤害修正**（易伤），**不含敌人的格挡** ——
 格挡要自己减。这一点漏了一次，见 §1.1 的警告。
 
-### ⚠️ 多段攻击：`values` 给的是**单次**伤害，而且没有任何字段告诉你它打几次
+### 多段攻击：`values` 给单次伤害，`hits` 给次数（2026-08-01 已解决）
 
 2026-08-01 实机核对（第 17 层 Boss 战，`双重打击`「造成5点伤害两次」）：
 
@@ -275,12 +279,16 @@ damage_vs   [4]                ← 单次（含易伤修正）
 「照理会以 `Repeat` 键出现」是错的。敌人意图那边**有** `repeats` 字段
 （`{"damage":4,"total":12,"repeats":3}`），自己手牌这边没有，两侧不对称。
 
-后果：拿 `damage_vs` 算斩杀线会把多段牌**低估 N 倍**。方向是安全的
-（不会误判成能斩杀），但会白白错过本可以打出的斩杀。
+重新反编译后确认，次数不在统一的 `DynamicVars` 键里，而由每张牌的 `OnPlay`
+传给 `AttackCommand.WithHitCount(...)`。桥接层现按 v0.107.1 的全部 37 处玩家牌
+调用导出 `hits`，目标条件不同则导出 `hits_vs`；runner 会自动乘上次数。
 
-**眼下的对策：卡面文本里写「X次」「两次」的牌，自己乘。** 桥接层补上这个
-字段的工作尚未做（要先在反编译代码里找到重复次数挂在哪，`DynamicVars` 里
-没有），记在 spec.md 6.4b 下。
+同日实机复验：`TwinStrike values.Damage=5`、易伤目标 `damage_vs=[7]`、
+`hits=2`，打出后敌人 `51→37`，正好 14。静态清单覆盖其余多段牌，但尚未逐张
+实机打出；详见 spec.md 6.4b。
+
+随机目标牌是例外：多怪场无法保证所有段数落到同一目标，runner 为避免假斩杀
+只计一段；只剩一只怪时才按完整 `hits` 计算。
 
 ## 5. 牌组强度是上限，打法只是效率
 

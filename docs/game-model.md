@@ -423,6 +423,24 @@ CardModel.UpdateDynamicVarPreview(CardPreviewMode, Creature? target, DynamicVarS
 实际打出去                →  17 → 8   正好 9，与预报一致
 ```
 
+### 多段次数不在 CardModel 的统一成员里
+
+v0.107.1 反编译代码中，玩家牌共有 37 处 `AttackCommand.WithHitCount(...)` 调用。
+次数有的写死为 2（双重打击），有的读 `RepeatVar.IntValue`，有的取预览管线已经
+算出的 `CalculatedHits`，还有 X 能量、手牌数、目标易伤等牌面专属公式。因此
+不能像敌人意图那样读取一个统一的 `Repeats` 属性。
+
+`/state` 按逐牌核对过的公式输出：
+
+```
+hits       固定或与目标无关的攻击次数；省略等于 1
+hits_vs    次数随目标变化时的逐敌数组，下标与 enemies[].i 对齐
+```
+
+`values.Damage` 和 `damage_vs` 始终是**单段**伤害，总伤害要再乘次数。实机
+验证（力士第 9 层）：`TwinStrike damage_vs=[7], hits=2`，敌人 51→37，正好
+`7×2=14`。其余 36 处是反编译静态核对，尚未逐张实机打出。
+
 ### 取整是截断，不是四舍五入
 
 卡面显示走 `(int)PreviewValue`，`GetSingleDamage` 也是 `Math.Max(0, (int)num)`。
