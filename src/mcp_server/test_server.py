@@ -69,3 +69,19 @@ def test_写不进去时不能谎报ok为True(monkeypatch):
     assert result["ok"] is False
     assert result["plan"] == "这一局先补格挡"        # 模型写的内容原样退回，方便它自己记住
     assert "error" in result and result["error"]     # 必须说明白，不能只给个 False
+
+
+def test_日志写不进去时动作工具依然回报ok为True(monkeypatch):
+    """`server._log()` 明确丢弃 `journal.record()` 的返回值——日志是旁路，
+    游戏才是主线（journal.py 的铁律）。但此前没有任何用例钉住这条原则：
+    谁把 `_log` 悄悄改成 `if not journal.record(...): return {"ok": False}`，
+    全部既有用例照样全绿，因为它们要么打桩绕开了真实写盘，要么根本没检查
+    写失败时动作本身的返回值。这里让日志写入真的失败（磁盘只读/满/ACL），
+    钉住 `pick` 这类动作工具的 `ok` 只应体现游戏侧结果，与日志有没有落盘
+    无关。"""
+    fake_game_result = {"ok": True, "state": _fake_state()}
+    monkeypatch.setattr(server, "_request", lambda method, path, params=None: fake_game_result)
+    _block_append(monkeypatch)
+
+    result = server.pick(0, why="随便挑一个")
+    assert result["ok"] is True

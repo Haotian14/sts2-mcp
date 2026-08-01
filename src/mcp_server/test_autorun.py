@@ -502,4 +502,4 @@ def test_日志写不进去时不会卡在开局复盘(monkeypatch):
     # 没有被开局复盘拦住——既然计划注定存不下来，停下去没有意义，
     # 径直往下走地图唯一的那条路。
     assert fake.calls == ["move0"]
-    assert result["stopped"] != "handoff" or "复盘" not in result["reason"]
+    assert "复盘" not in result["reason"]

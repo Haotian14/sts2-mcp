@@ -442,14 +442,6 @@ def test_日志可读却写不进去时has_plan仍然放行(monkeypatch):
     assert journal.has_plan(state(floor=1)) is True   # 放行，不再无限期等待
 
 
-def test_写不进去时set_plan必须能感知到失败(monkeypatch):
-    """`record_plan` 的返回值就是 `set_plan` 用来判断「能不能告诉模型
-    成功」的依据——这里钉的是 journal 这一层的契约，server.py 那层的
-    钉子见 test_server.py。"""
-    _block_append(monkeypatch)
-    assert journal.record_plan(state(floor=1), "试图写下的计划") is False
-
-
 # --------------------------------------------------------------------------
 #  两个此前零覆盖的分支（Important 3）
 # --------------------------------------------------------------------------
@@ -468,11 +460,11 @@ def test_log_unreadable_文件存在但打不开():
 def test_全新安装时logs目录不存在第一层仍然停手(tmp_path, monkeypatch):
     """spec.md §4.4：`logs/` 目录整个都不存在（全新安装、一次都没
     `record()` 过）时，第 1 层仍要求先复盘（`has_plan` 返回 False，不是
-    放行）。这份正确性完全靠 `has_plan()` 内部先调 `run_id(state)`
-    （其 `_save_current()` 会顺手把目录建出来）、再轮到 `_log_unreadable()`
-    检查目录这一**调用顺序**——两句话一换位置就会被静默违反，此前一个
-    测试都没有，见 `_log_unreadable` 文档字符串里对这份「借来的正确性」
-    的说明。"""
+    放行）。这份正确性现在由 `_log_unreadable`/`_log_unwritable` 共用的
+    `_ensure_dir()` 自己保证（探测前先试着建目录，建得出来就不算真故障）——
+    不再依赖 `has_plan()` 里 `run_id(state)` 与探针的调用顺序（`run_id`
+    内部的 `_save_current()` 恰好也会建目录，那份副作用此前是本测试能通过
+    的唯一原因）。"""
     fresh = tmp_path / "brand-new" / "decisions.jsonl"
     fresh_run = tmp_path / "brand-new" / "current-run.json"
     monkeypatch.setattr(journal, "PATH", str(fresh))
