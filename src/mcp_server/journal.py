@@ -270,6 +270,9 @@ def observe(state: dict[str, Any]) -> None:
             "floor": run.get("total_floor"),
             "act": run.get("act"),
             "hp": player.get("hp"),
+            # 终局记录也带 action：摘要的每一条都有这一栏，缺了读的人就得
+            # 为这一种记录写特例
+            "action": f"本局结束于第 {run.get('total_floor')} 层",
             "why": "本局结束（game_over）",
         })
     except Exception as exc:      # noqa: BLE001
