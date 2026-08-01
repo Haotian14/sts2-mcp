@@ -37,7 +37,8 @@ def enemy(i, hp, damage=None, powers=(), alive=True, hittable=True, id="Mob", bl
 
 
 def card(i, id="StrikeIronclad", cost=1, type="Attack", target="AnyEnemy",
-         playable=True, damage=None, block=None, damage_vs=None, values=None):
+         playable=True, damage=None, block=None, damage_vs=None, values=None,
+         hits=None, hits_vs=None):
     v = dict(values or {})
     if damage is not None:
         v["Damage"] = damage
@@ -47,6 +48,10 @@ def card(i, id="StrikeIronclad", cost=1, type="Attack", target="AnyEnemy",
          "playable": playable, "values": v}
     if damage_vs is not None:
         c["damage_vs"] = damage_vs
+    if hits is not None:
+        c["hits"] = hits
+    if hits_vs is not None:
+        c["hits_vs"] = hits_vs
     return c
 
 
@@ -245,6 +250,30 @@ def test_斩杀用实际伤害而非卡面值():
     move, why = autoplay.decide(s)
     assert move["card"] == 0
     assert "斩杀" in why
+
+
+def test_多段攻击按单段伤害乘次数算斩杀():
+    """双重打击 values.Damage=4、hits=2，实际总伤害是 8。"""
+    s = state(enemies=[enemy(0, 8, damage=7)],
+              hand=[card(0, "TwinStrike", damage=4, hits=2), defend(1)])
+    move, why = autoplay.decide(s)
+    assert move["card"] == 0
+    assert "斩杀" in why
+
+
+def test_多段攻击同时使用逐敌伤害与逐敌次数():
+    s = state(enemies=[enemy(0, 10, damage=7, powers=[{"id": "VulnerablePower"}])],
+              hand=[card(0, "Dismantle", damage=4, damage_vs=[6], hits_vs=[2]), defend(1)])
+    move, why = autoplay.decide(s)
+    assert move["card"] == 0           # 6 × 2 = 12，足够斩杀 10 血
+    assert "斩杀" in why
+
+
+def test_随机目标多段牌在多怪时不得假定全部命中同一只():
+    s = state(enemies=[enemy(0, 8, damage=7), enemy(1, 40, damage=1)],
+              hand=[card(0, "RipAndTear", target="RandomEnemy", damage=4, hits=2), defend(1)])
+    _, why = autoplay.decide(s)
+    assert "斩杀" not in why           # 不能把随机的 4×2 冒充成指定目标的 8
 
 
 def test_斩杀线要算上敌人的格挡():
