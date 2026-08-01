@@ -359,3 +359,27 @@ def test_上一局没有终局记录时降级为见过的最大层数():
 def test_brief读不到日志也不抛(monkeypatch):
     monkeypatch.setattr(journal, "PATH", "Z:/根本不存在的盘/decisions.jsonl")
     assert journal.brief()["run"] is None
+
+
+# --------------------------------------------------------------------------
+#  has_plan：失败即放行（不能拿 _read_all 的空列表当「读到了」的证据）
+# --------------------------------------------------------------------------
+
+
+def test_has_plan_本局有plan条目():
+    journal.record_plan(state(floor=1), "开局计划：优先拿降费件")
+    assert journal.has_plan(state(floor=1)) is True
+
+
+def test_has_plan_日志存在但本局没有plan条目():
+    journal.record(state(floor=1), "随便一步", "")   # 让日志文件确实存在
+    assert journal.has_plan(state(floor=1)) is False
+
+
+def test_has_plan_日志根本读不到就放行(monkeypatch):
+    """修复前 `_read_all()` 把「读不到」也吞成空列表，`any(...)` 直接是
+    False，外层 `except Exception: return True` 永远轮不到 —— 这条用来
+    钉死「失败方向是放行」这句承诺是真的兑现了。"""
+    monkeypatch.setattr(journal, "PATH", "Z:/根本不存在的盘/decisions.jsonl")
+    monkeypatch.setattr(journal, "_RUN_FILE", "Z:/根本不存在的盘/current-run.json")
+    assert journal.has_plan(state(floor=1)) is True
