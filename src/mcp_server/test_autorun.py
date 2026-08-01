@@ -348,3 +348,40 @@ def test_走满上限也会停():
     fake.move = walk
     result = run(fake, max_steps=5)
     assert result["stopped"] == "max_steps"
+
+
+# --------------------------------------------------------------------------
+#  开局先复盘（spec.md 6.3b）
+# --------------------------------------------------------------------------
+
+
+ONE_ROAD = {"can_move": True, "options": [{"i": 0, "type": "Monster"}]}
+
+
+def test_第一层且本局无计划就停手():
+    action, _, why = autorun.decide(state(floor=1, map_=ONE_ROAD), has_plan=False)
+    assert action == "handoff"
+    assert "复盘" in why
+
+
+def test_第一层已有计划就照常走():
+    action, _, _ = autorun.decide(state(floor=1, map_=ONE_ROAD), has_plan=True)
+    assert action == "move"
+
+
+def test_默认不因缺计划停手():
+    """不传 has_plan 时行为必须与从前完全一致 —— 老调用方一个都不能被绊住。"""
+    action, _, _ = autorun.decide(state(floor=1, map_=ONE_ROAD))
+    assert action == "move"
+
+
+def test_半局接手不被复盘这条拦住():
+    """第 5 层才开 runner 是常事，那时补写开局计划已无意义。"""
+    action, _, _ = autorun.decide(state(floor=5, map_=ONE_ROAD), has_plan=False)
+    assert action == "move"
+
+
+def test_战斗中不因缺计划打断():
+    """第 1 层直接开打时，停手要等这场打完 —— 半场撂挑子比漏一次复盘更糟。"""
+    action, _, _ = autorun.decide(state(floor=1, in_combat=True), has_plan=False)
+    assert action == "combat"

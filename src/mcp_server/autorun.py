@@ -134,10 +134,14 @@ def _new_run_decision(state: dict[str, Any], character: str) -> tuple[str, Any, 
     return "handoff", None, f"开新局导航遇到不认识的界面 {stype}：{[o.get('id') for o in usable]}"
 
 
-def decide(state: dict[str, Any], new_run_character: str | None = None) -> tuple[str, Any, str]:
+def decide(state: dict[str, Any], new_run_character: str | None = None,
+           has_plan: bool = True) -> tuple[str, Any, str]:
     """下一步做什么。返回 `(动作, 参数, 理由)`。
 
     动作为 `handoff` 时，参数即交还的理由。**顺序即优先级**，越靠前越硬。
+
+    `has_plan` 为 False 时，第 1 层会多一个停手点：先复盘上一局（6.3b）。
+    默认 True —— 调用方不关心这件事时，行为与从前完全一致。
     """
     character = str(new_run_character or "").strip()
     game_over = bool((state.get("run") or {}).get("game_over"))
@@ -155,6 +159,17 @@ def decide(state: dict[str, Any], new_run_character: str | None = None) -> tuple
 
     if state.get("in_combat"):
         return "combat", None, "战斗交给启发式"
+
+    # 开局先复盘上一局（spec.md 6.3b）。放在战斗分支**之后**是有意的：
+    # 第 1 层直接开打时，半场撂挑子比漏一次复盘更糟，等这场打完再停。
+    # 6.3b 拖了这么久没做，正因为它全靠自觉；而本项目治「靠自觉」的办法
+    # 一向是：该做决策的地方让 runner 停下来。
+    floor = (state.get("run") or {}).get("total_floor")
+    if not has_plan and isinstance(floor, int) and floor <= 1:
+        return "handoff", None, (
+            "新局开始且本局尚无开局计划 —— 先 get_brief 复盘上一局，"
+            "再 set_plan 写下这一局要改什么（spec.md 6.3b）"
+        )
 
     screen, options = _screen(state), _options(state)
     stype = screen.get("type") or ""
@@ -258,6 +273,12 @@ def play_run(
     repeats = 0
     unclear = 0
     last_sig = None
+    # 一次 play_run 调用期间这个值不会变（set_plan 只可能发生在两次调用之间），
+    # 故只求值一次，不必每步都读日志。但若 run_id 改变（倒退或新局），需重算。
+    # 初始若已在第 1 层或更早，默认 has_plan=True，避免不必要的复盘判断。
+    initial_floor = (state.get("run") or {}).get("total_floor")
+    has_plan = True if isinstance(initial_floor, int) and initial_floor <= 1 else journal.has_plan(state)
+    last_run_id = journal.run_id(state) if isinstance(initial_floor, int) and initial_floor > 1 else None
 
     def note(before: dict[str, Any], label: str, why: str) -> None:
         log.append({"floor": (before.get("run") or {}).get("total_floor"),
@@ -269,7 +290,16 @@ def play_run(
                 pass
 
     while steps < max_steps:
-        action, arg, why = decide(state, new_run_character=new_run_character)
+        # 若 run_id 改变（倒退或进入新局），重新计算 has_plan
+        if last_run_id is not None:
+            current_run_id = journal.run_id(state)
+            if current_run_id != last_run_id:
+                current_floor = (state.get("run") or {}).get("total_floor")
+                has_plan = True if isinstance(current_floor, int) and current_floor <= 1 else journal.has_plan(state)
+                last_run_id = current_run_id
+
+        action, arg, why = decide(state, new_run_character=new_run_character,
+                                  has_plan=has_plan)
 
         if action == "handoff":
             return _done(state, log, steps, "handoff", why)
