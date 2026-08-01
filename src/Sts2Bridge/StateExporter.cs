@@ -22,8 +22,12 @@ namespace Sts2Bridge
     /// </summary>
     internal static class StateExporter
     {
-        private const string CombatManager = "MegaCrit.Sts2.Core.Combat.CombatManager";
-        private const string RunManager    = "MegaCrit.Sts2.Core.Runs.RunManager";
+        private const string CombatManager   = "MegaCrit.Sts2.Core.Combat.CombatManager";
+        private const string RunManager      = "MegaCrit.Sts2.Core.Runs.RunManager";
+        private const string CardPreviewMode = "MegaCrit.Sts2.Core.Entities.Cards.CardPreviewMode";
+
+        /// <summary>DamageVar 的固定名字（<c>DamageVar.defaultName</c>）。</summary>
+        private const string DamageKey = "Damage";
 
         public static string Export()
         {
@@ -105,7 +109,7 @@ namespace Sts2Bridge
                 object? pcs = g.Obj(player, "PlayerCombatState");
                 WriteCombat(w, g, combatState, pcs);
                 WriteEnemies(w, g, combatState);
-                WriteHand(w, g, pcs);
+                WriteHand(w, g, pcs, combatState);
                 WritePiles(w, g, pcs);
             }
 
@@ -279,8 +283,12 @@ namespace Sts2Bridge
         // ------------------------------------------------------------------
         //  手牌与牌堆
         // ------------------------------------------------------------------
-        private static void WriteHand(JsonWriter w, Guarded g, object? pcs)
+        private static void WriteHand(JsonWriter w, Guarded g, object? pcs, object? combatState)
         {
+            // 算「这张牌打在这只怪身上是多少伤害」要拿敌人当目标，先取一次列表。
+            // 顺序与 enemies 数组一致 —— damage_vs 的下标就是 play_card 的目标下标。
+            var enemies = new List<object?>(GamePaths.Enumerate(g.Obj(combatState, "Enemies")));
+
             w.BeginArray("hand");
             int? i = 0;
             foreach (var card in GamePaths.Enumerate(g.Obj(g.Obj(pcs, "Hand"), "Cards")))
@@ -301,9 +309,94 @@ namespace Sts2Bridge
                 WritePlayable(w, g, card);
                 var upgrade = g.Int(card, "CurrentUpgradeLevel");
                 if (upgrade.HasValue && upgrade.Value > 0) w.Prop("upgraded", upgrade);
+                WriteCardValues(w, g, card, enemies);
                 w.EndObject();
             }
             w.EndArray();
+        }
+
+        /// <summary>
+        /// 「这张牌此刻打出去是多少」—— 已代入力量、虚弱、易伤、遗物、附魔的实际数值。
+        ///
+        /// 【为什么不能拿卡面文本代替】
+        /// <c>/glossary</c> 的 <c>GetDescriptionForPile</c> 渲染时用的是
+        /// <c>DynamicVar.PreviewValue</c>，而该值**只有先调过
+        /// <c>UpdateDynamicVarPreview</c> 才是修正后的数字**，否则等于
+        /// <c>BaseValue</c>（游戏界面正是在悬停时先 ClearPreview 再 Update）。
+        /// 加之 glossary 一局只取一次，拿它算斩杀线必然是卡面裸值。
+        /// 2026-08-01 第一章 Boss 战即因此差 5 点没触发击晕而阵亡（strategy.md §4）。
+        ///
+        /// 【为什么分 values 与 damage_vs 两块】
+        /// 力量、虚弱这类自身修正与目标无关，易伤这类目标侧修正则每只怪各不相同。
+        /// 前者放 <c>values</c>，后者只在确实有差异时才发 <c>damage_vs</c> ——
+        /// 常态（没人挂易伤）下一个字节都不多花。
+        /// </summary>
+        private static void WriteCardValues(JsonWriter w, Guarded g, object? card, List<object?> enemies)
+        {
+            var values = Preview(g, card, null);
+            if (values == null || values.Count == 0) return;
+
+            w.BeginObject("values");
+            foreach (var kv in values) w.Prop(kv.Key, (int?)kv.Value);
+            w.EndObject();
+
+            if (!values.TryGetValue(DamageKey, out int flat) || enemies.Count == 0) return;
+
+            List<int>? perEnemy = new List<int>(enemies.Count);
+            foreach (var enemy in enemies)
+            {
+                var v = Preview(g, card, enemy);
+                if (v == null || !v.TryGetValue(DamageKey, out int d)) { perEnemy = null; break; }
+                perEnemy.Add(d);
+            }
+
+            // 复原成无目标的中性预览：游戏界面读的是同一份 PreviewValue，
+            // 别让手牌上停着「针对最后一只怪」的数字
+            Preview(g, card, null);
+
+            if (perEnemy == null || perEnemy.TrueForAll(d => d == flat)) return;
+            w.BeginArray("damage_vs");
+            foreach (var d in perEnemy) w.Value(d);
+            w.EndArray();
+        }
+
+        /// <summary>
+        /// 走一遍游戏自己的预览管线，读出各动态变量的最终值。
+        ///
+        /// 步骤与 <c>NCardVisuals</c> 刷新卡面时完全一致：先 <c>ClearPreview</c>
+        /// 把值退回 base，再 <c>UpdateDynamicVarPreview</c> 过一遍
+        /// <c>Hook.ModifyDamage</c>。<c>CardPreviewMode.None</c> 与 <c>Normal</c>
+        /// 在这条路径上等价 —— 该参数只对 MultiCreatureTargeting 有意义，
+        /// 修正管线本身照跑（与 <c>AttackIntent.GetSingleDamage</c> 的用法一致）。
+        ///
+        /// 取整用截断而非四舍五入，与卡面显示的 <c>(int)PreviewValue</c> 对齐。
+        /// </summary>
+        private static Dictionary<string, int>? Preview(Guarded g, object? card, object? target)
+        {
+            var vars = g.Obj(card, "DynamicVars");
+            if (vars == null) return null;
+
+            try
+            {
+                GamePaths.Call(vars, "ClearPreview");
+                GamePaths.Call(card, "UpdateDynamicVarPreview",
+                    GamePaths.EnumValue(CardPreviewMode, "None"), target, vars);
+
+                var result = new Dictionary<string, int>(StringComparer.Ordinal);
+                foreach (var v in GamePaths.Enumerate(GamePaths.Get(vars, "Values")))
+                {
+                    var name = GamePaths.Text(v, "Name");
+                    if (name != null && GamePaths.Get(v, "PreviewValue") is IConvertible c)
+                        result[name] = (int)Convert.ToDecimal(c);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // 不带卡牌 id：失败必然是系统性的（游戏更新），带上就会每张牌刷一条
+                g.Note($"卡牌实时数值计算失败: {Brief(ex)}");
+                return null;
+            }
         }
 
         /// <summary>

@@ -341,7 +341,8 @@ EnergyCost.CostsX     = False    ← 排除 X 费牌的可能
 
 ```
 卡牌： CardModel.GetDescriptionForPile(PileType pile, Creature target) : string
-       ★ 输出已代入数值的最终文本（含升级、力量、遗物加成）
+       ★ 输出已代入数值的最终文本（含升级）
+       ⚠️ 不含力量/虚弱/易伤等战斗修正，原因见下节「卡牌的实时数值」
        传 (PileType.Hand, null) 即可，目标相关描述退化为通用措辞
 
 通用： LocManager.Instance.SmartFormat(LocString s,
@@ -359,6 +360,68 @@ EnergyCost.CostsX     = False    ← 排除 X 费牌的可能
 
 `CardModel.Title` 是**已渲染的 string**（实测「早有准备」），而 `RelicModel.Title`
 是 `LocString` —— 两者不一致，不要想当然。
+
+## 卡牌的实时数值 DynamicVars
+
+> 2026-08-01 由 ILSpy 核对并实机验证。这是「卡面伤害 ≠ 实际伤害」那个坑的根。
+
+每张牌的可变数字都装在 `DynamicVarSet` 里，一张牌通常只有 1~3 个：
+
+```
+CardModel.DynamicVars : DynamicVarSet          （由 CanonicalVars 克隆而来）
+    ["Damage"]          : DamageVar            StrikeIronclad 6
+    ["Block"]           : BlockVar             DefendIronclad 5
+    ["VulnerablePower"] : PowerVar<...>        Bash 施加 2 层
+    ["Repeat"] / ["ExtraDamage"] / ["Heal"] …  按卡而异
+
+DynamicVar
+    .BaseValue    : decimal   ★ 卡面裸值。游戏拿它做真实结算的输入
+    .PreviewValue : decimal   ★ 过完修正管线后的值，即玩家在牌面上看到的数字
+    .IntValue                 = (int)BaseValue —— 注意是 base，不是 preview
+```
+
+### PreviewValue 必须先算，否则等于 BaseValue
+
+`PreviewValue` 不是属性算出来的，而是被**写**进去的：
+
+```csharp
+DynamicVarSet.ClearPreview()                                  // 全部退回 BaseValue
+CardModel.UpdateDynamicVarPreview(CardPreviewMode, Creature? target, DynamicVarSet)
+    → DamageVar.UpdateCardPreview 内部走 Hook.ModifyDamage(…全部修正…)
+    → 结果写入 PreviewValue
+```
+
+游戏界面（`NCardVisuals`）每次刷新卡面都是先 `ClearPreview` 再 `Update`，所以
+玩家看到的永远是修正后的数字。**而 `GetDescriptionForPile` 自己不调这一步** ——
+它只是用 `{Damage:diff}` 这样的格式串去读当时的 `PreviewValue`
+（`HighlightDifferencesFormatter` → `DynamicVar.ToHighlightedString` → `(int)PreviewValue`）。
+
+于是从未被预览过的牌，渲染出来的就是裸值。`/glossary` 正是这种情况，加之它
+一局只取一次，双重意义上给不出「此刻」的数字。这就是
+`strategy.md` §4 那次 Boss 战算错斩杀线的全部原因。
+
+### `CardPreviewMode` 在这条路上不影响结果
+
+`Hook.ModifyDamage` 只在 `previewMode == MultiCreatureTargeting` 时分叉（对全体
+敌人各算一遍、一致才合并显示）；其余取值一律走同一个 `ModifyDamageInternal`，
+力量/虚弱/易伤/遗物照常生效。故取 `None` 即可 —— 与
+`AttackIntent.GetSingleDamage` 的用法一致。
+
+### 目标侧修正只有传目标才算得出
+
+易伤挂在**挨打的那只怪**身上，`target` 传 null 时算不进去。因此
+`/state` 对每只敌人各算一遍，得出 `hand[].damage_vs`。实测（打击基础 6）：
+
+```
+目标挂 VulnerablePower 2  →  9        6 × 1.5，截断
+实际打出去                →  17 → 8   正好 9，与预报一致
+```
+
+### 取整是截断，不是四舍五入
+
+卡面显示走 `(int)PreviewValue`，`GetSingleDamage` 也是 `Math.Max(0, (int)num)`。
+实测虚弱化（`FrailPower`，格挡 ×0.75）下的防御：`5 × 0.75 = 3.75 → 3`，
+打出去玩家格挡确实是 3。导出侧必须同样截断，否则会比游戏多报 1 点。
 
 ## 爬塔层面 RunState
 
