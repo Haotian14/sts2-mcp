@@ -404,7 +404,7 @@ CardModel.UpdateDynamicVarPreview(CardPreviewMode, Creature? target, DynamicVarS
 
 于是从未被预览过的牌，渲染出来的就是裸值。`/glossary` 正是这种情况，加之它
 一局只取一次，双重意义上给不出「此刻」的数字。这就是
-`strategy.md` §4 那次 Boss 战算错斩杀线的全部原因。
+`strategy.md` §5 那次 Boss 战算错斩杀线的全部原因。
 
 ### `CardPreviewMode` 在这条路上不影响结果
 

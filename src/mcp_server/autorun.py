@@ -12,7 +12,7 @@
 
 【默认值是「交还」，不是「猜」】
 认不出的界面、多于一条的路、休息点、商店、事件、卡牌三选一，一律停手。
-理由见 strategy.md §5：**构筑与路线决策决定一局的上限**，上一局整局的卡牌
+理由见 strategy.md §3：**构筑与路线决策决定一局的上限**，上一局整局的卡牌
 奖励都由脚本「拿第一张」，结果是牌组打不动 Boss。省下的那点调用次数，
 远不值这个代价。所以这里的原则是：**只做唯一解**，凡是有得选的都交还。
 """
@@ -32,11 +32,11 @@ UNCLEAR_RETRIES = 4
 # 明显长于战后奖励出现的几秒。显式要求跨局时固定间隔多等一会儿，仍有硬上限。
 NEW_RUN_UNCLEAR_RETRIES = 30
 
-# 战斗奖励里「永远该拿」的那几样（strategy.md §2.2）。
+# 战斗奖励里「永远该拿」的那几样（strategy.md §4.2）。
 # 卡牌三选一**不在**此列 —— 那是构筑决策，必须交还。
 ALWAYS_TAKE = ("GoldReward", "RelicReward", "PotionReward")
 
-# 地图上这两类房间事关全局，绝不本地代拿主意（strategy.md §3）
+# 地图上这两类房间事关全局，绝不本地代拿主意（strategy.md §2）
 RISKY_ROOMS = ("Elite", "Boss")
 
 # 「唯一一个选项，而且它就叫『继续』」不是决策，是导航。事件房结算完那一下
@@ -153,7 +153,7 @@ def decide(state: dict[str, Any], new_run_character: str | None = None,
         return "handoff", None, "不在局中（多半停在主菜单）"
 
     # 待答的选择一律交还：`choice` 不区分弃牌 / 检索 / 除卡，而三者的最优
-    # 选法互不相同（strategy.md §3）。分不清就不做。
+    # 选法互不相同（strategy.md §2）。分不清就不做。
     if state.get("awaiting_choice"):
         return "handoff", None, "游戏正等一次选择（弃牌/检索/除卡），交还"
 
@@ -181,7 +181,7 @@ def decide(state: dict[str, Any], new_run_character: str | None = None,
             return "pick", chest["i"], "开箱（开箱本身没得选）"
 
         # 药水栏满时**没有空位可放**，而奖励项的 available 仍是 true
-        # （strategy.md §2.2 原先记的「满了会 available=false」实测不成立）。
+        # （strategy.md §4.2 原先记的「满了会 available=false」实测不成立）。
         # 照拿会点了没反应、状态不变，runner 于是空转到 stuck —— 2026-08-01
         # 第 8 层精英战后实测。空位要自己数。
         potions = state.get("potions")
@@ -194,7 +194,7 @@ def decide(state: dict[str, Any], new_run_character: str | None = None,
 
         take = next((o for o in options if o.get("id") in ALWAYS_TAKE and takeable(o)), None)
         if take:
-            return "pick", take["i"], f"{take['id']} 永远该拿（strategy.md §2.2）"
+            return "pick", take["i"], f"{take['id']} 永远该拿（strategy.md §4.2）"
 
         # 只剩一个可选项、且它是宝箱里的遗物 —— 遗物同样永远该拿
         # （拿不了的药水不算「可选项」，否则界面上只剩它时会一直交还）
@@ -224,7 +224,7 @@ def decide(state: dict[str, Any], new_run_character: str | None = None,
         risky = [o for o in moves if o.get("type") in RISKY_ROOMS]
         if risky:
             kinds = "、".join(sorted({str(o.get("type")) for o in risky}))
-            return "handoff", None, f"下一步可走 {kinds}，路线决策交还（strategy.md §3）"
+            return "handoff", None, f"下一步可走 {kinds}，路线决策交还（strategy.md §2）"
         if len(moves) == 1:
             return "move", moves[0]["i"], f"地图只有一条路（{moves[0].get('type')}）"
         if len(moves) > 1:

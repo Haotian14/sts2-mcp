@@ -946,7 +946,7 @@ review 过、清单上打了勾，但从实现之日起商店就一直是空的�
 关键能量回合：一次把 3 能量抬到 5，另一次靠放血抬到 6；后者单回合把 Boss
 从 146 打到 95，共 51 点。最终第 6 回合以 53/80 血斩杀 222 血的
 `LagavulinMatriarch`，燃烧之血结算后为 59/80。**这一次实战支持了
-strategy.md §5 的能量投送判断，但仍只是一局数据，不写成通则。**
+strategy.md §3.3 的能量投送判断，但仍只是一局数据，不写成通则。**
 
 胜利也推翻了这条任务自己的前提。战后 `NRewardsScreen` 只有 `GoldReward` 与
 `CardReward`；领取后按继续，状态从 `act=1, floor=17` 直接变为
@@ -1044,7 +1044,7 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
 ### 阶段 6 · 让它打得好
 
 - [x] 6.1 + 6.2 **战斗启发式与分层** → `src/mcp_server/autoplay.py` +
-      MCP 工具 `auto_combat`。安全线判据取自 strategy.md §3，出牌照下方
+      MCP 工具 `auto_combat`。安全线判据取自 strategy.md §2，出牌照下方
       「6.2 血的教训」那张表的三条硬性要求写。回归测试
       `src/mcp_server/test_autoplay.py`（24 项）把 v1 的死亡局面钉成了用例。
       见下方「6.1+6.2 结论」
@@ -1061,14 +1061,14 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
 - [x] 6.4b **实时卡牌伤害** → `hand[].values`、`hand[].damage_vs` 与多段牌的
       `hand[].hits` / `hits_vs`。
       卡面文本不含力量/虚弱/易伤等修正，拿它算斩杀线会算错 —— 2026-08-01
-      Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §4。
+      Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §5。
       入口不是 `GetDescriptionForPile`（那条线索是错的，见下方「6.4b 结论」），
       而是 `CardModel.DynamicVars` + `UpdateDynamicVarPreview`
 - [x] 6.4c **待选物的名字与效果文本** → `screen.options[].title` / `.text`
       （外加商店的 `.cost`）**以及 `choice.options[]` 同样两个字段**。
       此前卡牌三选一 / 商店 / 宝箱只给标识（`Anger` / `Unrelenting`），
       而 `/glossary` 只覆盖**已持有**的东西，于是**模型是闭着眼睛做构筑决策的**
-      —— 而 strategy.md §5 的结论正是「构筑决策决定一局上限」。
+      —— 而 strategy.md §3 的结论正是「构筑决策决定一局上限」。
       两条路都要补：`screen` 那条先做完，紧接着在一个事件的「从 5 张随机牌中
       选 1 张」上撞见 `choice` 那条还是裸标识。2026-08-01 又补掉了图标计数
       被删成「获得。」的缺口，并经商店、`/glossary`、`choice.options[]` 实机
@@ -1149,7 +1149,7 @@ strategy.md §1.1 那个实测局面（怪 1 只剩 16 血却要打 16 点）被
 
 **2. 安全线在回合开始时判，此刻 `player.block` 必然是 0**
 
-`strategy.md §3` 的判据是 `Σ intents[].total − player.block > hp/4`。照字面实现，
+`strategy.md §2` 的判据是 `Σ intents[].total − player.block > hp/4`。照字面实现，
 等于假定我们一点格挡都不打，于是每个「来袭超过血量 1/4」的普通回合都会交还，
 分层退化成「几乎全交给模型」。实测：一场 39 血小怪的常规战斗第 3 回合就停手，
 而当时手里明明躺着 16 点格挡的血墙。
@@ -1208,7 +1208,7 @@ MCP 工具列表在会话启动时固定。开发期改一版验一版用
 `auto_combat`）。凡是有得选的 —— 卡牌三选一、商店、除卡、岔路、精英/Boss
 方向、休息点、事件、待答选牌 —— 一律停手。
 
-依据是 strategy.md §5：上一局整局的卡牌奖励都由脚本「拿第一张」，牌组因此
+依据是 strategy.md §3.1：上一局整局的卡牌奖励都由脚本「拿第一张」，牌组因此
 打不动 Boss。**省下的调用次数远不值这个代价。**
 
 ##### 三个 bug 都是实机跑出来的，单测一个都没抓到
@@ -1275,7 +1275,7 @@ MCP 工具列表在会话启动时固定。开发期改一版验一版用
 启发式的理由是现成的（它本来就得算），模型的没有 —— 它在自己脑子里。所以
 `pick` / `move` / `choose` / `play_card` / `use_potion` / `proceed` 各加了一个
 可选的 `why`，工具描述里明说「请如实写你真正的理由，写『感觉不错』不如不写」。
-构筑与路线决策决定一局的上限（strategy.md §5），而下一局重开时，
+构筑与路线决策决定一局的上限（strategy.md §3），而下一局重开时，
 唯一还留得下来的就是这份日志。
 
 **3. 摘要必须筛掉常规操作，但不能筛掉停手记录**
