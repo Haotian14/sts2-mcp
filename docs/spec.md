@@ -83,7 +83,8 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 ### 阶段 0 · 环境
 
 - [x] 0.3 建立工作目录与 git 仓库
-- [ ] 0.1 安装 .NET 9 SDK（`winget install Microsoft.DotNet.SDK.9`）
+- [x] 0.1 安装 .NET 9 SDK（实测 `dotnet --version` = 9.0.316；整个桥接层
+      一直是用它编出来的，这个勾早就该打上）
 - [x] 0.2 **离线反编译工具链**（不是可选项，是必需品 —— 见下）
 - [ ] 0.4 备份存档 `%APPDATA%\SlayTheSpire2\`（**技术债**：调试期重启频繁，
       每次都回退到最近存档点；跑长局前务必补上）
