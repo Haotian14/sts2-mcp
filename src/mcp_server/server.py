@@ -204,7 +204,20 @@ def _log(before: dict[str, Any], action: str, why: str,
     # 出手前的局面为空（模型没看状态就直接动手）时退回用执行后的状态，
     # 总比记成一条没有上下文的空记录强
     state = before or (result or {}).get("state") or {}
+
+    # 被游戏拒绝的动作**没有发生**，不能记成一条决策。
+    # 2026-08-01 实测：易伤药水漏传 target，桥接层照规矩回了 bad_target，
+    # 而日志里躺着一条「use_potion VulnerablePotion」和一句像模像样的理由 ——
+    # 事后复盘会把一件没发生的事当成发生过。日志记假事比不记更糟。
+    if result is not None and not result.get("ok", True):
+        journal.record(state, f"{action} —— 被拒（{result.get('error')}）", why,
+                       kind="rejected")
+        return
+
     journal.record(state, action, why)
+    # 决策记的是出手**前**的局面，而死亡是出手**后**才成立的 —— 不再看一眼
+    # 执行后的状态，一整局打完可能连一条终局记录都没有（实测如此）
+    journal.observe((result or {}).get("state") or {})
 
 
 # --------------------------------------------------------------------------
