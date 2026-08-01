@@ -494,10 +494,13 @@ def has_plan(state: dict[str, Any]) -> bool:
 # 上一局的「构筑决策」：模型亲自做的、且不在战斗内的那些。
 # 判据与 digest 同源（by != heuristic），因为二者要的是同一批东西：
 # 决定一局上限的地方（strategy.md §3）。
+# `plan` 与 `run_end` 都要排除在外：前者是开局计划，单列在 `plan` 字段里；
+# 后者是「本局结束于第 N 层」这句话——floor / ended 两个字段已经说过一遍，
+# 混进 builds 里就是同一件事被复述了两遍。
 def _is_build(entry: dict[str, Any]) -> bool:
     return (entry.get("by") != "heuristic"
             and not str(entry.get("where", "")).startswith("combat")
-            and entry.get("kind") != "plan")
+            and entry.get("kind") not in ("plan", "run_end"))
 
 
 def brief(runs_back: int = 1) -> dict[str, Any]:
@@ -512,8 +515,16 @@ def brief(runs_back: int = 1) -> dict[str, Any]:
         "builds": [], "plan": None,
     }
     try:
+        if runs_back < 1:      # 非法输入（0、负数）一律当「没有上一局」，不静默返回错的局
+            return empty
         entries = _read_all()
-        current = str((_load_current() or {}).get("id") or "")
+        # 只有「尚未结束」的那一局才算「当前局」要被排除——一局结束后、新局
+        # 还没开始前，current-run.json 记的正是**刚打完的那一局**（ended 为
+        # true）。若不分这一层，死亡界面/主菜单上调 brief() 会把刚死的这局
+        # 也一并当成「当前局」排除掉，结果错把上上局的事实当成「上一局」
+        # 返回（Important 1）。
+        cur = _load_current() or {}
+        current = str(cur.get("id") or "") if not cur.get("ended") else ""
         order, grouped = _group_by_run(entries, drop_menu=True)
 
         previous = [rid for rid in order if rid != current]
@@ -525,13 +536,19 @@ def brief(runs_back: int = 1) -> dict[str, Any]:
         end = next((e for e in items if e.get("kind") == "run_end"), None)
         floors = [e["floor"] for e in items if isinstance(e.get("floor"), int)]
         hps = [e["hp"] for e in items if isinstance(e.get("hp"), int)]
+        acts = [e["act"] for e in items if isinstance(e.get("act"), int)]
 
         stops: dict[str, int] = {}
         reasons: list[str] = []
         for e in items:
             if e.get("kind") != "stop":
                 continue
-            where = str(e.get("where") or "?")
+            # 桶键只取空格前的部分：战斗内的 where 形如 `combat T1`、`combat T3`……
+            # 按回合各成一桶，会把「战斗内停手」这一件事打散成一堆一次性的小桶
+            # （实测：combat T1:5, T3:4, T5:3, T2:3, T6:2, T4:1, T9:1），而
+            # `NRewardsScreen` 这类界面桶却整个聚在一起。切掉回合号，让战斗内
+            # 的停手聚成 `combat` 一桶，与界面桶站在同一个粒度上比较。
+            where = str(e.get("where") or "?").split(" ")[0]
             stops[where] = stops.get(where, 0) + 1
             if e.get("why"):
                 reasons.append(str(e["why"]))
@@ -552,7 +569,11 @@ def brief(runs_back: int = 1) -> dict[str, Any]:
             "character": rid.split("#")[0].split("-")[-1] or None,
             "ended": end is not None,
             "floor": (end or {}).get("floor") or (max(floors) if floors else None),
-            "act": (end or {}).get("act"),
+            # 与 floor / hp 同一套降级：没有终局记录时（runner 中途被打断、
+            # 或死亡时机的记录没能补上），取本局最后一条带 act 的记录 ——
+            # 否则未结束的局 act 恒为 null，而 get_brief 的说明书承诺的是
+            # 「结束在第几层第几幕」。
+            "act": (end or {}).get("act") if end else (acts[-1] if acts else None),
             "hp": (end or {}).get("hp") if end else (hps[-1] if hps else None),
             "stops": stops,
             "stop_reasons": reasons[-3:],

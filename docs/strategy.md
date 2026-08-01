@@ -38,7 +38,7 @@
 
 ⚠️ 上一局若是别的角色，**构筑结论不能直接搬**：§1–§5 的通则照用，§6 换一节读。
 
-依赖：`run.total_floor`、`run.character`、`run.game_over`，以及决策日志
+依赖：`run.total_floor`、`player.character`、`run.game_over`，以及决策日志
 `logs/decisions.jsonl`。**这是本文唯一一条不靠 `/state` 的判据** —— 它问的是
 上一局的事，而 `/state` 只知道此刻。
 

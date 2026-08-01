@@ -17,18 +17,8 @@ from __future__ import annotations
 import json
 import os
 
-import pytest
-
 import journal
-
-
-@pytest.fixture(autouse=True)
-def tmp_journal(tmp_path, monkeypatch):
-    """每个用例一份独立的日志文件 —— 别把测试数据混进真实的跨局记录里。"""
-    monkeypatch.setattr(journal, "PATH", str(tmp_path / "decisions.jsonl"))
-    monkeypatch.setattr(journal, "_RUN_FILE", str(tmp_path / "current-run.json"))
-    monkeypatch.setattr(journal, "_warned", False)
-    return tmp_path
+from conftest import _block_append
 
 
 def state(floor=1, character="Ironclad", ascension=2, hp=70, gold=99,
@@ -284,6 +274,28 @@ def test_只有菜单桶时视同没有上一局():
     assert journal.brief()["run"] is None
 
 
+def test_brief在刚死还没开新局时返回刚打完那局而不是上上局():
+    """Important 1：`current-run.json` 里的标识在「刚死、还没开新局」这个
+    窗口指向的正是**刚打完的那一局**（`ended` 为 true）。修复前 `brief()`
+    只要看到 `current-run.json` 里有个 id 就整个当「当前局」排除掉，于是
+    死亡界面/主菜单上调用会跳过刚死的这局，错把上上局的事实当成「上一局」
+    返回——且没有任何报错或提示。
+
+    只有当那一局**尚未结束**时，才该把它当「当前局」排除；已经结束的那局
+    本身就是「上一局」，应当被 brief() 返回。"""
+    # 上上局 A：打到第 5 层后结束
+    journal.record(state(floor=5, character="Ironclad"), "A局第一步", "")
+    journal.observe(state(floor=5, character="Ironclad", hp=0, game_over=True))
+    # 上一局 B：打到第 3 层后结束——此刻正是「刚死，还没开新局」的窗口，
+    # current-run.json 记的就是 B，且 ended 为 true。
+    journal.record(state(floor=3, character="Silent"), "B局第一步", "")
+    journal.observe(state(floor=3, character="Silent", hp=0, game_over=True))
+
+    b = journal.brief()
+    assert b["character"] == "Silent"
+    assert b["floor"] == 3
+
+
 def test_brief取的是上一局而不是本局():
     journal.record(state(floor=9, character="Ironclad"), "上一局最后一步", "")
     journal.record(state(floor=1, character="Silent"), "本局第一步", "")
@@ -302,13 +314,19 @@ def test_brief给出死亡层数与死时血量():
 
 
 def test_brief给出停手点分组与最后几条理由():
+    """桶键只取 `where` 空格前的部分：真实日志里战斗内的 where 是
+    `combat T1`、`combat T3`……按回合各成一桶，会把「战斗内停手」这一件事
+    打散成一堆一次性的小桶（实测：combat T1:5, T3:4, T5:3, T2:3, T6:2,
+    T4:1, T9:1），而 `NRewardsScreen` 这类界面桶却整桶聚在一起、显得比战斗
+    更「值得注意」。切掉回合号，让 `combat T4` 聚进 `combat` 一桶，才能与
+    界面桶站在同一个粒度上比较。"""
     combat = state(in_combat=True, combat={"turn": 4})
     journal.record(combat, "auto_combat 停手", "血量过低", by="heuristic", kind="stop")
     journal.record(state(screen={"type": "NMerchantRoom"}), "auto_run 停手", "商店要挑",
                    by="heuristic", kind="stop")
     journal.record(state(floor=1, character="Silent"), "新局第一步", "")
     b = journal.brief()
-    assert b["stops"] == {"combat T4": 1, "NMerchantRoom": 1}
+    assert b["stops"] == {"combat": 1, "NMerchantRoom": 1}
     assert "血量过低" in b["stop_reasons"]
 
 
@@ -333,6 +351,23 @@ def test_brief只收模型亲自做的构筑决策():
     assert [x["action"] for x in b["builds"]] == ["pick 剑柄打击"]
 
 
+def test_builds不混入终局记录():
+    """`_is_build()` 原先只排除了 `kind=="plan"`，没排 `run_end`——于是
+    `brief().builds` 里会混进一条「本局结束于第 12 层」，而 floor / ended
+    两个字段已经把这件事说过一遍，混进 builds 纯属重复。"""
+    journal.record(state(screen={"type": "NRewardsScreen"}), "pick 剑柄打击", "补输出")
+    # by="heuristic"：只让这条记录顺带触发 observe() 补一条 run_end，
+    # 自己不作为 build 混进来（那是既有的 by != heuristic 过滤已经保证的事，
+    # 不是本用例要钉的东西）。
+    journal.record(state(floor=12, hp=0, game_over=True), "auto_combat 停手", "本局已结束",
+                   by="heuristic")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    actions = [x["action"] for x in b["builds"]]
+    assert actions == ["pick 剑柄打击"]
+    assert not any("本局结束" in a for a in actions)
+
+
 def test_brief带出上一局写下的计划():
     journal.record_plan(state(floor=1), "这一局优先拿降费件")
     journal.record(state(floor=5), "往下打", "")
@@ -354,6 +389,28 @@ def test_上一局没有终局记录时降级为见过的最大层数():
     journal.record(state(floor=1, character="Silent"), "新局第一步", "")
     b = journal.brief()
     assert b["ended"] is False and b["floor"] == 8
+
+
+def test_未结束的局act降级为最后一条有act的记录():
+    """`floor` / `hp` 都有降级取值（最大层数 / 最后一条），此前只有 `act`
+    只从 `run_end` 那条取——于是未结束的局 `act` 恒为 null，而 get_brief
+    的说明书承诺的是「结束在第几层第几幕」。补上与 hp 同样的降级。"""
+    journal.record(state(floor=3), "a", "")
+    journal.record(state(floor=8), "b", "")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert b["ended"] is False
+    assert b["act"] == 1      # state() 里 run.act 恒为 1
+
+
+def test_runs_back小于1时按无上一局处理():
+    """`runs_back <= 0` 曾经会静默返回错的局（实测：0 → 最老那局，
+    -1 → 最新那局）。非法输入该按「没有上一局」处理，而不是悄悄给出
+    一个语义不对的结果。"""
+    journal.record(state(floor=5, character="Ironclad"), "a", "")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    assert journal.brief(runs_back=0)["run"] is None
+    assert journal.brief(runs_back=-1)["run"] is None
 
 
 def test_brief读不到日志也不抛(monkeypatch):
@@ -393,22 +450,6 @@ def test_has_plan_日志根本读不到就放行(monkeypatch):
 #  `ok: True`。于是模型以为计划记下来了，下一次 auto_run 又在第 1 层
 #  卡住——写失败换了个入口，复现同一种死循环。
 # --------------------------------------------------------------------------
-
-
-def _block_append(monkeypatch):
-    """把 `open(PATH, "a", ...)` 变成必现 `OSError`，模拟磁盘只读 / 满 /
-    ACL 限制，同时不影响默认的 "r" 模式读 —— 这正是「日志可读、却写不
-    进去」这一故障模式的最小复现（不依赖 chmod 在部分账户/平台下不生效
-    的坑，参见本文件其余用例一贯采用「指向不存在的盘符」的写法，这里
-    额外需要「读仍然正常」，故换一种构造方式）。"""
-    real_open = open
-
-    def fake_open(path, mode="r", *args, **kwargs):
-        if str(path) == journal.PATH and "a" in mode:
-            raise OSError("模拟磁盘写入失败")
-        return real_open(path, mode, *args, **kwargs)
-
-    monkeypatch.setattr("builtins.open", fake_open)
 
 
 def test_record写成功时返回True():
