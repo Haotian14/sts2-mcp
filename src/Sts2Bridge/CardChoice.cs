@@ -215,6 +215,12 @@ namespace Sts2Bridge
                 var cost = GamePaths.Int(GamePaths.Get(card, "EnergyCost"), "Canonical");
                 w.Prop("cost", cost.HasValue && cost.Value < 0 ? null : cost);
                 w.Prop("type", GamePaths.Text(card, "Type"));
+
+                // 候选牌可能根本不在牌库里（事件的「从 5 张随机牌中选 1 张」、
+                // 卡牌奖励），/glossary 一个都覆盖不到 —— 光给标识等于让模型
+                // 闭着眼睛选。与 screen.options[] 用的是同一个渲染器（任务 6.4c）。
+                w.Prop("title", GlossaryExporter.TitleOf(card));
+                w.Prop("text",  GlossaryExporter.TextOf(card));
                 w.EndObject();
             }
             w.EndArray();
