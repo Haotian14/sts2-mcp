@@ -372,16 +372,47 @@ def record_plan(state: dict[str, Any], plan: str) -> None:
     record(state, "本局计划", plan, by="model", kind="plan")
 
 
+def _log_unreadable() -> bool:
+    """日志是不是**真的**读不到 —— 区别于「还没写过」。
+
+    `_read_all()` 把「文件不存在」和「文件坏了/权限不对」一律归成空列表 ——
+    这对它自己的用途（摘要、brief）没问题，半局没记录就该显示成空。但
+    `has_plan` 要的是另一件事：只有「真故障」才该按「失败即放行」处理，
+    「日志是空的 / 还没轮到本局写过 plan」跟平常没查到条目一样，走正常
+    判定即可（否则全新环境第一次开局就会永远卡在第 1 层 —— 见本模块历史
+    bug：曾经就是直接拿 `_read_all()` 的返回值当「读没读到」的证据，
+    结果两种情况在这里被混成了一种，「失败即放行」名不副实）。
+
+    判法：连日志目录都摸不到，肯定是真故障（磁盘/路径问题）；目录在但
+    文件还没创建，是「空日志」，不算故障；目录、文件都在但打不开
+    （权限、损坏），才是「读不到」。
+    """
+    d = os.path.dirname(PATH) or "."
+    if not os.path.isdir(d):
+        return True
+    try:
+        with open(PATH, encoding="utf-8"):
+            return False
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+
+
 def has_plan(state: dict[str, Any]) -> bool:
     """本局是否已经写过开局计划。
 
     ⚠️ **失败方向是「放行」**：读不到日志、日志坏了，一律返回 True。
     这条判据只用来决定 runner 要不要停一次手，而日志是旁路 —— 让一次磁盘
-    错误把整局卡在第 1 层，比漏做一次复盘糟得多。
+    错误把整局卡在第 1 层（还写不进 `record_plan` 救不回来），比漏做一次
+    复盘糟得多。真正的判据在 `_log_unreadable`：区分「读不到」与「日志是
+    空的/本局没记过 plan」，后者走的是正常的「没查到条目」分支。
     """
     try:
         rid = run_id(state)
         if rid == "menu":
+            return True
+        if _log_unreadable():
             return True
         return any(e.get("run") == rid and e.get("kind") == "plan" for e in _read_all())
     except Exception:      # noqa: BLE001 —— 日志绝不能弄坏一步棋

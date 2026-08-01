@@ -23,12 +23,17 @@ import journal
 def 隔离日志(tmp_path, monkeypatch):
     """runner 的用例不该碰仓库里真实的 logs/ —— has_plan 会读它、run_id 会写它。
 
-    默认让 has_plan 返回 True：既有用例关心的是 runner 的决策，不是开局复盘；
-    要验复盘的用例自己再 monkeypatch 一次。
+    不再把 has_plan 桩死成 True：那样会让所有走 play_run 的用例都在「开局
+    复盘」这个特性关闭的状态下跑，往后任何在第 1 层跑 play_run 的新用例都
+    会默默继承这个假状态。这里只隔离日志文件位置（真实 has_plan 读写的是
+    tmp_path，不是仓库里的 logs/），has_plan 本身用真实实现 —— 空日志对
+    应「本局没记过 plan」，多数既有用例走的是 floor > 1 或不经 play_run，
+    不受影响；真正需要 floor == 1 走 play_run 的用例见「开局先复盘」小节，
+    那里会显式安排好日志内容。
     """
     monkeypatch.setattr(journal, "PATH", str(tmp_path / "decisions.jsonl"))
     monkeypatch.setattr(journal, "_RUN_FILE", str(tmp_path / "current-run.json"))
-    monkeypatch.setattr(journal, "has_plan", lambda state: True)
+    monkeypatch.setattr(journal, "_warned", False)
 
 
 def state(floor=5, hp=60, gold=99, in_combat=False, screen=None, map_=None, **kw):
@@ -352,13 +357,16 @@ def test_等几次仍是如此才交还():
 def test_走满上限也会停():
     s = state(map_={"can_move": True, "options": [{"i": 0, "type": "Monster"}]})
     fake = Fake([s])
-    # 每次移动都真的往前走一层，指纹会变，故不会被 stuck 判据拦下
+    # 每次移动都真的往前走一层，指纹会变，故不会被 stuck 判据拦下。
+    # 层数从 s 的初始层（5）往上加，不能从 1 起数 —— 现实中 total_floor
+    # 只增不减，从 1 起数会让层数从 5 倒退到 1，不像真游戏；这也会撞上
+    # 「开局先复盘」的 floor <= 1 检查，把这条用例变成误判成 handoff。
     walked = []
 
     def walk(i):
         walked.append(i)
         return {"ok": True, "state": state(
-            floor=len(walked), map_={"can_move": True, "options": [{"i": 0, "type": "Monster"}]})}
+            floor=5 + len(walked), map_={"can_move": True, "options": [{"i": 0, "type": "Monster"}]})}
 
     fake.move = walk
     result = run(fake, max_steps=5)
@@ -409,5 +417,57 @@ def test_经play_run时开局无计划真的会停手(monkeypatch):
     s = state(floor=1, map_=ONE_ROAD)
     fake = Fake([s])
     result = run(fake)
+    assert result["stopped"] == "handoff"
+    assert "复盘" in result["reason"]
+
+
+def test_真实has_plan接线_空日志第一层停手_记完计划后不再停():
+    """端到端钉住 journal 那一侧算得对不对 —— 之前所有经过 play_run 的用例
+    都把 journal.has_plan 整个换成 lambda，journal 自己的判断从没被真正
+    跑过一次。这里用的是真实 has_plan（日志走 fixture 隔离出的 tmp_path）。"""
+    s = state(floor=1, map_=ONE_ROAD)
+    fake = Fake([s])
+    result = run(fake)
+    assert result["stopped"] == "handoff"
+    assert "复盘" in result["reason"]
+
+    journal.record_plan(s, "这一局先探一条路试试")
+    fake2 = Fake([s])
+    result2 = run(fake2)
+    assert fake2.calls == ["move0"]           # 不再因缺计划停手，径直往下走
+    assert "复盘" not in result2["reason"]
+
+
+def test_跨局连跑时开局复盘会重新生效():
+    """入口那一局已有计划（entry 处 has_plan 会算出 True），但用
+    new_run_character 连跑进新局后，新局第 1 层必须重新算一次 has_plan ——
+    不能把入口时的结果一直背到新局头上（这正是这个特性最该生效的场景）。"""
+    journal.record_plan(state(floor=1), "上一局的开局计划")
+    journal.record(state(floor=9), "打到第9层", "")
+
+    # floor 要接到上面记的第 9 层 —— 用默认的 5 会被 journal 判成「总层数
+    # 倒退」，凭空造出另一局，入口 has_plan 就测不到「上一局已有计划」了。
+    dead_wait = state(floor=9, screen=screen("NGameOverScreen", []))
+    dead_wait["run"]["game_over"] = True
+    dead_continue = state(screen=screen("NGameOverScreen", [opt(0, "继续")]))
+    dead_continue["run"]["game_over"] = True
+    dead_menu = state(screen=screen("NGameOverScreen", [opt(0, "返回主菜单")]))
+    dead_menu["run"]["game_over"] = True
+    single = {"in_run": False, "screen": screen("NMainMenu", [opt(0, "单人模式")])}
+    standard = {"in_run": False, "screen": screen("NMainMenu", [opt(0, "标准模式")])}
+    choose = {"in_run": False, "screen": screen("NMainMenu", [
+        opt(0, "Ironclad", selected=False), opt(1, "Silent", selected=False),
+        opt(2, "ConfirmButton")])}
+    confirm = {"in_run": False, "screen": screen("NMainMenu", [
+        opt(0, "Ironclad", selected=False), opt(1, "Silent", selected=True),
+        opt(2, "ConfirmButton")])}
+    arrived = state(floor=1, screen=screen("NEventRoom", [opt(0, "领取祝福"), opt(1, "离开")]))
+    arrived["player"]["character"] = "Silent"
+    fake = Fake([dead_continue, dead_menu, single, standard, choose, confirm, arrived])
+    result = autorun.play_run(
+        dead_wait, play_card=lambda c, t: None, end_turn=lambda: None,
+        pick=fake.pick, proceed=fake.proceed, move=fake.move,
+        refresh=lambda: fake.states[0], settle_wait=0,
+        new_run_character="Silent")
     assert result["stopped"] == "handoff"
     assert "复盘" in result["reason"]

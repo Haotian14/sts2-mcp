@@ -273,9 +273,15 @@ def play_run(
     repeats = 0
     unclear = 0
     last_sig = None
-    # 一次 play_run 调用期间这个值不会变（set_plan 只可能发生在两次调用之间），
-    # 故只求值一次，不必每步都读日志。
+    # 只在两种时刻算 has_plan：一次是进入时，另一次是**确实跨了局**的那一刻
+    # （`in_run` 由 False 翻回 True，跨局必经的转折）。用 new_run_character
+    # 连跑多局时，入口那次绑的是上一局，若不重算，新局第 1 层会被入口时的
+    # 结果直接放过 —— 那正是这个特性最该生效的场景。
+    # ⚠️ 绝不能每步都调 —— has_plan 内部会调 journal.run_id()，那有落盘副作用
+    # （写 logs/current-run.json），一步一次代价太大，也没必要：has_plan
+    # 在一局之内不会变（set_plan 只可能发生在两次 play_run 调用之间）。
     has_plan = journal.has_plan(state)
+    was_in_run = bool(state.get("in_run"))
 
     def note(before: dict[str, Any], label: str, why: str) -> None:
         log.append({"floor": (before.get("run") or {}).get("total_floor"),
@@ -287,6 +293,11 @@ def play_run(
                 pass
 
     while steps < max_steps:
+        now_in_run = bool(state.get("in_run"))
+        if now_in_run and not was_in_run:
+            has_plan = journal.has_plan(state)
+        was_in_run = now_in_run
+
         action, arg, why = decide(state, new_run_character=new_run_character,
                                   has_plan=has_plan)
 
