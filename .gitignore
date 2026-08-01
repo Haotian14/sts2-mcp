@@ -28,6 +28,9 @@ logs/
 *.log
 runs/
 
+# ---- 存档备份（0.4）：玩家自己的存档，不进仓库 ----
+backup/saves/
+
 # ---- CoreCLR profiling 头文件 ----
 # 第三方代码（dotnet/runtime，MIT），体积较大，
 # 由 scripts/fetch-headers.ps1 按需获取
