@@ -386,6 +386,27 @@ def record_plan(state: dict[str, Any], plan: str) -> bool:
     return record(state, "本局计划", plan, by="model", kind="plan")
 
 
+def _ensure_dir() -> bool:
+    """确保日志目录存在，返回目录**现在**是不是在。
+
+    `_log_unreadable` 与 `_log_unwritable` 都要判断「目录摸不到」是真故障
+    还是「全新安装、还没来得及建」——而这两者单看一次 `os.path.isdir`
+    分不出来，非得先试着建一次不可（建得出来就是后者，建不出来才是前者）。
+    这一步是两个探针共用的唯一交集，抽到这里，谁也不必再依赖对方或
+    `has_plan` 里别的调用是否恰好先把目录建了出来。
+
+    ⚠️ 与 `_log_unreadable`/`_log_unwritable` 判的是两件不同的事（读坏了 /
+    写坏了）不同，这里只做「目录在不在」这一件事——不要把它也理解成
+    第三个探针，它只是两者共用的前置步骤。
+    """
+    d = os.path.dirname(PATH) or "."
+    try:
+        os.makedirs(d, exist_ok=True)
+    except OSError:
+        pass
+    return os.path.isdir(d)
+
+
 def _log_unreadable() -> bool:
     """日志是不是**真的**读不到 —— 区别于「还没写过」。
 
@@ -397,22 +418,16 @@ def _log_unreadable() -> bool:
     bug：曾经就是直接拿 `_read_all()` 的返回值当「读没读到」的证据，
     结果两种情况在这里被混成了一种，「失败即放行」名不副实）。
 
-    判法：目录**摸不到且建不出来**，才是真故障（磁盘/路径问题）；目录在
-    但文件还没创建，是「空日志」，不算故障；目录、文件都在但打不开
+    判法：目录**建不出来**，才是真故障（磁盘/路径问题）；目录建得出来但
+    文件还没创建，是「空日志」，不算故障；目录、文件都在但打不开
     （权限、损坏），才是「读不到」。
 
-    ⚠️ 这里只做了 `os.path.isdir` 这一次静态检查，本身**分不清**「目录
-    还没来得及建」与「目录建不出来」——它俩长得一模一样。这份正确性是
-    借来的：唯一的调用方 `has_plan()` 在这之前已经先调过 `run_id(state)`，
-    其内部 `_save_current()` 用 `os.makedirs(..., exist_ok=True)` 试过建
-    目录一次。等轮到这里检查时，目录若仍不存在，说明那次 `os.makedirs`
-    真的失败了（异常被 `_save_current` 里的 `_warn` 静默吞掉），而不是
-    「全新安装、还没来得及建」。**若脱离 `has_plan` 单独调用这个函数，
-    或者两者的调用顺序被换掉，这条判断就会失真**（全新安装、logs/ 目录
-    从未创建过时，会被误判成真故障而放行，导致第 1 层跳过复盘）。
+    目录这一步交给 `_ensure_dir()`：它会先试着建一次目录，建不出来才算
+    数。这样「全新安装、logs/ 目录从未创建过」与「目录真的建不出来」不再
+    长得一模一样——不必依赖 `has_plan` 里别的调用（如 `run_id`）恰好先把
+    目录建了出来，本函数单独调用也是对的，调用顺序也不再重要。
     """
-    d = os.path.dirname(PATH) or "."
-    if not os.path.isdir(d):
+    if not _ensure_dir():
         return True
     try:
         with open(PATH, encoding="utf-8"):
@@ -432,12 +447,16 @@ def _log_unwritable() -> bool:
     在没有人恰好触发过一次写入的情况下也得能独立判断出「写会失败」，
     不然它会在这条计划注定存不下来的前提下，一直等一个永远不会兑现的写入。
 
-    探测方式与 `_append` 完全同路：先试着建目录，再以追加模式打开一次。
-    打开成功就立刻关闭，不写入任何字节 —— 探测本身不产生副作用，也不会
-    在日志里凭空多出一行空的。
+    探测方式与 `_append` 同路：目录这一步交给 `_ensure_dir()`（建不出来
+    即真故障），再以追加模式打开一次，打开成功就立刻关闭，不写入任何
+    字节。⚠️ 但探测本身**并非无副作用**：目录不存在时会被 `_ensure_dir`
+    建出来；文件不存在时 `open(PATH, "a")` 也会顺手建出一个 0 字节的空
+    文件——这与 `_append` 真正落盘时「建目录」这一步一致、无害，但绝不是
+    「什么都不留下」，别再让注释说反话。
     """
+    if not _ensure_dir():
+        return True
     try:
-        os.makedirs(os.path.dirname(PATH), exist_ok=True)
         with open(PATH, "a", encoding="utf-8"):
             return False
     except OSError:
