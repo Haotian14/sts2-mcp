@@ -354,7 +354,7 @@ namespace Sts2Bridge
         /// <c>UpdateDynamicVarPreview</c> 才是修正后的数字**，否则等于
         /// <c>BaseValue</c>（游戏界面正是在悬停时先 ClearPreview 再 Update）。
         /// 加之 glossary 一局只取一次，拿它算斩杀线必然是卡面裸值。
-        /// 2026-08-01 第一章 Boss 战即因此差 5 点没触发击晕而阵亡（strategy.md §4）。
+        /// 2026-08-01 第一章 Boss 战即因此差 5 点没触发击晕而阵亡（strategy.md §5）。
         ///
         /// 【为什么分 values 与 damage_vs 两块】
         /// 力量、虚弱这类自身修正与目标无关，易伤这类目标侧修正则每只怪各不相同。
