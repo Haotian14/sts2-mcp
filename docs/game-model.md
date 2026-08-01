@@ -358,6 +358,12 @@ EnergyCost.CostsX     = False    ← 排除 X 费牌的可能
 额外抽[blue]2[/blue]张牌。          →  额外抽2张牌。
 ```
 
+`[img]path[/img]` 不能一律整段删除。`energyIcons()` / `starIcons()` 用连续图片的
+**个数**表示数值（如两张能量图标就是 2 点能量），删掉会把「获得 2 点能量」
+变成「获得。」。导出时连续同类图标转成 `【能量×N】` / `【星星×N】`；未知图标
+至少保留短文件名。2026-08-01 用战鼓实机验证：商店、`/glossary`、
+`choice.options[]` 均显示 `【能量×2】`，升级后变为 `【能量×3】`。
+
 `CardModel.Title` 是**已渲染的 string**（实测「早有准备」），而 `RelicModel.Title`
 是 `LocString` —— 两者不一致，不要想当然。
 

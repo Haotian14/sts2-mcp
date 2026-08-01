@@ -204,14 +204,17 @@ namespace Sts2Bridge
         /// 仅剥离形如 [tag] / [/tag] / [tag=value] 的标记；含空格或非标记字符的
         /// 方括号原样保留，避免误伤正文里可能出现的括号。
         ///
-        /// 【[img] 要连内容一起丢】
-        /// 着色标记之间的是正文（`[gold]格挡[/gold]` → `格挡`），但 [img] 之间
-        /// 的是资源路径，不是给人看的：
+        /// 【[img] 的路径要丢，语义不能丢】
+        /// 着色标记之间的是正文（`[gold]格挡[/gold]` → `格挡`），而 [img] 之间
+        /// 是资源路径，不是给人看的：
         ///
         ///   耗能变为0[img]res://images/…/ironclad_energy_icon.png[/img]。
         ///
         /// 只剥标签会留下一串裸路径，既是噪音又会把「变为 0」和后面的句子黏成
-        /// 一句看不懂的话。2026-08-01 在商店的「无情猛攻」上暴露出来。
+        /// 一句看不懂的话；把整个图片丢掉也不行：<c>energyIcons()</c> 与
+        /// <c>starIcons()</c> 正是用图片个数表示数值，删掉后「获得 2 点能量」只剩
+        /// 「获得。」。连续同类图片因此转成明确的 <c>【能量×2】</c> / <c>【星星×1】</c>；
+        /// 未知图片至少保留文件名，绝不再静默丢掉语义。
         /// </summary>
         internal static string? StripMarkup(string? text)
         {
@@ -226,12 +229,35 @@ namespace Sts2Bridge
                     int close = text.IndexOf(']', i + 1);
                     if (close > i && IsMarkupTag(text, i + 1, close))
                     {
-                        // 图片：连同中间的路径与闭合标记一并丢弃。
+                        // 图片：丢路径但保留图标的语义与重复次数。
                         // 找不到闭合标记时退回只剥这一个标签，绝不吞掉后面的正文。
                         if (IsTagNamed(text, i + 1, close, "img"))
                         {
                             int end = text.IndexOf("[/img]", close + 1, StringComparison.OrdinalIgnoreCase);
-                            i = end >= 0 ? end + "[/img]".Length : close + 1;
+                            if (end < 0)
+                            {
+                                i = close + 1;
+                                continue;
+                            }
+
+                            string icon = IconLabel(text.Substring(close + 1, end - close - 1));
+                            int count = 1;
+                            int next = end + "[/img]".Length;
+
+                            // energyIcons()/starIcons() 以相邻的同类图片表示数值。
+                            // 在这里合并成一个显式数字，模型不必靠数标签猜数量。
+                            while (TryReadImage(text, next, out int after, out string following) &&
+                                   string.Equals(icon, following, StringComparison.Ordinal))
+                            {
+                                count++;
+                                next = after;
+                            }
+
+                            sb.Append('【').Append(icon);
+                            if (count > 1 || icon == "能量" || icon == "星星")
+                                sb.Append('×').Append(count);
+                            sb.Append('】');
+                            i = next;
                             continue;
                         }
                         i = close + 1;
@@ -241,6 +267,41 @@ namespace Sts2Bridge
                 sb.Append(text[i++]);
             }
             return sb.ToString();
+        }
+
+        /// <summary>读取 start 处的一整个 [img]path[/img]，用于合并连续图标。</summary>
+        private static bool TryReadImage(string s, int start, out int after, out string label)
+        {
+            after = start;
+            label = "图标";
+            if (start >= s.Length || s[start] != '[') return false;
+
+            int close = s.IndexOf(']', start + 1);
+            if (close <= start || !IsMarkupTag(s, start + 1, close) ||
+                !IsTagNamed(s, start + 1, close, "img")) return false;
+
+            int end = s.IndexOf("[/img]", close + 1, StringComparison.OrdinalIgnoreCase);
+            if (end < 0) return false;
+
+            label = IconLabel(s.Substring(close + 1, end - close - 1));
+            after = end + "[/img]".Length;
+            return true;
+        }
+
+        /// <summary>把资源路径压成模型看得懂的短标签。</summary>
+        private static string IconLabel(string resource)
+        {
+            string lower = resource.ToLowerInvariant();
+            if (lower.Contains("energy")) return "能量";
+            if (lower.Contains("star")) return "星星";
+
+            int slash = Math.Max(resource.LastIndexOf('/'), resource.LastIndexOf('\\'));
+            string file = slash >= 0 ? resource.Substring(slash + 1) : resource;
+            int dot = file.LastIndexOf('.');
+            if (dot > 0) file = file.Substring(0, dot);
+            if (file.EndsWith("_icon", StringComparison.OrdinalIgnoreCase))
+                file = file.Substring(0, file.Length - "_icon".Length);
+            return file.Length > 0 ? "图标:" + file : "图标";
         }
 
         /// <summary>标记的名字是否为 name（忽略闭合斜杠与 =value 部分）。</summary>
