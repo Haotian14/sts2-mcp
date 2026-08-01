@@ -79,14 +79,16 @@ namespace Sts2Bridge
         /// 在节点树里按类型短名递归收集节点，保持场景树顺序 —— 顺序即下标，
         /// 必须稳定。Godot 的子节点是有序的，天然满足。
         /// </summary>
-        private static void Collect(object? node, string typeName, List<object?> found, int depth = 0)
+        private static void Collect(object? node, string typeName, List<object?> found,
+                                    bool includeSubclasses, int depth = 0)
         {
             if (node == null || depth > 12) return;      // 深度上限：防御畸形/循环的场景树
 
-            if (GamePaths.Id(node) == typeName) found.Add(node);
+            bool hit = includeSubclasses ? IsA(node, typeName) : GamePaths.Id(node) == typeName;
+            if (hit) found.Add(node);
 
             foreach (var child in Children(node))
-                Collect(child, typeName, found, depth + 1);
+                Collect(child, typeName, found, includeSubclasses, depth + 1);
         }
 
         /// <summary>
@@ -104,10 +106,19 @@ namespace Sts2Bridge
             return GamePaths.Enumerate(array);
         }
 
-        private static List<object?> FindAll(object? root, string typeName)
+        /// <summary>
+        /// 按类型短名找出所有后代节点。
+        ///
+        /// <paramref name="includeSubclasses"/> 为 true 时改按**基类**匹配。
+        /// 商店踩过这个坑：`NMerchantSlot` 是抽象基类，场景里的实际节点是
+        /// `NMerchantCard` / `NMerchantRelic` / `NMerchantPotion` /
+        /// `NMerchantCardRemoval`，按运行时类型短名精确比对**永远匹配 0 个** ——
+        /// 商店因此从实现之日起就一直报空，直到 2026-08-01 头一回真站进商店才发现。
+        /// </summary>
+        private static List<object?> FindAll(object? root, string typeName, bool includeSubclasses = false)
         {
             var found = new List<object?>();
-            Collect(root, typeName, found);
+            Collect(root, typeName, found, includeSubclasses);
             return found;
         }
 
@@ -275,14 +286,15 @@ namespace Sts2Bridge
                 case MerchantRoom:
                     // 商店：每个槽位挂一个 MerchantEntry，价格与「钱够不够」都在它上面。
                     // 缺货的槽位不列出 —— 卖掉之后槽位还在，但已无内容。
-                    foreach (var slot in FindAll(top, MerchantSlot))
+                    // NMerchantSlot 是抽象基类，必须按基类匹配（见 FindAll）。
+                    foreach (var slot in FindAll(top, MerchantSlot, includeSubclasses: true))
                     {
                         var entry = GamePaths.Get(slot, "Entry");
                         if (entry == null) continue;
                         if (!(GamePaths.Bool(entry, "IsStocked") ?? false)) continue;
 
                         var cost = GamePaths.Int(entry, "Cost");
-                        var label = LabelOf(slot) ?? GamePaths.Id(entry);
+                        var label = MerchantLabel(entry);
                         result.Add((slot, cost.HasValue ? $"{label} ({cost}金)" : label,
                                     GamePaths.Bool(entry, "EnoughGold")));
                     }
@@ -390,6 +402,43 @@ namespace Sts2Bridge
             return null;
         }
 
+        /// <summary>
+        /// 把一个不打算 await 的 Task 交给游戏的 <c>TaskHelper.RunSafely</c> ——
+        /// 直接丢弃 Task 会让里面的异常无人观察、悄无声息地消失，
+        /// 而这类动作失败恰恰是最需要看见的。取不到该助手时退回丢弃。
+        /// </summary>
+        private static void RunSafely(object? task)
+        {
+            if (task == null) return;
+            try { GamePaths.CallStatic("MegaCrit.Sts2.Core.Helpers.TaskHelper", "RunSafely", task); }
+            catch { /* 助手不在就算了，动作本身已经发出去了 */ }
+        }
+
+        /// <summary>
+        /// 商品的标识。
+        ///
+        /// **不能用 <see cref="LabelOf"/>** —— 槽位上唯一的文本是价格标签，
+        /// 读出来是「54」这样的数字，模型据此根本不知道自己在买什么。
+        /// 商品身份只能从 entry 上的模型取：
+        ///
+        /// <code>
+        /// MerchantCardEntry    .CreationResult.Card : CardModel   ← 遗物可能改过它，取 Card 而非 originalCard
+        /// MerchantRelicEntry   .Model               : RelicModel
+        /// MerchantPotionEntry  .Model               : PotionModel
+        /// MerchantCardRemovalEntry                    除卡服务，没有模型
+        /// </code>
+        /// </summary>
+        private static string MerchantLabel(object? entry)
+        {
+            if (GamePaths.TryGet(entry, "CreationResult", out var created) && created != null)
+                return GamePaths.Id(GamePaths.Get(created, "Card")) ?? "Card";
+
+            if (GamePaths.TryGet(entry, "Model", out var model) && model != null)
+                return GamePaths.Id(model) ?? "Item";
+
+            return GamePaths.Id(entry) ?? "MerchantEntry";   // 除卡服务走这条
+        }
+
         /// <summary>运行时类型是否派生自某个类型（按短名比对，不必编译期引用）。</summary>
         private static bool IsA(object? node, string baseTypeName)
         {
@@ -439,8 +488,19 @@ namespace Sts2Bridge
                     return null;
 
                 case MerchantRoom:
-                    // 商店槽位本身不是按钮，可点的是它的 Hitbox
-                    GamePaths.Call(GamePaths.Get(node, "Hitbox") ?? node, "ForceClick");
+                    // 【不能 ForceClick】商店槽位的 MouseReleased 处理器有
+                    // `if (_isHovered && !_ignoreMouseRelease && ev is InputEventMouseButton)`
+                    // 三重前置 —— 我们从没悬停过，合成的释放事件被直接丢弃。
+                    // 实测：点了没反应，金币不变、界面不变、也不报错。
+                    //
+                    // 走它自己的选中入口：`OnSelected()` 正是那个处理器校验通过后
+                    // 要调的东西（private async Task，内部 await OnTryPurchase）。
+                    // 与 CardRewardScreen 直接调 SelectCard 是同一个路数。
+                    //
+                    // 不 await：游戏自己也是 `TaskHelper.RunSafely(OnSelected())`
+                    // 这样发射后不管的，异常交给它记日志；动作是否生效由上层的
+                    // 「等局面稳定」判定。
+                    RunSafely(GamePaths.Call(node, "OnSelected"));
                     return null;
 
                 default:
