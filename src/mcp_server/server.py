@@ -564,6 +564,41 @@ def get_journal(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
 
 @server.tool(
     description=(
+        "开新局时先调这个：把**上一局的硬事实**取回来。\n"
+        "\n"
+        "给的是事实，不是建议：上一局是哪个角色、结束在第几层第几幕、"
+        "死时多少血、启发式在哪些界面停过手（含最后几条停手理由）、"
+        "模型自己做过哪些构筑决策，以及上一局开局时写下的计划。\n"
+        "\n"
+        "**「所以这一局该改什么」要你自己写**，写完用 set_plan 记下来。"
+        "上一局若是别的角色，构筑结论不能直接搬 —— 通则见 strategy.md，"
+        "角色专属结论见该文 §6。"
+    )
+)
+def get_brief() -> dict[str, Any]:
+    # 获取上一局的硬事实
+    return journal.brief()
+
+
+@server.tool(
+    description=(
+        "写下这一局的开局计划（读完 get_brief 之后）。\n"
+        "\n"
+        "一两句话：这一局据上一局的哪个事实、要改什么。它会记进决策日志，"
+        "下一局的 get_brief 读得到 —— 这样每一局的判断都接得上前一局。\n"
+        "\n"
+        "**auto_run 在第 1 层会因为「本局尚无计划」停手一次**，"
+        "调过本工具之后它就不再因此停手。"
+    )
+)
+def set_plan(plan: str) -> dict[str, Any]:
+    # 把模型写的开局计划记进日志
+    journal.record_plan(_request("GET", "/state"), plan)
+    return {"ok": True, "plan": plan}
+
+
+@server.tool(
+    description=(
         "检查桥接层是否就绪。连不上游戏时先用它定位问题。\n"
         "`attached` 为 false 表示桥接层没接入游戏帧循环，此时**动作一律无法下发**。"
     )
