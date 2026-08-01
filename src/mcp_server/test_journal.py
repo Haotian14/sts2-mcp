@@ -312,6 +312,18 @@ def test_brief给出停手点分组与最后几条理由():
     assert "血量过低" in b["stop_reasons"]
 
 
+def test_停手理由只留最后三条且顺序不是最早三条():
+    combat = state(in_combat=True, combat={"turn": 1})
+    journal.record(combat, "auto_combat 停手", "理由一", by="heuristic", kind="stop")
+    journal.record(combat, "auto_combat 停手", "理由二", by="heuristic", kind="stop")
+    journal.record(combat, "auto_combat 停手", "理由三", by="heuristic", kind="stop")
+    journal.record(combat, "auto_combat 停手", "理由四", by="heuristic", kind="stop")
+    journal.record(combat, "auto_combat 停手", "理由五", by="heuristic", kind="stop")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert b["stop_reasons"] == ["理由三", "理由四", "理由五"]
+
+
 def test_brief只收模型亲自做的构筑决策():
     journal.record(state(screen={"type": "NRewardsScreen"}), "pick 剑柄打击", "补输出")
     journal.record(state(in_combat=True, combat={"turn": 2}), "play_card 打击", "常规",
@@ -326,6 +338,14 @@ def test_brief带出上一局写下的计划():
     journal.record(state(floor=5), "往下打", "")
     journal.record(state(floor=1, character="Silent"), "新局第一步", "")
     assert journal.brief()["plan"] == "这一局优先拿降费件"
+
+
+def test_一局内重新规划时取最新那条():
+    """重新规划是带着更多信息做的，它比开局时的猜想更值得传给下一局。"""
+    journal.record_plan(state(floor=1), "开局：优先拿降费件")
+    journal.record_plan(state(floor=9), "改主意：先补格挡，不然撑不到 Boss")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    assert journal.brief()["plan"] == "改主意：先补格挡，不然撑不到 Boss"
 
 
 def test_上一局没有终局记录时降级为见过的最大层数():
