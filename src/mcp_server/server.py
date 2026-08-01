@@ -590,12 +590,28 @@ def get_brief() -> dict[str, Any]:
         "下一局的 get_brief 读得到 —— 这样每一局的判断都接得上前一局。\n"
         "\n"
         "**auto_run 在第 1 层会因为「本局尚无计划」停手一次**，"
-        "调过本工具之后它就不再因此停手。"
+        "调过本工具之后它就不再因此停手。\n"
+        "\n"
+        "**返回值的 `ok` 是如实的**：磁盘写不进去时（满盘、只读、权限问题）"
+        "会是 `false`，说明这条计划**没有**真正记下来 —— 下一局的 get_brief "
+        "也读不到它。即便如此 auto_run 也不会因此永远卡在第 1 层"
+        "（既然计划注定存不下来，继续停手没有意义）；但 `ok:false` 时不必"
+        "重试，多半是环境问题，值得告知使用者。"
     )
 )
 def set_plan(plan: str) -> dict[str, Any]:
-    # 把模型写的开局计划记进日志
-    journal.record_plan(_request("GET", "/state"), plan)
+    # 把模型写的开局计划记进日志；record_plan 如实回报有没有真的落盘 ——
+    # 写失败时绝不能像从前那样无条件回报 ok:True（模型会以为记下来了，
+    # 下一局 get_brief 却读不到，而 auto_run 又会在同一个停手点上卡住）。
+    saved = journal.record_plan(_request("GET", "/state"), plan)
+    if not saved:
+        return {
+            "ok": False,
+            "plan": plan,
+            "error": "决策日志写不进去（磁盘/权限问题），这条计划没有真正记下来 —— "
+                     "下一局的 get_brief 也读不到它。auto_run 不会因此卡在第 1 层，"
+                     "但计划本身需要你自己记住。",
+        }
     return {"ok": True, "plan": plan}
 
 

@@ -185,7 +185,9 @@ def _where(state: dict[str, Any]) -> str:
     return (state.get("run") or {}).get("room") or "?"
 
 
-def _append(entry: dict[str, Any]) -> None:
+def _append(entry: dict[str, Any]) -> bool:
+    """追加一行。返回是否真的落了盘 —— 调用方（`record`）要把这件事如实
+    传出去，`_warn` 只管打日志、不够用来判断有没有写成功。"""
     try:
         os.makedirs(os.path.dirname(PATH), exist_ok=True)
         with open(PATH, "a", encoding="utf-8") as f:
@@ -195,8 +197,10 @@ def _append(entry: dict[str, Any]) -> None:
             if _truncated():
                 f.write("\n")
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        return True
     except OSError as exc:
         _warn(exc)
+        return False
 
 
 def _truncated() -> bool:
@@ -212,8 +216,8 @@ def _truncated() -> bool:
 
 
 def record(state: dict[str, Any], action: str, why: str = "", by: str = "model",
-           kind: str = "") -> None:
-    """记一步决策。
+           kind: str = "") -> bool:
+    """记一步决策。返回是否真的落了盘（写失败时为 `False`，但绝不抛异常）。
 
     `state` 是做这个决策时的局面。动作工具只拿得到**执行后**的状态，
     直接用即可 —— 层数、金币、血量在一次点击前后基本不变；而战斗内的
@@ -226,6 +230,10 @@ def record(state: dict[str, Any], action: str, why: str = "", by: str = "model",
     `kind` 标出「这条不是常规操作」（如 `stop`：启发式停手交还）。摘要会按它
     保留 —— 停手的理由标出了启发式的边界在哪，恰恰是最该留下来的一条，
     而它偏偏也是 `by=heuristic` 的战斗内记录，不特别标一下就会被筛掉。
+
+    ⚠️ 返回值只是**如实相告**，不改变「绝不因为写失败而抛异常」这条铁律——
+    调用方（如 `record_plan` → `set_plan`）可以选择看这个返回值，也可以
+    像大多数调用点一样完全不看；日志始终是旁路，游戏永远是主线。
     """
     try:
         state = state or {}
@@ -245,10 +253,12 @@ def record(state: dict[str, Any], action: str, why: str = "", by: str = "model",
             "action": action,
             "why": why,
         }
-        _append({k: v for k, v in entry.items() if v not in (None, "")})
+        ok = _append({k: v for k, v in entry.items() if v not in (None, "")})
         observe(state)
+        return ok
     except Exception as exc:      # noqa: BLE001 —— 日志绝不能弄坏一步棋
         _warn(exc)
+        return False
 
 
 def observe(state: dict[str, Any]) -> None:
@@ -362,14 +372,18 @@ def digest(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
     return {"path": PATH, "runs": out}
 
 
-def record_plan(state: dict[str, Any], plan: str) -> None:
-    """记下本局的开局计划（spec.md 6.3b）。
+def record_plan(state: dict[str, Any], plan: str) -> bool:
+    """记下本局的开局计划（spec.md 6.3b）。返回是否真的落了盘。
 
     形状上就是一条普通决策，只是 `kind="plan"`。`digest` 的筛选规则是
     「带 kind 的一律留」，所以它天然会出现在下一局的 `brief()` 里 ——
     闭环不需要额外代码。
+
+    ⚠️ `set_plan` 工具靠这个返回值判断能不能对模型说「记下来了」——
+    写失败时 `has_plan` 会转为放行（见其文档），但那只解决了「不再卡死」，
+    不能让 `set_plan` 平白说谎，模型有权知道这一条计划其实没能落盘。
     """
-    record(state, "本局计划", plan, by="model", kind="plan")
+    return record(state, "本局计划", plan, by="model", kind="plan")
 
 
 def _log_unreadable() -> bool:
@@ -383,9 +397,19 @@ def _log_unreadable() -> bool:
     bug：曾经就是直接拿 `_read_all()` 的返回值当「读没读到」的证据，
     结果两种情况在这里被混成了一种，「失败即放行」名不副实）。
 
-    判法：连日志目录都摸不到，肯定是真故障（磁盘/路径问题）；目录在但
-    文件还没创建，是「空日志」，不算故障；目录、文件都在但打不开
+    判法：目录**摸不到且建不出来**，才是真故障（磁盘/路径问题）；目录在
+    但文件还没创建，是「空日志」，不算故障；目录、文件都在但打不开
     （权限、损坏），才是「读不到」。
+
+    ⚠️ 这里只做了 `os.path.isdir` 这一次静态检查，本身**分不清**「目录
+    还没来得及建」与「目录建不出来」——它俩长得一模一样。这份正确性是
+    借来的：唯一的调用方 `has_plan()` 在这之前已经先调过 `run_id(state)`，
+    其内部 `_save_current()` 用 `os.makedirs(..., exist_ok=True)` 试过建
+    目录一次。等轮到这里检查时，目录若仍不存在，说明那次 `os.makedirs`
+    真的失败了（异常被 `_save_current` 里的 `_warn` 静默吞掉），而不是
+    「全新安装、还没来得及建」。**若脱离 `has_plan` 单独调用这个函数，
+    或者两者的调用顺序被换掉，这条判断就会失真**（全新安装、logs/ 目录
+    从未创建过时，会被误判成真故障而放行，导致第 1 层跳过复盘）。
     """
     d = os.path.dirname(PATH) or "."
     if not os.path.isdir(d):
@@ -399,20 +423,49 @@ def _log_unreadable() -> bool:
         return True
 
 
+def _log_unwritable() -> bool:
+    """日志**读得到**，但写不进去 —— 磁盘满、文件只读、ACL 限制等。
+
+    这是 `_log_unreadable` 之外的另一半：读和写走的是不同的系统调用，
+    一份日志完全可以「读得到、写不进」（最常见的例子就是文件被设成只读）。
+    `record`/`record_plan` 写失败时早已如实返回 `False`，但 `has_plan`
+    在没有人恰好触发过一次写入的情况下也得能独立判断出「写会失败」，
+    不然它会在这条计划注定存不下来的前提下，一直等一个永远不会兑现的写入。
+
+    探测方式与 `_append` 完全同路：先试着建目录，再以追加模式打开一次。
+    打开成功就立刻关闭，不写入任何字节 —— 探测本身不产生副作用，也不会
+    在日志里凭空多出一行空的。
+    """
+    try:
+        os.makedirs(os.path.dirname(PATH), exist_ok=True)
+        with open(PATH, "a", encoding="utf-8"):
+            return False
+    except OSError:
+        return True
+
+
 def has_plan(state: dict[str, Any]) -> bool:
     """本局是否已经写过开局计划。
 
-    ⚠️ **失败方向是「放行」**：读不到日志、日志坏了，一律返回 True。
-    这条判据只用来决定 runner 要不要停一次手，而日志是旁路 —— 让一次磁盘
-    错误把整局卡在第 1 层（还写不进 `record_plan` 救不回来），比漏做一次
-    复盘糟得多。真正的判据在 `_log_unreadable`：区分「读不到」与「日志是
-    空的/本局没记过 plan」，后者走的是正常的「没查到条目」分支。
+    ⚠️ **失败方向是「放行」**：读不到日志、日志坏了、日志读得到但写不
+    进去，一律返回 True。这条判据只用来决定 runner 要不要停一次手，而
+    日志是旁路 —— 让一次磁盘错误把整局卡在第 1 层，比漏做一次复盘糟得多。
+
+    这曾经只修了一半：`_log_unreadable` 只管「读」这一侧，而「日志可读、
+    却写不进 `record_plan`」是另一个独立的故障模式（文件只读、ACL 限制、
+    磁盘满）——那种情况下 `_read_all()` 能正常读出「本局没记过 plan」，
+    `any(...)` 于是恒为 False，`set_plan` 却因为 `record_plan` 内部把
+    `OSError` 吞掉而无条件回报成功，模型被告知「记下来了」，下一次
+    `auto_run` 又卡在同一个停手点——写失败换了个入口，复现同一种死循环。
+    `_log_unwritable()` 补的就是这一半。
     """
     try:
         rid = run_id(state)
         if rid == "menu":
             return True
         if _log_unreadable():
+            return True
+        if _log_unwritable():
             return True
         return any(e.get("run") == rid and e.get("kind") == "plan" for e in _read_all())
     except Exception:      # noqa: BLE001 —— 日志绝不能弄坏一步棋

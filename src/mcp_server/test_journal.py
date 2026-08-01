@@ -383,3 +383,100 @@ def test_has_plan_日志根本读不到就放行(monkeypatch):
     monkeypatch.setattr(journal, "PATH", "Z:/根本不存在的盘/decisions.jsonl")
     monkeypatch.setattr(journal, "_RUN_FILE", "Z:/根本不存在的盘/current-run.json")
     assert journal.has_plan(state(floor=1)) is True
+
+
+# --------------------------------------------------------------------------
+#  「失败即放行」只修了读的一半：日志可读、却写不进去（Important 1）
+#
+#  修复前：`record_plan` 写失败时被 `_warn` 静默吞掉，`has_plan` 读得到
+#  日志、只是查不到 plan 条目，恒为 False；而 `set_plan` 无条件回报
+#  `ok: True`。于是模型以为计划记下来了，下一次 auto_run 又在第 1 层
+#  卡住——写失败换了个入口，复现同一种死循环。
+# --------------------------------------------------------------------------
+
+
+def _block_append(monkeypatch):
+    """把 `open(PATH, "a", ...)` 变成必现 `OSError`，模拟磁盘只读 / 满 /
+    ACL 限制，同时不影响默认的 "r" 模式读 —— 这正是「日志可读、却写不
+    进去」这一故障模式的最小复现（不依赖 chmod 在部分账户/平台下不生效
+    的坑，参见本文件其余用例一贯采用「指向不存在的盘符」的写法，这里
+    额外需要「读仍然正常」，故换一种构造方式）。"""
+    real_open = open
+
+    def fake_open(path, mode="r", *args, **kwargs):
+        if str(path) == journal.PATH and "a" in mode:
+            raise OSError("模拟磁盘写入失败")
+        return real_open(path, mode, *args, **kwargs)
+
+    monkeypatch.setattr("builtins.open", fake_open)
+
+
+def test_record写成功时返回True():
+    assert journal.record(state(), "pick 某张牌", "理由") is True
+
+
+def test_record写不进去时返回False但依然不抛异常(monkeypatch):
+    """`test_写不进去也不抛异常` 钉的是「不抛」，这条额外钉「如实返回
+    False」——两条并不重复：前者是安全底线，后者是给上层（`set_plan`）
+    做判断用的信号。"""
+    _block_append(monkeypatch)
+    assert journal.record(state(), "pick 某张牌", "理由") is False
+
+
+def test_record_plan写不进去时返回False(monkeypatch):
+    _block_append(monkeypatch)
+    assert journal.record_plan(state(floor=1), "开局计划") is False
+
+
+def test_日志可读却写不进去时has_plan仍然放行(monkeypatch):
+    """区别于「读不到」：这里日志文件本身可读、也确实有内容（只是没有
+    plan 条目），只是新的写入会失败。修复前 `has_plan` 只处理了读失败，
+    这种情况下 `any(...)` 会诚实地算出 False，永远不满足，`auto_run`
+    就会在第 1 层无限期停手。"""
+    # 先在写还没坏的时候，让日志确实存在且可读（但没有 plan 条目）
+    journal.record(state(floor=1), "已有一条普通记录", "")
+    assert journal._log_unreadable() is False      # 此刻确实读得到
+
+    _block_append(monkeypatch)
+    assert journal._log_unwritable() is True
+    assert journal.has_plan(state(floor=1)) is True   # 放行，不再无限期等待
+
+
+def test_写不进去时set_plan必须能感知到失败(monkeypatch):
+    """`record_plan` 的返回值就是 `set_plan` 用来判断「能不能告诉模型
+    成功」的依据——这里钉的是 journal 这一层的契约，server.py 那层的
+    钉子见 test_server.py。"""
+    _block_append(monkeypatch)
+    assert journal.record_plan(state(floor=1), "试图写下的计划") is False
+
+
+# --------------------------------------------------------------------------
+#  两个此前零覆盖的分支（Important 3）
+# --------------------------------------------------------------------------
+
+
+def test_log_unreadable_文件存在但打不开():
+    """`_log_unreadable` 的 `except OSError: return True` 分支此前零覆盖——
+    唯一的放行用例走的是「盘符不存在」，命中的是 `isdir` 那一支。这里用
+    「PATH 本身其实是个目录」来稳定触发「文件存在但打不开」，跨平台都会
+    在 `open()` 时报 `OSError`（IsADirectoryError / PermissionError 皆是
+    其子类），不必依赖 chmod 在部分平台/账户下不生效的坑。"""
+    os.makedirs(journal.PATH)      # PATH 自己就是个目录，open() 必然报错
+    assert journal._log_unreadable() is True
+
+
+def test_全新安装时logs目录不存在第一层仍然停手(tmp_path, monkeypatch):
+    """spec.md §4.4：`logs/` 目录整个都不存在（全新安装、一次都没
+    `record()` 过）时，第 1 层仍要求先复盘（`has_plan` 返回 False，不是
+    放行）。这份正确性完全靠 `has_plan()` 内部先调 `run_id(state)`
+    （其 `_save_current()` 会顺手把目录建出来）、再轮到 `_log_unreadable()`
+    检查目录这一**调用顺序**——两句话一换位置就会被静默违反，此前一个
+    测试都没有，见 `_log_unreadable` 文档字符串里对这份「借来的正确性」
+    的说明。"""
+    fresh = tmp_path / "brand-new" / "decisions.jsonl"
+    fresh_run = tmp_path / "brand-new" / "current-run.json"
+    monkeypatch.setattr(journal, "PATH", str(fresh))
+    monkeypatch.setattr(journal, "_RUN_FILE", str(fresh_run))
+    assert not os.path.isdir(os.path.dirname(fresh))       # 目录确实还不存在
+
+    assert journal.has_plan(state(floor=1)) is False       # 仍要求复盘，不是放行
