@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import json
+import os
 
 import pytest
 
@@ -157,6 +158,24 @@ def test_结束时补一条终局记录():
     kinds = [e.get("kind") for e in lines()]
     assert "run_end" in kinds
     assert lines()[-1]["floor"] == 12
+
+
+def test_死亡发生在动作之后_要靠observe补上():
+    """实测（第 17 层 Boss 战）：最后一次 end_turn 记的是出手前的局面，
+    `game_over` 仍是 false，于是人死了、日志却显示这局还在进行中。
+    动作做完必须拿**执行后**的状态再看一眼。"""
+    journal.record(state(floor=17, hp=11), "end_turn", "没牌可打了")
+    assert not any(e.get("kind") == "run_end" for e in lines())
+
+    journal.observe(state(floor=17, hp=0, game_over=True))
+    end = [e for e in lines() if e.get("kind") == "run_end"]
+    assert len(end) == 1 and end[0]["floor"] == 17
+    assert end[0]["run"] == lines()[0]["run"]      # 与本局同号，不是新开一局
+
+
+def test_observe不记决策():
+    journal.observe(state(floor=3))
+    assert not os.path.exists(journal.PATH)      # 一个字节都没写
 
 
 def test_终局记录只补一次():

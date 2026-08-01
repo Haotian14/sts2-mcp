@@ -240,18 +240,33 @@ def record(state: dict[str, Any], action: str, why: str = "", by: str = "model",
             "why": why,
         }
         _append({k: v for k, v in entry.items() if v not in (None, "")})
-
-        if _mark_ended(state):
-            _append({
-                "t": time.strftime("%Y-%m-%dT%H:%M:%S"),
-                "run": entry["run"],
-                "kind": "run_end",
-                "floor": run.get("total_floor"),
-                "act": run.get("act"),
-                "hp": player.get("hp"),
-                "why": "本局结束（game_over）",
-            })
+        observe(state)
     except Exception as exc:      # noqa: BLE001 —— 日志绝不能弄坏一步棋
+        _warn(exc)
+
+
+def observe(state: dict[str, Any]) -> None:
+    """看一眼局面，只为捕捉「本局结束」这一件事，不记决策。
+
+    死亡是**动作之后**才成立的，而决策记的是动作**之前**的局面 —— 于是
+    一整局打完，日志里可能一条终局记录都没有。2026-08-01 实测：Boss 战最后
+    一次 end_turn 记的是出手前（`game_over` 仍是 false）的局面，人死了，
+    日志却显示这局还在进行中。故动作做完要拿**执行后**的状态再看一眼。
+    """
+    try:
+        if not state or not _mark_ended(state):
+            return
+        run, player = state.get("run") or {}, state.get("player") or {}
+        _append({
+            "t": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "run": run_id(state),
+            "kind": "run_end",
+            "floor": run.get("total_floor"),
+            "act": run.get("act"),
+            "hp": player.get("hp"),
+            "why": "本局结束（game_over）",
+        })
+    except Exception as exc:      # noqa: BLE001
         _warn(exc)
 
 
