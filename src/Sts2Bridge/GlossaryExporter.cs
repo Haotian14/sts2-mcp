@@ -90,9 +90,16 @@ namespace Sts2Bridge
         }
 
         /// <summary>
-        /// 卡牌文本由 <c>GetDescriptionForPile</c> 渲染 —— 它输出的是**已代入
-        /// 数值**的最终文本（含升级、力量、遗物加成），与玩家在手牌上看到的一致。
-        /// 传 Hand 与 null 目标：目标相关的描述退化为通用措辞，够用且无副作用。
+        /// 卡牌文本由 <c>GetDescriptionForPile</c> 渲染 —— 它输出的是代入了
+        /// **卡面数值**的最终文本（含升级），传 Hand 与 null 目标，目标相关的
+        /// 描述退化为通用措辞。
+        ///
+        /// ⚠️ 这里的数字**不含力量、虚弱、易伤、遗物等战斗中的修正**。
+        /// 渲染读的是 <c>DynamicVar.PreviewValue</c>，而该值只有先调过
+        /// <c>UpdateDynamicVarPreview</c> 才是修正后的数字，否则等于 BaseValue；
+        /// 何况本接口一局只取一次缓存，天然给不出「此刻」的值。
+        /// 需要实际数值请用 <c>/state</c> 的 <c>hand[].values</c>（见
+        /// <see cref="StateExporter"/> 的 WriteCardValues）。
         /// </summary>
         private static void WriteCard(JsonWriter w, object? card, HashSet<string> seen, List<string> warnings)
         {

@@ -101,6 +101,11 @@ namespace Sts2Bridge
             Sep(); _sb.Append(v == null ? "null" : Reflect.Str(v)); return this;
         }
 
+        public JsonWriter Value(int v)
+        {
+            Sep(); _sb.Append(v.ToString(CultureInfo.InvariantCulture)); return this;
+        }
+
         public override string ToString() => _sb.ToString();
     }
 }

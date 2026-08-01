@@ -909,10 +909,18 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
       导不出的信息就是做不出的决策
 - [ ] 6.3b 把 strategy.md 提炼成决策 prompt 模板
 - [ ] 6.4 整局 runner（Claude Code 交互式跑不完一整局）
-- [ ] 6.4b **实时卡牌伤害**：`/state` 的 `hand[]` 需给出「这张牌此刻打出去是
-      多少伤害」。卡面文本不含力量/虚弱/易伤等修正，拿它算斩杀线会算错 ——
-      2026-08-01 Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §4。
-      线索：`CardModel.GetDescriptionForPile` 输出的是已代入数值的最终文本
+- [x] 6.4b **实时卡牌伤害** → `hand[].values` 与 `hand[].damage_vs`。
+      卡面文本不含力量/虚弱/易伤等修正，拿它算斩杀线会算错 —— 2026-08-01
+      Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §4。
+      入口不是 `GetDescriptionForPile`（那条线索是错的，见下方「6.4b 结论」），
+      而是 `CardModel.DynamicVars` + `UpdateDynamicVarPreview`
+- [ ] 6.4c **待选卡牌的卡面文本**：卡牌三选一 / 商店 / Boss 遗物给出的只有
+      标识（`Anger` / `Colossus` / `Spite`），`/glossary` 又只覆盖**已持有**的
+      牌与遗物（`Deck.Cards` + `PlayerCombatState.AllCards`），于是**模型是在
+      看不见效果的情况下选牌的**。strategy.md §5 刚得出「构筑决策决定一局上限」，
+      却恰恰卡在这里。2026-08-01 实机撞上：只能靠对 StS1 的印象猜 `Anger` 是什么。
+      修法：让 `/glossary`（或 `screen.options[]` 自身）把当前奖励界面上的
+      候选卡也渲染进去
 - [ ] 6.5 决策日志 `(state, action, 理由)` —— 唯一能让它变强的东西
 - [x] 6.6a 死亡后可脱身：游戏结束界面 → 主菜单 → 开新局，全程经 `pick`
       （靠通用兜底分支实现，见下方「6.6 结论」）
@@ -960,6 +968,44 @@ ShrinkerBeetle 39 血    HP 58→55，战后 BurningBlood 回到 61
 却要打 16 点，两张打击加愤怒正好 18 点弄死它，那 16 点伤害直接消失；
 若照 v2 的「先堆格挡」打，10 点格挡挡不住 26，要白掉 16 血。
 **这正是分层的意义：启发式管常规，模型管拐点。**
+
+#### 6.4b 结论：卡面文本这条线索是错的，数值入口在 DynamicVars
+
+任务原本记的线索是「`GetDescriptionForPile` 输出的是已代入数值的最终文本」。
+**这句话本身就是那次阵亡的成因**：该方法只是用格式串去读
+`DynamicVar.PreviewValue`，而 `PreviewValue` 需要先调
+`UpdateDynamicVarPreview` 才是修正后的数字，否则等于卡面裸值。游戏界面每次
+刷新卡面都会先算一遍，所以玩家看到的是对的；我们直接调渲染就拿到了裸值。
+完整链路见 `game-model.md` 的「卡牌的实时数值 DynamicVars」。
+
+`/state` 现在照界面的做法走同一条管线（`ClearPreview` → `UpdateDynamicVarPreview`
+→ 读 `PreviewValue`），产出两个字段：
+
+```jsonc
+{"i":0,"id":"Bash","cost":2,"values":{"Damage":8,"VulnerablePower":2}}
+{"i":1,"id":"StrikeIronclad","cost":1,"values":{"Damage":6},"damage_vs":[9,6]}
+```
+
+- `values` 装自身侧修正（力量、虚弱化、遗物、附魔），与目标无关
+- `damage_vs` 装目标侧修正（易伤），逐敌各算一遍，**只在确实有差异时才发** ——
+  常态下一个字节都不多花
+
+##### 实机验证（2026-08-01，力士，第 2 层双尸蛞蝓）
+
+```
+虚弱化 2 层的防御   卡面 5 → values.Block=3      打出后 player.block 确实是 3
+易伤 2 层的目标     卡面 6 → damage_vs=[9,6]     打出后敌人 17 → 8，正好 9
+虚弱化过期后        →      values.Block 自动回到 5
+一击斩杀            敌人 9 血，damage_vs=[9]     一张打击结束战斗
+```
+
+三处踩坑固化在代码注释里：
+
+| 坑 | 处理 |
+|---|---|
+| 取整是**截断**不是四舍五入（`5×0.75=3.75→3`） | 导出侧同样截断，否则每张牌多报 1 点 |
+| `PreviewValue` 是共享状态，界面读的是同一份 | 算完逐敌之后**复原成无目标预览**，别让手牌停在针对最后一只怪的数字上 |
+| 每张牌逐敌算一遍不便宜 | 只有 `values` 里真有 `Damage` 键时才逐敌算；技能牌一遍都不多跑 |
 
 #### 6.6 结论：认不出的界面不该等于死路
 
