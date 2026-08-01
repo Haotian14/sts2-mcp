@@ -13,27 +13,15 @@
 
 from __future__ import annotations
 
-import pytest
-
 import autorun
 import journal
 
-
-@pytest.fixture(autouse=True)
-def 隔离日志(tmp_path, monkeypatch):
-    """runner 的用例不该碰仓库里真实的 logs/ —— has_plan 会读它、run_id 会写它。
-
-    不再把 has_plan 桩死成 True：那样会让所有走 play_run 的用例都在「开局
-    复盘」这个特性关闭的状态下跑，往后任何在第 1 层跑 play_run 的新用例都
-    会默默继承这个假状态。这里只隔离日志文件位置（真实 has_plan 读写的是
-    tmp_path，不是仓库里的 logs/），has_plan 本身用真实实现 —— 空日志对
-    应「本局没记过 plan」，多数既有用例走的是 floor > 1 或不经 play_run，
-    不受影响；真正需要 floor == 1 走 play_run 的用例见「开局先复盘」小节，
-    那里会显式安排好日志内容。
-    """
-    monkeypatch.setattr(journal, "PATH", str(tmp_path / "decisions.jsonl"))
-    monkeypatch.setattr(journal, "_RUN_FILE", str(tmp_path / "current-run.json"))
-    monkeypatch.setattr(journal, "_warned", False)
+# 「隔离日志」这个 autouse fixture 现在统一放在 conftest.py 里，对本目录下
+# 所有测试文件默认生效——runner 的用例同样受它保护，不会碰到仓库里真实的
+# logs/（has_plan 会读它、run_id 会写它）。它只隔离日志文件的路径，不打桩
+# has_plan 本身：空日志对应「本局没记过 plan」，多数既有用例走的是
+# floor > 1 或不经 play_run，不受影响；真正需要 floor == 1 走 play_run 的
+# 用例见下面「开局先复盘」小节，那里会显式安排好日志内容。
 
 
 def state(floor=5, hp=60, gold=99, in_combat=False, screen=None, map_=None, **kw):
