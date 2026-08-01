@@ -176,12 +176,20 @@ python -m pip install -r src\mcp_server\requirements.txt
 | `pick(i)` | 点击当前界面上的选项（战斗奖励、卡牌三选一），见 `get_state` 的 `screen` |
 | `proceed()` | 按「继续」离开当前界面回到地图 |
 | `resume_run()` | 游戏停在主菜单（`in_run` 为 false）时载入存档 |
+| `auto_combat(max_turns?)` | 自动打完当前这场战斗，局面变险时停手交还 |
+| `auto_run(max_steps?, max_turns?, new_run_character?)` | 一路自动跑下去，撞上真正需要决策的地方才停手 |
+| `get_journal(runs?, per_run?)` | 读回过去几局决策日志的原始摘要，用于跨局找规律 |
+| `get_brief()` | 开新局前先调：上一局的硬事实（死亡层数、停手分组、构筑决策、上一局的计划） |
+| `set_plan(plan)` | 读完 `get_brief` 之后，写下这一局的开局计划 |
 | `health()` | 连不上游戏时先用它定位 |
 
 动作工具会自行等到局面稳定，并在返回值里附带执行后的新状态 ——
 **不需要在动作之后再调一次 `get_state`**。
 
 `STS2MCP_URL` 可覆盖桥接层地址（默认 `http://127.0.0.1:8765`）。
+`STS2MCP_JOURNAL` 可覆盖决策日志路径（默认 `logs/decisions.jsonl`）——
+这两个是 MCP server（Python）侧的环境变量，与上面 `scripts/launch-steam.cmd`
+里那几个桥接层（C#）侧的变量分属两条进程，不必一起设。
 
 ### 配置
 

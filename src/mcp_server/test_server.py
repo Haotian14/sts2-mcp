@@ -15,17 +15,9 @@
 
 from __future__ import annotations
 
-import pytest
-
 import journal
 import server
-
-
-@pytest.fixture(autouse=True)
-def 隔离日志(tmp_path, monkeypatch):
-    monkeypatch.setattr(journal, "PATH", str(tmp_path / "decisions.jsonl"))
-    monkeypatch.setattr(journal, "_RUN_FILE", str(tmp_path / "current-run.json"))
-    monkeypatch.setattr(journal, "_warned", False)
+from conftest import _block_append
 
 
 def _fake_state() -> dict:
@@ -34,20 +26,6 @@ def _fake_state() -> dict:
         "run": {"act": 1, "total_floor": 1, "ascension": 2, "gold": 0, "game_over": False},
         "player": {"character": "Ironclad", "hp": 70, "max_hp": 80},
     }
-
-
-def _block_append(monkeypatch):
-    """把追加写变成必现 OSError，模拟磁盘只读/满/ACL 限制——与
-    test_journal.py 里的同名手法一致，这里独立写一份是因为两个测试文件
-    互不导入对方的私有辅助函数。"""
-    real_open = open
-
-    def fake_open(path, mode="r", *args, **kwargs):
-        if str(path) == journal.PATH and "a" in mode:
-            raise OSError("模拟磁盘写入失败")
-        return real_open(path, mode, *args, **kwargs)
-
-    monkeypatch.setattr("builtins.open", fake_open)
 
 
 def test_写入成功时如实回报ok为True(monkeypatch):
