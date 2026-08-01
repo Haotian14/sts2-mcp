@@ -301,6 +301,32 @@ def _read_all() -> list[dict[str, Any]]:
         return []
 
 
+def _group_by_run(
+    entries: list[dict[str, Any]], *, drop_menu: bool = False,
+) -> tuple[list[str], dict[str, list[dict[str, Any]]]]:
+    """按局号分组，`order` 记局号首次出现的顺序（分组规则的唯一出处）。
+
+    `digest` 与 `brief` 都要按局号分组，且分组规则必须是同一份 —— 局号
+    判定一旦以后要改，两处各改一遍最容易漏掉一处，日志就会在两个读口上
+    读出不一样的「局」。
+
+    `drop_menu` 只供 `brief` 用：主菜单上的点击不属于任何一局，不该被当成
+    「上一局」。`digest` 面向全部历史且不受这条规则约束，故默认不过滤，
+    以保持其既有对外行为不变。
+    """
+    order: list[str] = []
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for e in entries:
+        rid = str(e.get("run") or "?")
+        if drop_menu and rid == "menu":
+            continue
+        if rid not in grouped:
+            grouped[rid] = []
+            order.append(rid)
+        grouped[rid].append(e)
+    return order, grouped
+
+
 def digest(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
     """把日志压成能塞进上下文的一份摘要。
 
@@ -309,14 +335,7 @@ def digest(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
     必须留全。故战斗内只保留模型亲自出手的那些 —— 那正是启发式停手交还的拐点。
     """
     entries = _read_all()
-    order: list[str] = []
-    grouped: dict[str, list[dict[str, Any]]] = {}
-    for e in entries:
-        rid = e.get("run") or "?"
-        if rid not in grouped:
-            grouped[rid] = []
-            order.append(rid)
-        grouped[rid].append(e)
+    order, grouped = _group_by_run(entries)
 
     out = []
     for rid in order[-runs:] if runs > 0 else order:
@@ -392,17 +411,7 @@ def brief(runs_back: int = 1) -> dict[str, Any]:
     try:
         entries = _read_all()
         current = str((_load_current() or {}).get("id") or "")
-
-        order: list[str] = []
-        grouped: dict[str, list[dict[str, Any]]] = {}
-        for e in entries:
-            rid = str(e.get("run") or "?")
-            if rid == "menu":
-                continue          # 主菜单上的点击不属于任何一局
-            if rid not in grouped:
-                grouped[rid] = []
-                order.append(rid)
-            grouped[rid].append(e)
+        order, grouped = _group_by_run(entries, drop_menu=True)
 
         previous = [rid for rid in order if rid != current]
         if not previous or runs_back > len(previous):
@@ -424,7 +433,13 @@ def brief(runs_back: int = 1) -> dict[str, Any]:
             if e.get("why"):
                 reasons.append(str(e["why"]))
 
-        plan = next((str(e.get("why") or "") for e in items if e.get("kind") == "plan"), None)
+        # 取最后一条而非第一条：一局内可能重新规划（例如打到第二幕才看清
+        # 牌组短板），后写的那条是带着更多信息做的，比开局时的猜想更值得
+        # 传给下一局。
+        plan = next(
+            (str(e.get("why") or "") for e in reversed(items) if e.get("kind") == "plan"),
+            None,
+        )
 
         return {
             "run": rid,
