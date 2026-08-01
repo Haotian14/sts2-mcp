@@ -79,7 +79,7 @@ def handoff_reason(state: dict[str, Any]) -> str | None:
     if not state.get("in_combat"):
         return "不在战斗中"
 
-    # 待答的选择一律交还。弃牌选择照 strategy.md §1.7 本可以本地做，但
+    # 待答的选择一律交还。弃牌选择照 strategy.md §1.9 本可以本地做，但
     # `choice` 不告诉我们这是弃牌还是检索 —— 两者的最优选法**正好相反**
     # （弃牌丢最没用的，检索取最有用的）。分不清就不做。
     if state.get("awaiting_choice"):
@@ -266,12 +266,6 @@ def decide(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
     energy = combat.get("energy") or 0
     enemies = _alive(state)
 
-    def act(card: dict[str, Any], enemy_i: int | None, why: str):
-        move: dict[str, Any] = {"card": card["i"]}
-        if _needs_target(card) and enemy_i is not None:
-            move["target"] = enemies[enemy_i]["i"]
-        return move, why
-
     if energy <= 0 or not hand:
         return None, "无能量或无手牌"
     if not enemies:
@@ -279,6 +273,18 @@ def decide(state: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
 
     # 敌人按「本回合打多少」排序：先处理威胁最大的那只
     order = sorted(range(len(enemies)), key=lambda i: _intent_total(enemies[i]), reverse=True)
+
+    def act(card: dict[str, Any], enemy_i: int | None, why: str):
+        move: dict[str, Any] = {"card": card["i"]}
+        # 「要不要目标」由牌自己说了算，与我们为什么打它无关。
+        # 2026-08-01 实机撞到：铁斩波（5 格挡 + 5 伤害）是被当成防御牌选出来的，
+        # 于是走了 enemy_i=None 那条路，而它的 target 是 AnyEnemy ——
+        # 下发时没带目标，被判 bad_target，整场战斗就此交还。
+        # 拿不到更好的目标时，默认打威胁最大的那只。
+        if _needs_target(card):
+            idx = enemy_i if enemy_i is not None else order[0]
+            move["target"] = enemies[idx]["i"]
+        return move, why
 
     incoming = _incoming(enemies)
     block_now = player.get("block") or 0

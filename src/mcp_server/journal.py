@@ -142,6 +142,28 @@ def _mark_ended(state: dict[str, Any]) -> bool:
 # --------------------------------------------------------------------------
 
 
+def option_name(options: Any, i: int) -> str:
+    """把「下标」还原成「名字」。
+
+    日志里记 `pick(2)` 等于没记 —— 下标当场就过期，三天后回头看无从还原。
+    故动作名一律在**下发之前**从局面里取出来（`闪电霹雳` / `Monster` /
+    `无情猛攻（38金）`）。放在这里是因为 server 与 autorun 两条路都要用。
+    """
+    opt = next((o for o in options or [] if o.get("i") == i), None)
+    if not opt:
+        return f"#{i}"
+    name = opt.get("title") or opt.get("id") or opt.get("type") or f"#{i}"
+
+    # `cost` 在两处含义**完全不同**：商店选项上是金价，待答选牌的选项上是
+    # 能量费用。实测把后者写成了「痛击+（2金）」—— 日志里一句假话，
+    # 而日志的全部价值就在于事后能信它。
+    # 判据：待答选牌的选项带卡牌 `type`（Attack/Skill…），商店选项没有。
+    cost = opt.get("cost")
+    if isinstance(cost, int) and "type" not in opt:
+        return f"{name}（{cost}金）"
+    return str(name)
+
+
 def _where(state: dict[str, Any]) -> str:
     """这一步发生在哪 —— 战斗第几回合 / 什么界面 / 地图上。"""
     if state.get("in_combat"):

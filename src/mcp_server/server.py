@@ -24,6 +24,7 @@ import httpx
 from mcp.server.mcpserver import MCPServer
 
 import autoplay
+import autorun
 import journal
 
 # httpx 默认对每个请求打一条 INFO。stdio 传输下日志走 stderr，不会污染协议，
@@ -195,13 +196,7 @@ _WHY_DOC = (
 )
 
 
-def _named(options: Any, i: int) -> str:
-    opt = next((o for o in options or [] if o.get("i") == i), None)
-    if not opt:
-        return f"#{i}"
-    name = opt.get("title") or opt.get("id") or opt.get("type") or f"#{i}"
-    cost = opt.get("cost")
-    return f"{name}（{cost}金）" if isinstance(cost, int) else str(name)
+_named = journal.option_name      # 取名器与 autorun 共用一份
 
 
 def _log(before: dict[str, Any], action: str, why: str,
@@ -471,6 +466,58 @@ def auto_combat(max_turns: int = 20) -> dict[str, Any]:
     # 停手的理由本身就是最该留下来的一条：它标出了启发式的边界在哪
     journal.record(result.get("state") or {},
                    f"auto_combat 停手（{result.get('stopped')}）",
+                   result.get("reason") or "", by="heuristic", kind="stop")
+    return result
+
+
+@server.tool(
+    description=(
+        "**一路自动跑下去**，直到撞上真正需要你决策的地方才停手。\n"
+        "\n"
+        "auto_combat 的整局版：它把没有决策含量的步子全做掉 —— 领金币/遗物/药水、"
+        "按继续、开宝箱、地图只有一条路时移动、常规战斗（内部就是调 auto_combat）。"
+        "**一局有数百个动作，其中绝大多数是这些。**\n"
+        "\n"
+        "**它绝不替你做的事**（一律停手交还）：\n"
+        "- 卡牌三选一、商店、除卡 —— 构筑决策决定一局的上限（strategy.md §5），"
+        "上一局整局「拿第一张」的结果是牌组打不动 Boss\n"
+        "- 岔路，以及任何通往精英 / Boss 的路\n"
+        "- 休息点（烤火还是打铁）、事件（要读文本）\n"
+        "- 待答的选牌、认不出的界面\n"
+        "- 战斗内触及安全线（血量过低 / 预计掉血过多 / 有致死风险）\n"
+        "\n"
+        "**返回值的 `stopped` 决定你接下来做什么**：\n"
+        "- `handoff`：轮到你了，`reason` 说明是什么决策，`state` 是当前局面\n"
+        "- `stuck`：连续几步局面毫无变化，多半是某个点击静默失效了，需要人看一眼\n"
+        "- `rejected`：某个动作被游戏拒绝，runner 与游戏判断不一致\n"
+        "- `max_steps`：走满上限，局面正常，再调一次即可继续\n"
+        "\n"
+        "`log` 是走过的每一步与理由（同时写进决策日志，见 get_journal）。\n"
+        "\n"
+        "**处理完你那一步之后，再调一次 auto_run 继续跑。**"
+    )
+)
+def auto_run(max_steps: int = 100, max_turns: int = 30) -> dict[str, Any]:
+    state = _request("GET", "/state")
+    result = autorun.play_run(
+        state,
+        # 一律直连 _request：pick / move / proceed 那几个工具函数自己也会记
+        # 日志，经它们走每一步会被记两遍
+        play_card=lambda card, target: _request(
+            "POST", "/action/play_card",
+            {"card": card, **({"target": target} if target is not None else {})},
+        ),
+        end_turn=lambda: _request("POST", "/action/end_turn"),
+        pick=lambda i: _request("POST", "/action/pick", {"i": i}),
+        proceed=lambda: _request("POST", "/action/proceed"),
+        move=lambda node: _request("POST", "/action/move", {"node": node}),
+        refresh=lambda: _request("GET", "/state"),
+        max_steps=max_steps,
+        max_turns=max_turns,
+        on_step=lambda before, label, why: journal.record(before, label, why, by="heuristic"),
+    )
+    journal.record(result.get("state") or {},
+                   f"auto_run 停手（{result.get('stopped')}）",
                    result.get("reason") or "", by="heuristic", kind="stop")
     return result
 

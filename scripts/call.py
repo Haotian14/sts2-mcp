@@ -28,7 +28,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src", "mcp_ser
 import server  # noqa: E402
 
 
-def _value(raw: str):
+# 收列表的参数：`cards=0` 只有一个元素时没有逗号可认，会被当成整数传下去，
+# 而工具那边 `for c in cards` 直接炸。按参数名判定，不靠值的形状猜。
+LIST_ARGS = ("cards",)
+
+
+def _value(raw: str, key: str = ""):
+    if key in LIST_ARGS:
+        return [int(p) for p in raw.split(",") if p.strip()]
     if raw.lstrip("-").isdigit():
         return int(raw)
     if "," in raw:
@@ -53,7 +60,7 @@ def main() -> int:
     for raw in sys.argv[2:]:
         if "=" in raw and not raw.split("=", 1)[0].lstrip("-").isdigit():
             k, v = raw.split("=", 1)
-            kwargs[k] = _value(v)
+            kwargs[k] = _value(v, k)
         else:
             args.append(_value(raw))
 
