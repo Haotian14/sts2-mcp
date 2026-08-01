@@ -86,8 +86,8 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
 - [x] 0.1 安装 .NET 9 SDK（实测 `dotnet --version` = 9.0.316；整个桥接层
       一直是用它编出来的，这个勾早就该打上）
 - [x] 0.2 **离线反编译工具链**（不是可选项，是必需品 —— 见下）
-- [ ] 0.4 备份存档 `%APPDATA%\SlayTheSpire2\`（**技术债**：调试期重启频繁，
-      每次都回退到最近存档点；跑长局前务必补上）
+- [x] 0.4 **备份存档** → `scripts/backup-save.ps1`（备份 / `-List` / `-Restore`）。
+      **路径不是本条原先写的 `%APPDATA%\SlayTheSpire2\`** —— 见下方「0.4 结论」
 - [x] 0.5 **一键重启** `scripts/restart-game.ps1` —— 桥接层由 profiler 在进程
       启动那一刻载入，每改一次都得重启游戏才能验证。脚本走完：结束进程 →
       等端口释放 → 经 Steam 启动 → 等接入帧循环 → 点主菜单「继续游戏」。
@@ -98,6 +98,52 @@ HTTP 线程经由该队列提交所有游戏调用，用 `TaskCompletionSource` 
         `RunState`。为此加了 `POST /action/resume_run` 与 `/state` 的
         `in_run` / `can_resume` —— 否则上层只能从「所有字段都是 null」去猜
       - **`.ps1` 含中文必须存成 UTF-8 with BOM**（仓库早有记录，本次又踩）
+
+#### 0.4 结论：这条技术债一直没做对，是因为路径写错了
+
+清单上原本写的是备份 `%APPDATA%\SlayTheSpire2\`。照这个做**会备份到一份空壳**：
+
+```
+%APPDATA%\SlayTheSpire2\
+    default\1\settings.save            ← 只有设置，且日期停在 6 月（未登录 Steam 时的档）
+    logs\ sentry\ shader_cache\        ← 12 MB，随时可重建，与存档无关
+    steam\<steamId>\                   ← **真正的存档在这里**
+        profile.save  settings.save
+        profile1\saves\
+            progress.save              ← 当前进度，含正在进行的那一局（132 KB）
+            progress.save.backup       ← 游戏自己留的上一版
+            history\*.run              ← 已结束的每一局各一个文件
+```
+
+判据是文件时间：整个目录里只有 `steam\...\progress.save` 跟着实机操作在变
+（实测 12:42 那次刚好是本局阵亡写入）。**找存档不要靠猜目录名，靠改动时间。**
+
+三处设计取舍：
+
+| 取舍 | 理由 |
+|---|---|
+| 还原前先把现状另存一份 | 否则「还原错了一份」无处可退。安全副本自带 note.txt 说明它是什么 |
+| 游戏运行时拒绝还原 | 进度在内存里，游戏退出时会照内存重写一遍，把刚还原的档直接盖掉 —— 不是保守，是白干一次 |
+| 不备份 shader_cache / logs / sentry | 12 MB 且可重建；真存档连同 35 局历史记录才 1.8 MB |
+
+##### 踩坑：`$null -replace` 返回的是空数组，不是空串
+
+`-List` 打印没有 note.txt 的备份时，第三列显示成 `System.Object[]`。
+`$null -replace 'a','b'` 得到的是**空数组**，`-f` 格式化数组即得此结果。
+套一层 `[string]` 收口。
+
+##### 实机验证（2026-08-01）
+
+```
+备份            → backup/saves/20260801-124735（1876 KB，35 局历史 + 当前进度）
+游戏运行时还原  → 拒绝，并报出 pid ✓
+关掉游戏后还原  → 成功，还原前的现状自动另存 ✓
+存档目录无污染  → note.txt 没有被拷进游戏的存档目录 ✓
+```
+
+⚠️ **Steam 云同步未验证**：还原一份**较旧**的存档后，游戏下次启动时云端那份
+是否会覆盖回来，没试过（本次还原的是与现状相同的一份，试不出来）。
+脚本里已写明这个风险与规避办法（临时关闭该游戏的云同步）。
 
 #### 0.2 结论：签名必须从元数据核对，不能从文档注释推断
 
