@@ -23,6 +23,8 @@ from typing import Any
 import httpx
 from mcp.server.mcpserver import MCPServer
 
+import autoplay
+
 # httpx 默认对每个请求打一条 INFO。stdio 传输下日志走 stderr，不会污染协议，
 # 但一局要发几百个请求，会把真正的错误淹掉。降到 WARNING。
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -111,7 +113,9 @@ server = MCPServer(
         "- `awaiting_choice`：**为 true 时游戏正等玩家做选择**，此时任何其他动作都会被拒绝。"
         "同时带有 `choice` 字段时用 choose 应答；没有 `choice` 则是桥接层还接管不了的"
         "选择（地图、商店、事件），只能由人操作。\n"
-        "- `choice`：待答的选牌。`options[].i` 是下标，`min`/`max` 是要选几张。\n"
+        "- `choice`：待答的选牌。`options[].i` 是下标，`min`/`max` 是要选几张，"
+        "`title` / `text` 是每张牌的中文名与效果（候选牌可能不在牌库里，"
+        "get_glossary 覆盖不到）。\n"
         "- `screen`：当前弹出的界面。`type` 是界面类型，`options[].i` 用于 pick，"
         "`can_proceed` 为 true 时用 proceed 离开。**界面开着时 `map.can_move` 必为 false**，"
         "处理完按继续才能回到地图。`options` 为空说明桥接层还不支持这个界面，需要人工操作。\n"
@@ -337,6 +341,43 @@ def choose(cards: list[int]) -> dict[str, Any]:
 )
 def resume_run() -> dict[str, Any]:
     return _request("POST", "/action/resume_run")
+
+
+@server.tool(
+    description=(
+        "**自动打完当前这场战斗**，直到战斗结束，或局面变险时停手把方向盘交还给你。\n"
+        "\n"
+        "常规回合不必一张一张手动出牌 —— 用这个工具，一次调用打完整场。\n"
+        "省下的调用次数就是省下的上下文。\n"
+        "\n"
+        "启发式只做**确定性的事**，照 docs/strategy.md 的实战结论：\n"
+        "- 能斩杀就斩杀（杀掉一只怪 = 它今后每回合的输出都归零），且用 "
+        "`damage_vs` 算实际伤害而非卡面值\n"
+        "- 格挡是硬约束：先算够本回合要挡多少并满足它，剩余能量才用于输出\n"
+        "- 敌人不攻击的回合一点格挡都不叠；场上有荆棘则先叠满格挡再攻击\n"
+        "- Status / Curse 一律不打（可打出 ≠ 值得打）\n"
+        "\n"
+        "**返回值的 `stopped` 决定你接下来做什么**：\n"
+        "- `combat_ended`：战斗打完了，照常处理奖励界面\n"
+        "- `handoff`：**停手交还，需要你接管**。`reason` 说明为什么 —— "
+        "血量过低、预计掉血超过血量 1/4、有致死风险、出现了待答的选择、"
+        "或者手上有它不认识的牌。此时**一张牌都没有多打**，局面原样交给你，"
+        "看 `state` 自己出牌。\n"
+        "- `max_turns`：打满上限，局面仍在战斗中\n"
+        "\n"
+        "`log` 是它每一步的动作与理由，`state` 是停手时的局面。\n"
+        "\n"
+        "⚠️ 它**不会**用药水、不会应答选牌、不碰非战斗界面 —— 那些一律交还给你。"
+    )
+)
+def auto_combat(max_turns: int = 20) -> dict[str, Any]:
+    state = _request("GET", "/state")
+    return autoplay.play_combat(
+        state,
+        play_card=lambda card, target: play_card(card, target),
+        end_turn=end_turn,
+        max_turns=max_turns,
+    )
 
 
 @server.tool(

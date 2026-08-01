@@ -26,8 +26,15 @@ namespace Sts2Bridge
         private const string RunManager      = "MegaCrit.Sts2.Core.Runs.RunManager";
         private const string CardPreviewMode = "MegaCrit.Sts2.Core.Entities.Cards.CardPreviewMode";
 
-        /// <summary>DamageVar 的固定名字（<c>DamageVar.defaultName</c>）。</summary>
-        private const string DamageKey = "Damage";
+        /// <summary>
+        /// 伤害变量的名字。普通攻击牌是 <c>DamageVar</c>（"Damage"），而条件伤害
+        /// 走 <c>CalculatedDamageVar</c>（"CalculatedDamage"）——
+        /// 实测「完美打击」只有后者：`{CalculationBase:6, ExtraDamage:2,
+        /// CalculatedDamage:22}`，**一个 Damage 键都没有**。
+        /// 只认 "Damage" 会让这类牌完全算不出目标侧修正（易伤）。
+        /// 按顺序取第一个存在的。
+        /// </summary>
+        private static readonly string[] DamageKeys = { "Damage", "CalculatedDamage" };
 
         public static string Export()
         {
@@ -340,13 +347,17 @@ namespace Sts2Bridge
             foreach (var kv in values) w.Prop(kv.Key, (int?)kv.Value);
             w.EndObject();
 
-            if (!values.TryGetValue(DamageKey, out int flat) || enemies.Count == 0) return;
+            string? key = null;
+            int flat = 0;
+            foreach (var k in DamageKeys)
+                if (values.TryGetValue(k, out flat)) { key = k; break; }
+            if (key == null || enemies.Count == 0) return;
 
             List<int>? perEnemy = new List<int>(enemies.Count);
             foreach (var enemy in enemies)
             {
                 var v = Preview(g, card, enemy);
-                if (v == null || !v.TryGetValue(DamageKey, out int d)) { perEnemy = null; break; }
+                if (v == null || !v.TryGetValue(key, out int d)) { perEnemy = null; break; }
                 perEnemy.Add(d);
             }
 
