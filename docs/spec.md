@@ -1051,7 +1051,9 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
 - [x] 6.3a **策略沉淀** → `docs/strategy.md`。只收录实战验证过的判断，
       且每条都注明依赖 `/state` 的哪个字段 —— 策略与状态导出是一体的，
       导不出的信息就是做不出的决策
-- [ ] 6.3b 把 strategy.md 提炼成决策 prompt 模板
+- [ ] 6.3b **开新局前复盘上一局**：先读 `get_journal`，把上一局死亡楼层、
+      构筑取舍与停手原因压成这一局的短提示。暂不把整份 strategy.md 再复制成
+      一套 prompt 模板——它会很快与原文漂移，当前增量价值也低
 - [x] 6.4 **整局 runner** → `src/mcp_server/autorun.py` + MCP 工具 `auto_run`。
       把一整局里没有决策含量的步子连起来跑掉（领奖、按继续、开宝箱、
       地图独路、常规战斗），**一撞上真正的决策就停手交还**。
@@ -1078,7 +1080,9 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
       都进日志。见下方「6.5 结论」
 - [x] 6.6a 死亡后可脱身：游戏结束界面 → 主菜单 → 开新局，全程经 `pick`
       （靠通用兜底分支实现，见下方「6.6 结论」）
-- [ ] 6.6b 死亡/胜利的**自动**检测与开新局（`run.game_over` 已导出，尚未自动化）
+- [x] 6.6b 死亡/胜利的**自动**检测与开新局：`auto_run` 默认仍在终局停手，
+      只有显式传 `new_run_character` 才会跨局；终局动画 → 主菜单 → 模式 →
+      角色 → 确认全链路已用真实死亡局复验。见下方「6.6 结论」
 
 #### 6.2 血的教训：一个「朴素」原型打死了一整局（2026-08-01）
 
@@ -1523,34 +1527,61 @@ preview」。现在连续同类图片转成 `【能量×N】` / `【星星×N】
 教训是：**「待选物看不见效果」这个缺口有两条通路，修一条不算修完** ——
 凡是「让模型挑一样东西」的地方都要过一遍。
 
-#### 6.6 结论：认不出的界面不该等于死路
+#### 6.6 结论：终局能自动跨过去，但必须由调用方显式授权
 
-死亡当时 `NGameOverScreen` 报了 0 个选项、`can_proceed` 也是 false，
-桥接层既检测不了死亡、也退不出那个界面 —— 整条链路彻底卡死。
+6.6a 最初靠 `Screens.OptionsOf` 的通用兜底打通了终局、主菜单和角色选择：
+认不出的界面就列出可见且启用的 `NClickableControl`，并在未进局时把
+`Game/RootSceneContainer/MainMenu` 纳入 `Context()`。它解决了“认不出的界面
+直接变死路”，但实机继续跑又暴露出两处不能留给通用兜底的语义。
 
-修法不是给游戏结束界面写一个专用处理器，而是给 `Screens.OptionsOf` 加**兜底
-分支**：认不出的界面就把所有**可见且启用**的 `NClickableControl` 后代按
-**节点名**列出来。节点名本身有语义（`Continue` / `SingleplayerButton` /
-`ConfirmButton`），模型看得懂。
+第一处是 **`NGameOverScreen` 根节点本身也继承 `NClickableControl`**。点过真正的
+“继续”后，摘要动画期间两个导航按钮暂时都不可用；旧兜底却把根节点列成按钮，
+`LabelOf` 再从整棵子树里捞出“还没有分数……”这段正文。runner 因而连续点正文，
+最后被防空转判据拦成 `stuck`。现在终局走专用分支，只导出游戏持有的
+`_continueButton` / `_mainMenuButton`；两者都未启用时就明确返回零选项，让 runner
+按终局动画的较长重试窗口等待。
 
-一次改动顺带打通了游戏结束界面、主菜单、角色选择、**以及事件房**（它的四个
-选项也自动出现了）。同时把主菜单纳入 `Context()` —— 没有房间时（未进局）
-以 `Game/RootSceneContainer/MainMenu` 为上下文，否则死亡之后无路可走。
+第二处是角色选择。`ForceClick(SILENT_button)` 静默无效，确认后永远还是默认的
+Ironclad。反编译和游戏自己的 AutoSlay 都指向同一入口：
+`NCharacterSelectButton.Select()`。桥接层现在对角色按钮专门调用 `Select()`，并把
+`Character.Id` 与 `IsSelected` 导出为 `id` / `selected`；runner 必须先看到目标
+角色 `selected:true` 才会按确认，找不到请求角色时停手，不会误认默认角色。
+这与商店槽位的 `OnSelected()`、卡牌选择的 `SelectCard()` 是同一规律：
+`ForceClick` 只适合把完整语义挂在 `Released` 信号上的控件。
 
-实测：从游戏结束 → 主菜单 → 单人 → 标准 → 角色选择 → 确认，全程经 `pick` 完成。
+`auto_run` 新增可选参数 `new_run_character`。默认不传时，发现
+`run.game_over=true` 仍会停手；只有显式传角色才按以下顺序跨局：
 
-##### 遗留：点角色按钮不生效
+```
+终局继续 → 等摘要动画 → 返回主菜单 → 单人模式 → 标准模式
+         → Select(目标角色) → selected=true → 确认 → 首个真实决策处停手
+```
 
-`ForceClick` 点 `SILENT_button` 后确认，开出来的却是 Ironclad。AutoSlay 用的
-是 `NCharacterSelectButton.Select()` 而非点击 —— 该按钮的选中逻辑不在
-`Released` 信号上。需要专门处理，暂记。
+这样普通的“跑到该问我时为止”不会意外开下一局，而需要连续跑局的调用方可以
+明确授权。死亡与胜利没有两套 runner 分支：桥接层统一导出
+`RunState.IsGameOver` 为 `run.game_over`，后续只看这个布尔值。
 
-**2026-08-01 补：这不是孤例，是一整类问题。** 商店槽位也栽在同一处
-（`OnMouseReleased` 里有 `if (_isHovered)` 前置，`ForceClick` 静默失效），
-见 §3.4f 结论。规律是：`ForceClick` 只对把逻辑挂在 `Released` 信号上的按钮
-有效；凡是自己拦 `_GuiInput`、或在处理器里校验悬停/焦点状态的控件，
-都必须另找正规入口（`Select()` / `OnSelected()` / `SelectCard()` 之类）。
-**且失败是静默的** —— 不抛异常、状态不变，只能靠实机点一下才看得出来。
+##### 实机复验（2026-08-01，v0.107.1）
+
+先从无存档主菜单调用 `auto_run(new_run_character="Silent")`：4 步依次进入单人、
+标准、选择 Silent、确认，最终 `player.character=Silent`，并在第一层涅奥遗物选择
+停手。随后在第 2 层 `NibbitsWeak` 故意不出牌，真实死亡状态为
+`NGameOverScreen`、`run.game_over=true`、HP 0。
+
+第二次从这个真实终局调用同一工具，共 6 步：
+
+```
+pick 继续 → pick 返回主菜单 → pick 单人模式 → pick 标准模式
+          → pick Silent → pick ConfirmButton
+```
+
+结果再次进入第 1 层 Silent 新局，并停在三件涅奥遗物前，没有替模型做构筑选择。
+这次还覆盖了“终局刚出现时零选项”和“摘要动画后才出现主菜单按钮”的等待过程。
+
+同一轮实机另修了跨章节地图起点：新章 `CurrentMapCoord=null` 时不能从跨章累积的
+`VisitedMapCoords` 或可能残留的 `CurrentMapPoint` 猜当前位置，应直接导出
+`Map.StartingMapPoint`。修后在第二章第 0 层实际得到 Ancient 起点并成功移动；
+否则 `can_move=true` 却 `options=[]`，跨局 runner 也会在新章入口卡住。
 
 ---
 

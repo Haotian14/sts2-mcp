@@ -59,8 +59,15 @@ namespace Sts2Bridge
         /// <summary>
         /// 下一步可走的节点，按 (row, col) 排序。
         ///
-        /// 本章尚未走第一步时（<c>VisitedMapCoords</c> 为空），可选的是第 0 行的
-        /// 全部节点；否则是当前节点的子节点。这与游戏自带的 AutoSlay 判据一致。
+        /// 本章尚未走第一步时（<c>CurrentMapCoord</c> 为 null），可选的是独立的
+        /// <c>Map.StartingMapPoint</c>；否则是当前节点的子节点。
+        ///
+        /// 不能用 <c>VisitedMapCoords.Count == 0</c>：它跨章节累积。第一章走完后
+        /// 进入第二章，当前坐标已经清空但访问记录仍非空；而 CurrentMapPoint
+        /// 实机仍可能短暂保留上一章 Boss 点，也不能拿它判。旧判据于是从旧 Boss
+        /// 的空 Children 导出 `can_move:true` 却 `options:[]`，新章第一步永远走不了。
+        /// 也不能「从 Grid 筛第 0 行」：反编译确认 Grid 是 `[列, 行]` 二维数组，
+        /// 路线节点从第 1 行开始；第 0 行的 Ancient 入口单独存在 StartingMapPoint。
         /// </summary>
         public static List<object?> Options()
         {
@@ -68,12 +75,11 @@ namespace Sts2Bridge
             var result = new List<object?>();
             if (state == null) return result;
 
-            int visited = GamePaths.Count(GamePaths.Get(state, "VisitedMapCoords")) ?? 0;
-            if (visited == 0)
+            var currentCoord = GamePaths.Get(state, "CurrentMapCoord");
+            if (currentCoord == null)
             {
-                // Grid 是全图节点。首步没有「当前节点」可依，只能按行号筛。
-                foreach (var p in GamePaths.Enumerate(GamePaths.Get(GamePaths.Get(state, "Map"), "Grid")))
-                    if (Row(p) == 0) result.Add(p);
+                var starting = GamePaths.Get(GamePaths.Get(state, "Map"), "StartingMapPoint");
+                if (starting != null) result.Add(starting);
             }
             else
             {
