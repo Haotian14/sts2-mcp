@@ -43,6 +43,8 @@ namespace Sts2Bridge
         private const string RestSiteButton   = "NRestSiteButton";
         private const string TreasureRoom     = "NTreasureRoom";
         private const string RelicHolder      = "NTreasureRoomRelicHolder";
+        private const string CharacterButton = "NCharacterSelectButton";
+        private const string GameOverScreen  = "NGameOverScreen";
 
         /// <summary>
         /// 覆盖层栈顶界面，没有则 null。须在主线程调用。
@@ -241,6 +243,7 @@ namespace Sts2Bridge
                 w.Prop("id", opt.Id);
                 if (opt.Available.HasValue) w.Prop("available", opt.Available);
                 if (opt.Cost.HasValue) w.Prop("cost", opt.Cost);
+                if (opt.Selected.HasValue) w.Prop("selected", opt.Selected);
 
                 // 待选物的名字与效果 —— 只有卡牌/遗物/药水这类有模型的选项才有。
                 // 不发进 /glossary 的理由见 GlossaryExporter.TitleOf 上方注释。
@@ -272,6 +275,7 @@ namespace Sts2Bridge
             public object? Node;
             public string? Id;
             public bool? Available;
+            public bool? Selected; // 角色选择按钮；让跨局 runner 知道何时可以按确认
             public object? Model;
             public int? Cost;      // 商店价格，其余界面为 null
         }
@@ -375,6 +379,18 @@ namespace Sts2Bridge
                     // 实测战斗刚结束时曾报出 `[0] 0`、`[2] Hitbox` 这种条目。
                     break;
 
+                case GameOverScreen:
+                    // 终局界面的根节点自己也继承 NClickableControl。若让通用兜底
+                    // 收它，LabelOf 会从整棵子树里捞到“还没有分数……”之类的正文，
+                    // runner 随后会把正文当按钮反复 ForceClick，真正的继续/主菜单
+                    // 按钮反而被淹没。只导出游戏明确持有的两个导航控件。
+                    //
+                    // 点“继续”后摘要动画期间，两者会短暂都不可用；此时返回空列表，
+                    // 让上层等待，而不是猜一个节点去点。
+                    AddGameOverButton(result, GamePaths.Get(top, "_continueButton"), "继续");
+                    AddGameOverButton(result, GamePaths.Get(top, "_mainMenuButton"), "返回主菜单");
+                    break;
+
                 default:
                     // 兜底：认不出的界面，就把所有可点、可见、启用的按钮按**节点名**
                     // 列出来。节点名本身是有语义（Continue / SingleplayerButton /
@@ -384,17 +400,36 @@ namespace Sts2Bridge
                     // NGameOverScreen 报了 0 个选项、can_proceed 也是 false，
                     // 整个链路彻底卡死 —— 认不出的界面不该等于死路。
                     //
-                    // Boss 遗物三选一预期也落在这里。真站到那个界面前，
-                    // 若它同样只报节点名而没有遗物模型，就得像商店那样单开一个 case。
                     foreach (var b in FindClickable(top))
+                    {
+                        // 角色按钮的节点名虽然也能用（SILENT_button），但直接取模型
+                        // 才稳定，且不受场景命名变化影响。IsSelected 是关键状态：
+                        // Select() 后界面不跳转，若不导出它，runner 无法知道该按确认，
+                        // 只会重复选择同一个角色直到判定 stuck。
+                        bool isCharacter = IsA(b, CharacterButton);
+                        var character = isCharacter ? GamePaths.Get(b, "Character") : null;
                         result.Add(new Option {
                             Node = b,
-                            Id = LabelOf(b) ?? GamePaths.Text(b, "Name"),
+                            Id = GamePaths.Id(character) ?? LabelOf(b) ?? GamePaths.Text(b, "Name"),
                             Available = GamePaths.Bool(b, "IsEnabled"),
+                            Selected = isCharacter ? GamePaths.Bool(b, "IsSelected") : null,
                         });
+                    }
                     break;
             }
             return result;
+        }
+
+        private static void AddGameOverButton(List<Option> result, object? button, string id)
+        {
+            if (button == null) return;
+
+            bool visible = false;
+            try { visible = GamePaths.Call(button, "IsVisibleInTree") is bool v && v; }
+            catch { }
+            if (!visible || !(GamePaths.Bool(button, "IsEnabled") ?? false)) return;
+
+            result.Add(new Option { Node = button, Id = id, Available = true });
         }
 
         /// <summary>
@@ -549,8 +584,14 @@ namespace Sts2Bridge
                     return null;
 
                 default:
-                    // 休息点按钮、宝箱、遗物架，以及兜底分支列出的按钮，
-                    // 都是 NClickableControl，一律 ForceClick
+                    // 角色按钮不能 ForceClick：它的 OnPress 不负责选择，游戏自己的
+                    // AutoSlay 也直接调 Select()。旧实现静默失败，随后按确认总会用
+                    // 默认的 Ironclad。其余兜底按钮仍走完整的 ForceClick 路径。
+                    if (IsA(node, CharacterButton))
+                    {
+                        GamePaths.Call(node, "Select");
+                        return null;
+                    }
                     GamePaths.Call(node, "ForceClick");
                     return null;
             }

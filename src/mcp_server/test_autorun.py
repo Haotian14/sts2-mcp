@@ -191,6 +191,32 @@ def test_局面结束与不在局中都交还():
     assert autorun.decide({"in_run": False})[0] == "handoff"
 
 
+def test_只有显式指定角色才跨过终局():
+    dead = state(screen=screen("NGameOverScreen", [opt(0, "继续")]))
+    dead["run"]["game_over"] = True
+    assert autorun.decide(dead)[0] == "handoff"
+    assert autorun.decide(dead, "Silent")[:2] == ("pick", 0)
+
+
+def test_角色选择必须先选中再确认():
+    options = [
+        opt(0, "Ironclad", selected=False),
+        opt(1, "Silent", selected=False),
+        opt(2, "ConfirmButton"),
+    ]
+    menu = {"in_run": False, "screen": screen("NMainMenu", options)}
+    assert autorun.decide(menu, "静默猎手")[:2] == ("pick", 1)
+    options[1]["selected"] = True
+    assert autorun.decide(menu, "Silent")[:2] == ("pick", 2)
+
+
+def test_请求的角色不可用时停手而非确认默认角色():
+    options = [opt(0, "Ironclad", selected=True), opt(1, "ConfirmButton")]
+    menu = {"in_run": False, "screen": screen("NMainMenu", options)}
+    action, _, why = autorun.decide(menu, "Silent")
+    assert action == "handoff" and "Silent" in why
+
+
 # --------------------------------------------------------------------------
 #  循环
 # --------------------------------------------------------------------------
@@ -235,6 +261,34 @@ def test_一路跑到需要决策为止():
     assert result["stopped"] == "handoff"
     assert "CardReward" in result["reason"]                 # 理由要点名等着挑的是什么
     assert result["log"][0]["do"] == "pick GoldReward"      # 记名字，不记下标
+
+
+def test_终局一路开到指定角色的新局():
+    dead_wait = state(screen=screen("NGameOverScreen", []))
+    dead_wait["run"]["game_over"] = True
+    dead_continue = state(screen=screen("NGameOverScreen", [opt(0, "继续")]))
+    dead_continue["run"]["game_over"] = True
+    dead_menu = state(screen=screen("NGameOverScreen", [opt(0, "返回主菜单")]))
+    dead_menu["run"]["game_over"] = True
+    single = {"in_run": False, "screen": screen("NMainMenu", [opt(0, "单人模式")])}
+    standard = {"in_run": False, "screen": screen("NMainMenu", [opt(0, "标准模式")])}
+    choose = {"in_run": False, "screen": screen("NMainMenu", [
+        opt(0, "Ironclad", selected=False), opt(1, "Silent", selected=False),
+        opt(2, "ConfirmButton")])}
+    confirm = {"in_run": False, "screen": screen("NMainMenu", [
+        opt(0, "Ironclad", selected=False), opt(1, "Silent", selected=True),
+        opt(2, "ConfirmButton")])}
+    arrived = state(floor=1, screen=screen("NEventRoom", [opt(0, "领取祝福"), opt(1, "离开")]))
+    arrived["player"]["character"] = "Silent"
+    fake = Fake([dead_continue, dead_menu, single, standard, choose, confirm, arrived])
+    result = autorun.play_run(
+        dead_wait, play_card=lambda c, t: None, end_turn=lambda: None,
+        pick=fake.pick, proceed=fake.proceed, move=fake.move,
+        refresh=lambda: fake.states[0], settle_wait=0,
+        new_run_character="Silent")
+    assert fake.calls == ["pick0", "pick0", "pick0", "pick0", "pick1", "pick2"]
+    assert result["stopped"] == "handoff"
+    assert result["state"]["player"]["character"] == "Silent"
 
 
 def test_动作被拒绝就停手():

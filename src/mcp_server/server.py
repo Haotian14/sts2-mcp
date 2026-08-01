@@ -508,12 +508,17 @@ def auto_combat(max_turns: int = 20) -> dict[str, Any]:
         "- `rejected`：某个动作被游戏拒绝，runner 与游戏判断不一致\n"
         "- `max_steps`：走满上限，局面正常，再调一次即可继续\n"
         "\n"
+        "默认在死亡/胜利时停手。要连续跑多局，显式传 `new_run_character`"
+        "（如 `Silent`）：runner 会点完终局摘要，走主菜单 → 单人模式 → 标准模式 → "
+        "指定角色 → 确认；进入新局后仍在第一处真正决策停手。不会中途放弃尚未结束的局。\n"
+        "\n"
         "`log` 是走过的每一步与理由（同时写进决策日志，见 get_journal）。\n"
         "\n"
         "**处理完你那一步之后，再调一次 auto_run 继续跑。**"
     )
 )
-def auto_run(max_steps: int = 100, max_turns: int = 30) -> dict[str, Any]:
+def auto_run(max_steps: int = 100, max_turns: int = 30,
+             new_run_character: str = "") -> dict[str, Any]:
     state = _request("GET", "/state")
     result = autorun.play_run(
         state,
@@ -530,6 +535,7 @@ def auto_run(max_steps: int = 100, max_turns: int = 30) -> dict[str, Any]:
         refresh=lambda: _request("GET", "/state"),
         max_steps=max_steps,
         max_turns=max_turns,
+        new_run_character=new_run_character or None,
         on_step=lambda before, label, why: journal.record(before, label, why, by="heuristic"),
     )
     journal.record(result.get("state") or {},

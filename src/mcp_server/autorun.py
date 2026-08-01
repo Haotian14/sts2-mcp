@@ -28,6 +28,10 @@ import journal
 # 「什么都做不了」时重读几次状态才认定是真卡住（见 play_run）
 UNCLEAR_RETRIES = 4
 
+# 游戏结束先播放结算摘要，再浮出「返回主菜单」；这不是普通界面加载，实机可能
+# 明显长于战后奖励出现的几秒。显式要求跨局时固定间隔多等一会儿，仍有硬上限。
+NEW_RUN_UNCLEAR_RETRIES = 30
+
 # 战斗奖励里「永远该拿」的那几样（strategy.md §2.2）。
 # 卡牌三选一**不在**此列 —— 那是构筑决策，必须交还。
 ALWAYS_TAKE = ("GoldReward", "RelicReward", "PotionReward")
@@ -49,15 +53,100 @@ def _options(state: dict[str, Any]) -> list[dict[str, Any]]:
     return _screen(state).get("options") or []
 
 
-def decide(state: dict[str, Any]) -> tuple[str, Any, str]:
+def _key(value: Any) -> str:
+    """菜单标识的宽松比较键：大小写、空格、连字符与 `_button` 都不重要。"""
+    key = "".join(ch for ch in str(value or "").lower() if ch.isalnum())
+    return key.removesuffix("button")
+
+
+def _find_option(options: list[dict[str, Any]], *needles: str) -> dict[str, Any] | None:
+    keys = tuple(_key(n) for n in needles)
+    for option in options:
+        if option.get("available") is False:
+            continue
+        hay = _key(option.get("id") or option.get("title"))
+        if any(n and (hay == n or n in hay) for n in keys):
+            return option
+    return None
+
+
+_CHARACTER_ALIASES = {
+    "ironclad": ("ironclad", "力士"),
+    "silent": ("silent", "静默猎手"),
+    "defect": ("defect", "故障机器人"),
+    "necrobinder": ("necrobinder", "亡灵契约师"),
+    "regent": ("regent", "摄政王"),
+}
+
+
+def _character_needles(character: str) -> tuple[str, ...]:
+    wanted = _key(character)
+    for aliases in _CHARACTER_ALIASES.values():
+        if wanted in {_key(a) for a in aliases}:
+            return aliases
+    return (character,)
+
+
+def _new_run_decision(state: dict[str, Any], character: str) -> tuple[str, Any, str]:
+    """终局到下一局的菜单导航。只有调用方显式给角色时才会走到这里。"""
+    screen, options = _screen(state), _options(state)
+    stype = screen.get("type") or ""
+    usable = [o for o in options if o.get("available") is not False]
+
+    if (state.get("run") or {}).get("game_over"):
+        # 结算分两段：先「继续」播放摘要，再「返回主菜单」。期间会暂时零选项。
+        choice = _find_option(usable, "返回主菜单", "return to main menu", "main menu")
+        if choice:
+            return "pick", choice["i"], "终局摘要已看完，返回主菜单开下一局"
+        choice = _find_option(usable, "继续", "continue")
+        if choice:
+            return "pick", choice["i"], "检测到本局结束，进入终局摘要"
+        if len(usable) == 1:
+            return "pick", usable[0]["i"], "终局界面只有一个可用导航按钮"
+        if not usable:
+            return "unclear", None, f"{stype or '终局界面'} 正在播放结算动画"
+        return "handoff", None, f"终局界面出现多个不认识的选项，不猜：{[o.get('id') for o in usable]}"
+
+    # 角色按钮由 C# 侧导出 selected；有该字段即可判定已经进入角色选择页，
+    # 不依赖整个主菜单上下文始终叫 NMainMenu 这一实现细节。
+    character_options = [o for o in usable if "selected" in o]
+    if character_options:
+        target = _find_option(character_options, *_character_needles(character))
+        if not target:
+            names = [str(o.get("id")) for o in character_options]
+            return "handoff", None, f"角色 {character!r} 不在当前可选列表：{'、'.join(names)}"
+        if not target.get("selected"):
+            return "pick", target["i"], f"选择下一局角色 {target.get('id')}"
+        confirm = _find_option(usable, "确认", "confirm")
+        if confirm:
+            return "pick", confirm["i"], f"已选中 {target.get('id')}，确认开局"
+        return "unclear", None, f"已选中 {target.get('id')}，等待确认按钮"
+
+    standard = _find_option(usable, "标准模式", "standard")
+    if standard:
+        return "pick", standard["i"], "选择标准模式"
+    single = _find_option(usable, "单人模式", "singleplayer", "single player")
+    if single:
+        return "pick", single["i"], "进入单人模式"
+
+    if not usable:
+        return "unclear", None, f"{stype or '主菜单'} 正在切换界面"
+    return "handoff", None, f"开新局导航遇到不认识的界面 {stype}：{[o.get('id') for o in usable]}"
+
+
+def decide(state: dict[str, Any], new_run_character: str | None = None) -> tuple[str, Any, str]:
     """下一步做什么。返回 `(动作, 参数, 理由)`。
 
     动作为 `handoff` 时，参数即交还的理由。**顺序即优先级**，越靠前越硬。
     """
-    if not state.get("in_run"):
+    character = str(new_run_character or "").strip()
+    game_over = bool((state.get("run") or {}).get("game_over"))
+    if game_over or not state.get("in_run"):
+        if character:
+            return _new_run_decision(state, character)
+        if game_over:
+            return "handoff", None, "本局已结束"
         return "handoff", None, "不在局中（多半停在主菜单）"
-    if (state.get("run") or {}).get("game_over"):
-        return "handoff", None, "本局已结束"
 
     # 待答的选择一律交还：`choice` 不区分弃牌 / 检索 / 除卡，而三者的最优
     # 选法互不相同（strategy.md §3）。分不清就不做。
@@ -139,7 +228,8 @@ def _signature(state: dict[str, Any]) -> tuple:
     run, player = state.get("run") or {}, state.get("player") or {}
     return (
         run.get("total_floor"), run.get("gold"), player.get("hp"),
-        _screen(state).get("type"), len(_options(state)),
+        _screen(state).get("type"),
+        tuple((o.get("id"), o.get("selected")) for o in _options(state)),
         state.get("in_combat"), (state.get("map") or {}).get("can_move"),
     )
 
@@ -156,6 +246,7 @@ def play_run(
     on_step: Callable[[dict[str, Any], str, str], None] | None = None,
     refresh: Callable[[], dict[str, Any]] | None = None,
     settle_wait: float = 0.8,
+    new_run_character: str | None = None,
 ) -> dict[str, Any]:
     """一路跑到需要模型出面为止。
 
@@ -178,7 +269,7 @@ def play_run(
                 pass
 
     while steps < max_steps:
-        action, arg, why = decide(state)
+        action, arg, why = decide(state, new_run_character=new_run_character)
 
         if action == "handoff":
             return _done(state, log, steps, "handoff", why)
@@ -189,12 +280,16 @@ def play_run(
         # 「卡住了，交还」，而 0.8 秒后奖励界面就到了。
         # 这与 3.4c 那个「等待判据早于目标事件」是同一类错误。
         if action == "unclear":
-            if refresh and unclear < UNCLEAR_RETRIES:
+            crossing_run = bool(new_run_character) and (
+                bool((state.get("run") or {}).get("game_over")) or not state.get("in_run")
+            )
+            retry_limit = NEW_RUN_UNCLEAR_RETRIES if crossing_run else UNCLEAR_RETRIES
+            if refresh and unclear < retry_limit:
                 unclear += 1
                 # 等待时间递增：0.8 → 1.6 → 2.4 …。固定 0.8 秒试三次实测不够 ——
                 # 有的战斗打完，奖励界面两秒多才浮出来，runner 于是白交还一次。
                 # 递增让常见情形仍然只等一下，慢的那些也等得住。
-                time.sleep(settle_wait * unclear)
+                time.sleep(settle_wait if crossing_run else settle_wait * unclear)
                 state = refresh() or state
                 continue
             return _done(state, log, steps, "handoff",
