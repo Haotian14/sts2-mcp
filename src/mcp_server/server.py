@@ -24,6 +24,7 @@ import httpx
 from mcp.server.mcpserver import MCPServer
 
 import autoplay
+import journal
 
 # httpx 默认对每个请求打一条 INFO。stdio 传输下日志走 stderr，不会污染协议，
 # 但一局要发几百个请求，会把真正的错误淹掉。降到 WARNING。
@@ -45,6 +46,11 @@ _client = httpx.Client(timeout=_TIMEOUT)
 # 卡面文本一局之内基本不变，缓存之。这正是桥接层把 /state 与 /glossary
 # 拆开的理由：若合并，每个决策点都要重传一遍 1.6 KB 的静态文本。
 _glossary_cache: dict[str, Any] | None = None
+
+# 最近一次见到的局面。决策日志要记的是**出手前**的局面（选了哪个选项、
+# 当时几点血），而动作接口只回报执行后的状态 —— 但上一次调用的「执行后」
+# 恰好就是这一次的「执行前」，缓存下来即可，不必为记日志多发一个 HTTP。
+_last_state: dict[str, Any] = {}
 
 
 class BridgeError(RuntimeError):
@@ -77,6 +83,10 @@ def _request(method: str, path: str, params: dict[str, Any] | None = None) -> di
     if response.status_code >= 400:
         raise BridgeError(f"桥接层拒绝了请求（HTTP {response.status_code}）：{payload}")
 
+    global _last_state
+    snapshot = payload.get("state") if isinstance(payload.get("state"), dict) else payload
+    if isinstance(snapshot, dict) and "in_run" in snapshot:
+        _last_state = snapshot
     return payload
 
 
@@ -170,6 +180,39 @@ def get_glossary(refresh: bool = False) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+#  决策日志（spec.md 6.5）
+#
+#  落盘的逻辑全在 journal.py。这里只负责一件事：**给动作起一个三天后还看得懂
+#  的名字**。日志里记 `pick(2)` 等于没记 —— 下标当场就过期了，得在下发之前
+#  从局面里把名字取出来（「剑柄打击」「Elite」「38 金的无情猛攻」）。
+# --------------------------------------------------------------------------
+
+_WHY_DOC = (
+    "`why` 是一句话理由，会连同当时的局面一起写进决策日志"
+    "（`logs/decisions.jsonl`，跨局累积）。构筑与路线决策决定一局的上限，"
+    "而下一局重开时唯一还留得下来的就是这份日志 —— **请如实写你真正的理由**，"
+    "写「感觉不错」不如不写。"
+)
+
+
+def _named(options: Any, i: int) -> str:
+    opt = next((o for o in options or [] if o.get("i") == i), None)
+    if not opt:
+        return f"#{i}"
+    name = opt.get("title") or opt.get("id") or opt.get("type") or f"#{i}"
+    cost = opt.get("cost")
+    return f"{name}（{cost}金）" if isinstance(cost, int) else str(name)
+
+
+def _log(before: dict[str, Any], action: str, why: str,
+         result: dict[str, Any] | None = None) -> None:
+    # 出手前的局面为空（模型没看状态就直接动手）时退回用执行后的状态，
+    # 总比记成一条没有上下文的空记录强
+    state = before or (result or {}).get("state") or {}
+    journal.record(state, action, why)
+
+
+# --------------------------------------------------------------------------
 #  动作
 #
 #  三个工具形状一致：同步执行，等到局面稳定才返回，返回值里带上新状态。
@@ -202,14 +245,23 @@ _ACTION_RESULT_DOC = (
         "\n"
         "**每打出一张牌，剩余手牌的下标都会重排。**连续出牌时，"
         "请用上一次调用返回的 `state` 里的下标，不要沿用更早的。\n"
+        "\n" + _WHY_DOC + "\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def play_card(card: int, target: int | None = None) -> dict[str, Any]:
+def play_card(card: int, target: int | None = None, why: str = "") -> dict[str, Any]:
     params: dict[str, Any] = {"card": card}
     if target is not None:
         params["target"] = target
-    return _request("POST", "/action/play_card", params)
+    before = _last_state
+    hand = before.get("hand") or []
+    name = next((c.get("id") for c in hand if c.get("i") == card), None) or f"#{card}"
+    if target is not None:
+        foe = next((e.get("id") for e in before.get("enemies") or [] if e.get("i") == target), None)
+        name = f"{name} → {foe or target}"
+    result = _request("POST", "/action/play_card", params)
+    _log(before, f"play_card {name}", why, result)
+    return result
 
 
 @server.tool(
@@ -224,8 +276,11 @@ def play_card(card: int, target: int | None = None) -> dict[str, Any]:
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def end_turn() -> dict[str, Any]:
-    return _request("POST", "/action/end_turn")
+def end_turn(why: str = "") -> dict[str, Any]:
+    before = _last_state
+    result = _request("POST", "/action/end_turn")
+    _log(before, "end_turn", why, result)
+    return result
 
 
 @server.tool(
@@ -237,14 +292,20 @@ def end_turn() -> dict[str, Any]:
         "作用于自己的药水省略即可。\n"
         "\n"
         "药水在战斗外也能喝（比如上路前先回血）。\n"
+        "\n" + _WHY_DOC + "\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def use_potion(slot: int, target: int | None = None) -> dict[str, Any]:
+def use_potion(slot: int, target: int | None = None, why: str = "") -> dict[str, Any]:
     params: dict[str, Any] = {"slot": slot}
     if target is not None:
         params["target"] = target
-    return _request("POST", "/action/use_potion", params)
+    before = _last_state
+    potions = before.get("potions") or []
+    name = potions[slot] if 0 <= slot < len(potions) and potions[slot] else f"#{slot}"
+    result = _request("POST", "/action/use_potion", params)
+    _log(before, f"use_potion {name}", why, result)
+    return result
 
 
 # --------------------------------------------------------------------------
@@ -269,11 +330,16 @@ def use_potion(slot: int, target: int | None = None) -> dict[str, Any]:
         "决定一局的上限**，比任何出牌技巧都重要，务必读完文本再选。\n"
         "\n"
         "领完想要的之后，用 proceed 离开回到地图。\n"
+        "\n" + _WHY_DOC + "\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def pick(i: int) -> dict[str, Any]:
-    return _request("POST", "/action/pick", {"i": i})
+def pick(i: int, why: str = "") -> dict[str, Any]:
+    before = _last_state
+    label = _named((before.get("screen") or {}).get("options"), i)
+    result = _request("POST", "/action/pick", {"i": i})
+    _log(before, f"pick {label}", why, result)
+    return result
 
 
 @server.tool(
@@ -282,11 +348,17 @@ def pick(i: int) -> dict[str, Any]:
         "\n"
         "只有在 get_state 的 `screen.can_proceed` 为 true 时才可用。"
         "**没按继续就回不到地图**，`map.can_move` 会一直是 false。\n"
+        "\n"
+        "跳过一份卡牌奖励（不点 CardReward 直接按继续）也是一次构筑决策，"
+        "值得在 `why` 里写明为什么不要。\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def proceed() -> dict[str, Any]:
-    return _request("POST", "/action/proceed")
+def proceed(why: str = "") -> dict[str, Any]:
+    before = _last_state
+    result = _request("POST", "/action/proceed")
+    _log(before, "proceed", why, result)
+    return result
 
 
 @server.tool(
@@ -303,11 +375,16 @@ def proceed() -> dict[str, Any]:
         "\n"
         "会一直等到真的走进新房间才返回；若目标是战斗房，返回时战斗已经开始"
         "（`in_combat` 为 true，且已进入出牌阶段）。\n"
+        "\n" + _WHY_DOC + "\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def move(node: int) -> dict[str, Any]:
-    return _request("POST", "/action/move", {"node": node})
+def move(node: int, why: str = "") -> dict[str, Any]:
+    before = _last_state
+    label = _named((before.get("map") or {}).get("options"), node)
+    result = _request("POST", "/action/move", {"node": node})
+    _log(before, f"move → {label}", why, result)
+    return result
 
 
 @server.tool(
@@ -322,11 +399,17 @@ def move(node: int) -> dict[str, Any]:
         "\n"
         "`awaiting_choice` 为 true 却没有 `choice` 字段，说明这是桥接层还接管不了的"
         "选择（如地图、商店、事件），只能由人操作。\n"
+        "\n" + _WHY_DOC + "\n"
         "\n" + _ACTION_RESULT_DOC
     )
 )
-def choose(cards: list[int]) -> dict[str, Any]:
-    return _request("POST", "/action/choose", {"cards": ",".join(str(c) for c in cards)})
+def choose(cards: list[int], why: str = "") -> dict[str, Any]:
+    before = _last_state
+    options = (before.get("choice") or {}).get("options")
+    label = "、".join(_named(options, c) for c in cards) or "（空）"
+    result = _request("POST", "/action/choose", {"cards": ",".join(str(c) for c in cards)})
+    _log(before, f"choose {label}", why, result)
+    return result
 
 
 @server.tool(
@@ -365,19 +448,49 @@ def resume_run() -> dict[str, Any]:
         "看 `state` 自己出牌。\n"
         "- `max_turns`：打满上限，局面仍在战斗中\n"
         "\n"
-        "`log` 是它每一步的动作与理由，`state` 是停手时的局面。\n"
+        "`log` 是它每一步的动作与理由，`state` 是停手时的局面"
+        "（同样会写进决策日志，见 get_journal）。\n"
         "\n"
         "⚠️ 它**不会**用药水、不会应答选牌、不碰非战斗界面 —— 那些一律交还给你。"
     )
 )
 def auto_combat(max_turns: int = 20) -> dict[str, Any]:
     state = _request("GET", "/state")
-    return autoplay.play_combat(
+    result = autoplay.play_combat(
         state,
-        play_card=lambda card, target: play_card(card, target),
-        end_turn=end_turn,
+        # 直接走 _request，不经 play_card / end_turn 那两个工具函数 ——
+        # 它们各自也会记日志，那样每张牌会被记两遍
+        play_card=lambda card, target: _request(
+            "POST", "/action/play_card",
+            {"card": card, **({"target": target} if target is not None else {})},
+        ),
+        end_turn=lambda: _request("POST", "/action/end_turn"),
         max_turns=max_turns,
+        on_step=lambda before, label, why: journal.record(before, label, why, by="heuristic"),
     )
+    # 停手的理由本身就是最该留下来的一条：它标出了启发式的边界在哪
+    journal.record(result.get("state") or {},
+                   f"auto_combat 停手（{result.get('stopped')}）",
+                   result.get("reason") or "", by="heuristic", kind="stop")
+    return result
+
+
+@server.tool(
+    description=(
+        "读回**过去几局**的决策日志 —— 每条都带当时的层数、血量、做了什么、为什么。\n"
+        "\n"
+        "**开新局之前先看一眼**：上一局死在第几层、当时的构筑决策是什么、"
+        "启发式在哪里停手交还。这些在上下文里早就没了，只有这份日志留得下来。\n"
+        "\n"
+        "为控制篇幅，战斗内由启发式逐张出的牌不会出现在摘要里"
+        "（那是常规操作，价值低），保留的是：卡牌三选一、商店、除卡、路线、"
+        "药水，以及每一次 `auto_combat` 停手交还的理由。\n"
+        "\n"
+        "`runs` 是往回看几局（默认 3，含当前这局），`per_run` 是每局最多几条。"
+    )
+)
+def get_journal(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
+    return journal.digest(runs=runs, per_run=per_run)
 
 
 @server.tool(
