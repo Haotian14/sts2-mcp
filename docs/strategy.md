@@ -19,8 +19,12 @@
 > 剩余 1 点能量叠格挡，只掉 7 血。
 > 若照「先堆格挡」打：3 点能量最多 10 点格挡，挡不住 26，白掉 16 血。
 
-**判据**：对每只敌人算 `本回合可投送伤害 >= enemy.hp`？能则优先斩杀，
-且优先斩杀 `intents[].total` 最高的那只。
+**判据**：对每只敌人算 `本回合可投送伤害 >= enemy.hp + enemy.block`？
+能则优先斩杀，且优先斩杀 `intents[].total` 最高的那只。
+
+⚠️ **格挡必须算进去**，它先于血量被扣掉。2026-08-01 实测漏掉的代价：
+`SewerClam` 56 血 + 8 格挡（`PlatingPower` 每回合回满），启发式按
+`28 ≥ 26 血` 判定斩杀，实际两刀先被格挡吃掉、怪没死，那 14 点照样打在脸上。
 
 依赖：`enemies[].hp`、`enemies[].intents[].total`、`hand[].damage_vs`（对这只怪
 的实际伤害，见 §4）、`hand[].cost`、`combat.energy`。
@@ -204,8 +208,12 @@ hand[].damage_vs   对每只敌人的实际伤害，下标与 enemies[].i 对齐
 一击斩杀             敌人 9 血，damage_vs = [9]   一张打击结束战斗
 ```
 
-**判据因此可以做实了**：§1.1 的斩杀判定用 `damage_vs[i] >= enemies[i].hp`，
-§1.2 的凑数字用 `values.Damage` 求和 —— 不必再像过去那样留余量。
+**判据因此可以做实了**：§1.1 的斩杀判定用
+`damage_vs[i] >= enemies[i].hp + enemies[i].block`，§1.2 的凑数字用
+`values.Damage` 求和 —— 不必再像过去那样留余量。
+
+⚠️ `damage_vs` 含的是**目标侧的伤害修正**（易伤），**不含敌人的格挡** ——
+格挡要自己减。这一点漏了一次，见 §1.1 的警告。
 
 ⚠️ 仍需留意**多段攻击**：`values` 给的是单次数值。游戏侧确有 `RepeatVar`
 （`DynamicVarSet.Repeat`），照理会以 `Repeat` 键出现在 `values` 里，总伤害

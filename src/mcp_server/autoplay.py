@@ -213,6 +213,13 @@ def _killable(hand: list[dict[str, Any]], energy: int, enemy: dict[str, Any],
     if not enemy.get("hittable"):
         return None
 
+    # 格挡先于血量被扣掉，所以斩杀线是 **血量 + 格挡**，不是血量。
+    # 2026-08-01 实测漏掉它的代价（第 9 层 SewerClam，56 血 + 8 格挡 +
+    # PlatingPower 每回合回满）：`完美打击 22 + 打击 6 = 28 ≥ 26 血` 被判成
+    # 「斩杀线净挨 0」，实际两刀先被 8 点格挡吃掉，怪没死，那 14 点照样打在脸上。
+    # 与当初 DamageCalc 那条同型的错误：单向高估自己，且敌人格挡越厚错得越多。
+    need = hp + (enemy.get("block") or 0)
+
     picked: list[dict[str, Any]] = []
     dealt = spent = 0
     for card in sorted(_attacks(hand), key=lambda c: _damage(c, enemy_i), reverse=True):
@@ -221,7 +228,7 @@ def _killable(hand: list[dict[str, Any]], energy: int, enemy: dict[str, Any],
         picked.append(card)
         dealt += _damage(card, enemy_i)
         spent += _cost(card)
-        if dealt >= hp:
+        if dealt >= need:
             return picked
     return None
 

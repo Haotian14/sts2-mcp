@@ -30,9 +30,9 @@ def state(hp=60, max_hp=80, block=0, energy=3, enemies=(), hand=(), **kw):
     return base
 
 
-def enemy(i, hp, damage=None, powers=(), alive=True, hittable=True, id="Mob"):
+def enemy(i, hp, damage=None, powers=(), alive=True, hittable=True, id="Mob", block=0):
     intents = [{"type": "Attack", "damage": damage, "total": damage}] if damage else [{"type": "Buff"}]
-    return {"i": i, "id": id, "hp": hp, "alive": alive, "hittable": hittable,
+    return {"i": i, "id": id, "hp": hp, "block": block, "alive": alive, "hittable": hittable,
             "powers": list(powers), "intents": intents}
 
 
@@ -244,6 +244,28 @@ def test_斩杀用实际伤害而非卡面值():
               hand=[card(0, damage=6, damage_vs=[9]), defend(1)])
     move, why = autoplay.decide(s)
     assert move["card"] == 0
+    assert "斩杀" in why
+
+
+def test_斩杀线要算上敌人的格挡():
+    """实机抓到的（2026-08-01，第 9 层 SewerClam：56 血 + 8 格挡 + 每回合回满）。
+
+    28 点伤害 ≥ 26 血，旧版据此判「斩杀，净挨 0」；实际两刀先被 8 点格挡
+    吃掉，怪没死，那 14 点照样打在脸上。格挡先于血量被扣，斩杀线是血+格挡。
+    """
+    s = state(hp=60, max_hp=80, energy=3,
+              enemies=[enemy(0, 26, block=8, damage=14, id="SewerClam")],
+              hand=[card(0, "PerfectedStrike", cost=2, damage=22), card(1, damage=6), defend(2)])
+    move, why = autoplay.decide(s)
+    assert "斩杀" not in why          # 28 < 26 + 8，杀不掉，别装作杀得掉
+    assert "格挡" in why              # 杀不掉就老老实实挡
+
+
+def test_算上格挡仍杀得掉就照杀():
+    s = state(hp=60, max_hp=80, energy=3,
+              enemies=[enemy(0, 20, block=8, damage=14, id="SewerClam")],
+              hand=[card(0, "PerfectedStrike", cost=2, damage=22), card(1, damage=6), defend(2)])
+    move, why = autoplay.decide(s)
     assert "斩杀" in why
 
 
