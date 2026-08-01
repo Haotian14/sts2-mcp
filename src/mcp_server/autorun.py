@@ -26,7 +26,7 @@ import autoplay
 import journal
 
 # 「什么都做不了」时重读几次状态才认定是真卡住（见 play_run）
-UNCLEAR_RETRIES = 3
+UNCLEAR_RETRIES = 4
 
 # 战斗奖励里「永远该拿」的那几样（strategy.md §2.2）。
 # 卡牌三选一**不在**此列 —— 那是构筑决策，必须交还。
@@ -34,6 +34,11 @@ ALWAYS_TAKE = ("GoldReward", "RelicReward", "PotionReward")
 
 # 地图上这两类房间事关全局，绝不本地代拿主意（strategy.md §3）
 RISKY_ROOMS = ("Elite", "Boss")
+
+# 「唯一一个选项，而且它就叫『继续』」不是决策，是导航。事件房结算完那一下
+# 就是这样（实测第 1 层涅奥事件）。**必须同时满足「只有这一个可选项」** ——
+# 事件里的真正选项从来不叫「继续」，而只要还有第二个选项，这里就不成立。
+CONTINUE_WORDS = ("继续", "continue", "proceed", "确认", "ok")
 
 
 def _screen(state: dict[str, Any]) -> dict[str, Any]:
@@ -71,15 +76,32 @@ def decide(state: dict[str, Any]) -> tuple[str, Any, str]:
         if chest:
             return "pick", chest["i"], "开箱（开箱本身没得选）"
 
-        take = next((o for o in options
-                     if o.get("id") in ALWAYS_TAKE and o.get("available") is not False), None)
+        # 药水栏满时**没有空位可放**，而奖励项的 available 仍是 true
+        # （strategy.md §2.2 原先记的「满了会 available=false」实测不成立）。
+        # 照拿会点了没反应、状态不变，runner 于是空转到 stuck —— 2026-08-01
+        # 第 8 层精英战后实测。空位要自己数。
+        potions = state.get("potions")
+        full = isinstance(potions, list) and potions and all(p for p in potions)
+
+        def takeable(o: dict[str, Any]) -> bool:
+            if o.get("available") is False:
+                return False
+            return not (full and o.get("id") == "PotionReward")
+
+        take = next((o for o in options if o.get("id") in ALWAYS_TAKE and takeable(o)), None)
         if take:
             return "pick", take["i"], f"{take['id']} 永远该拿（strategy.md §2.2）"
 
         # 只剩一个可选项、且它是宝箱里的遗物 —— 遗物同样永远该拿
-        usable = [o for o in options if o.get("available") is not False]
+        # （拿不了的药水不算「可选项」，否则界面上只剩它时会一直交还）
+        usable = [o for o in options if takeable(o)]
         if len(usable) == 1 and "Treasure" in stype:
             return "pick", usable[0]["i"], "宝箱里的遗物，唯一可拿项"
+
+        if len(usable) == 1:
+            name = str(usable[0].get("title") or usable[0].get("id") or "").strip().lower()
+            if any(w in name for w in CONTINUE_WORDS):
+                return "pick", usable[0]["i"], "唯一选项就是「继续」，属于导航不是决策"
 
         if screen.get("can_proceed") and not usable:
             return "proceed", None, "界面上已无可领取的东西"
@@ -169,7 +191,10 @@ def play_run(
         if action == "unclear":
             if refresh and unclear < UNCLEAR_RETRIES:
                 unclear += 1
-                time.sleep(settle_wait)
+                # 等待时间递增：0.8 → 1.6 → 2.4 …。固定 0.8 秒试三次实测不够 ——
+                # 有的战斗打完，奖励界面两秒多才浮出来，runner 于是白交还一次。
+                # 递增让常见情形仍然只等一下，慢的那些也等得住。
+                time.sleep(settle_wait * unclear)
                 state = refresh() or state
                 continue
             return _done(state, log, steps, "handoff",

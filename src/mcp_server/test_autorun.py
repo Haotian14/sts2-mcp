@@ -57,10 +57,32 @@ def test_遗物与药水也该拿():
 
 
 def test_领不了的药水不去点():
-    """药水栏满时 available 为 false，点它没有意义。"""
     s = state(screen=screen(options=[opt(0, "PotionReward", available=False)], can_proceed=True))
     action, _, _ = autorun.decide(s)
     assert action == "proceed"
+
+
+def test_药水栏满时跳过药水去拿遗物():
+    """实测（第 8 层精英战后）：药水栏三格全满，奖励项的 available 仍是 true，
+    点了没反应、状态不变，runner 空转到 stuck。空位得自己数。"""
+    s = state(potions=["FlexPotion", "PowderedDemise", "FlexPotion"],
+              screen=screen(options=[opt(0, "PotionReward"), opt(1, "RelicReward")]))
+    action, arg, _ = autorun.decide(s)
+    assert (action, arg) == ("pick", 1)
+
+
+def test_界面上只剩拿不了的药水就按继续():
+    """否则模型会被反复叫醒去处理一个根本领不了的奖励。"""
+    s = state(potions=["a", "b", "c"],
+              screen=screen(options=[opt(0, "PotionReward")], can_proceed=True))
+    assert autorun.decide(s)[0] == "proceed"
+
+
+def test_药水栏有空位就照拿():
+    s = state(potions=["FlexPotion", None, None],
+              screen=screen(options=[opt(0, "PotionReward")]))
+    action, arg, _ = autorun.decide(s)
+    assert (action, arg) == ("pick", 0)
 
 
 def test_界面处理完按继续():
@@ -114,6 +136,19 @@ def test_商店交还():
 
 def test_休息点交还():
     s = state(screen=screen("NRestSiteRoom", [opt(0, "HEAL"), opt(1, "FORGE")]))
+    assert autorun.decide(s)[0] == "handoff"
+
+
+def test_事件结算完那句继续算导航不算决策():
+    """实测第 1 层涅奥事件：选完祝福后只剩一个「继续」。"""
+    s = state(screen=screen("NEventRoom", [opt(0, "继续")]))
+    action, arg, _ = autorun.decide(s)
+    assert (action, arg) == ("pick", 0)
+
+
+def test_只要还有第二个选项就不算导航():
+    """事件里真正的选项从不叫「继续」，但保险起见：多于一个就交还。"""
+    s = state(screen=screen("NEventRoom", [opt(0, "继续"), opt(1, "失去9点生命，选择一张牌变化")]))
     assert autorun.decide(s)[0] == "handoff"
 
 
