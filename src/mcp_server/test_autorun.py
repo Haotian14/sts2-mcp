@@ -298,7 +298,13 @@ def test_终局一路开到指定角色的新局():
     confirm = {"in_run": False, "screen": screen("NMainMenu", [
         opt(0, "Ironclad", selected=False), opt(1, "Silent", selected=True),
         opt(2, "ConfirmButton")])}
-    arrived = state(floor=1, screen=screen("NEventRoom", [opt(0, "领取祝福"), opt(1, "离开")]))
+    # floor 特意用 2（而不是 1）：这条用例钉的是「跨局之后仍在第一处真正
+    # 决策（NEventRoom 的二选一）停手」，不是「开局先复盘」那个停手点 ——
+    # 若落在 floor == 1 且本局尚无计划，两个停手点会重叠，`stopped ==
+    # "handoff"` 与角色断言恰好都还成立，测试却已经不再覆盖它本来要钉的
+    # 决策点了（这正是 Important 4 指出的意图漂移）。跨局复盘的重新生效
+    # 由另一条用例 `test_跨局连跑时开局复盘会重新生效` 专门覆盖。
+    arrived = state(floor=2, screen=screen("NEventRoom", [opt(0, "领取祝福"), opt(1, "离开")]))
     arrived["player"]["character"] = "Silent"
     fake = Fake([dead_continue, dead_menu, single, standard, choose, confirm, arrived])
     result = autorun.play_run(
@@ -308,6 +314,7 @@ def test_终局一路开到指定角色的新局():
         new_run_character="Silent")
     assert fake.calls == ["pick0", "pick0", "pick0", "pick0", "pick1", "pick2"]
     assert result["stopped"] == "handoff"
+    assert "领取祝福" in result["reason"] and "离开" in result["reason"]   # 停在事件二选一，不是复盘门
     assert result["state"]["player"]["character"] == "Silent"
 
 
@@ -471,3 +478,28 @@ def test_跨局连跑时开局复盘会重新生效():
         new_run_character="Silent")
     assert result["stopped"] == "handoff"
     assert "复盘" in result["reason"]
+
+
+def test_日志写不进去时不会卡在开局复盘(monkeypatch):
+    """Important 1：日志可读却写不进去（磁盘只读/满/ACL 限制）时，
+    `record_plan` 会静默写失败，`has_plan` 若只处理「读不到」这一半，
+    就会恒为 False——`auto_run` 每次都会在第 1 层停手要求复盘，而
+    `set_plan` 又无条件回报成功，模型会以为记下来了，实际上永远过不去，
+    陷入死循环。这里钉住 `play_run` 这一层的最终效果：写坏了也不能卡住。
+    """
+    real_open = open
+
+    def fake_open(path, mode="r", *args, **kwargs):
+        if str(path) == journal.PATH and "a" in mode:
+            raise OSError("模拟磁盘写入失败")
+        return real_open(path, mode, *args, **kwargs)
+
+    monkeypatch.setattr("builtins.open", fake_open)
+
+    s = state(floor=1, map_=ONE_ROAD)
+    fake = Fake([s])
+    result = run(fake)
+    # 没有被开局复盘拦住——既然计划注定存不下来，停下去没有意义，
+    # 径直往下走地图唯一的那条路。
+    assert fake.calls == ["move0"]
+    assert result["stopped"] != "handoff" or "复盘" not in result["reason"]
