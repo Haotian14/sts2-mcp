@@ -132,6 +132,54 @@ namespace Sts2Bridge
             w.EndObject();
         }
 
+        // ------------------------------------------------------------------
+        //  给 Screens 复用的单个模型渲染
+        //
+        //  本类导出的是**已持有**的牌与遗物，而卡牌三选一、商店、Boss 遗物
+        //  给的是**待选**的东西 —— 后者不在牌库里，本接口一个都覆盖不到。
+        //  文本又不能塞进 /glossary：那是一局取一次的静态缓存，而候选物每个
+        //  界面都不一样，塞进去要么发过期数据、要么每次重取整副牌组。
+        //  故把渲染逻辑开放出去，由 Screens 就地写进 screen.options[]。
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// 模型的显示名。卡牌的 <c>Title</c> 已是渲染好的 string，
+        /// 遗物/药水的是 LocString，得过一遍本地化器 —— 两者不一致，见 game-model.md。
+        /// </summary>
+        internal static string? TitleOf(object? model, List<string>? warnings = null)
+        {
+            if (model == null) return null;
+            var id = GamePaths.Id(model);
+
+            if (GamePaths.IsA(model, "CardModel"))
+                return StripMarkup(Safe(() => GamePaths.Text(model, "Title"), $"{id}.Title", warnings));
+
+            return StripMarkup(Safe(() => Render(GamePaths.Get(model, "Title")), $"{id}.Title", warnings));
+        }
+
+        /// <summary>
+        /// 模型的效果文本。
+        ///
+        /// 遗物的描述成员叫 <c>DynamicDescription</c>、药水的叫 <c>Description</c>，
+        /// 按存在性依次尝试 —— 这是正常的多态差异，不该记成警告。
+        /// </summary>
+        internal static string? TextOf(object? model, List<string>? warnings = null)
+        {
+            if (model == null) return null;
+            var id = GamePaths.Id(model);
+
+            if (GamePaths.IsA(model, "CardModel"))
+                return StripMarkup(Safe(() => (string?)GamePaths.Call(
+                        model, "GetDescriptionForPile", GamePaths.EnumValue(PileType, "Hand"), null),
+                    $"{id}.GetDescriptionForPile", warnings));
+
+            foreach (var member in new[] { "DynamicDescription", "Description" })
+                if (GamePaths.TryGet(model, member, out var loc) && loc != null)
+                    return StripMarkup(Safe(() => Render(loc), $"{id}.{member}", warnings));
+
+            return null;
+        }
+
         /// <summary>
         /// LocString → 文本。LocString 自身只持有表名与键（如 relics /
         /// RING_OF_THE_SNAKE.description），真正的查表与变量代入由 LocManager 完成。
@@ -155,6 +203,15 @@ namespace Sts2Bridge
         ///
         /// 仅剥离形如 [tag] / [/tag] / [tag=value] 的标记；含空格或非标记字符的
         /// 方括号原样保留，避免误伤正文里可能出现的括号。
+        ///
+        /// 【[img] 要连内容一起丢】
+        /// 着色标记之间的是正文（`[gold]格挡[/gold]` → `格挡`），但 [img] 之间
+        /// 的是资源路径，不是给人看的：
+        ///
+        ///   耗能变为0[img]res://images/…/ironclad_energy_icon.png[/img]。
+        ///
+        /// 只剥标签会留下一串裸路径，既是噪音又会把「变为 0」和后面的句子黏成
+        /// 一句看不懂的话。2026-08-01 在商店的「无情猛攻」上暴露出来。
         /// </summary>
         internal static string? StripMarkup(string? text)
         {
@@ -169,6 +226,14 @@ namespace Sts2Bridge
                     int close = text.IndexOf(']', i + 1);
                     if (close > i && IsMarkupTag(text, i + 1, close))
                     {
+                        // 图片：连同中间的路径与闭合标记一并丢弃。
+                        // 找不到闭合标记时退回只剥这一个标签，绝不吞掉后面的正文。
+                        if (IsTagNamed(text, i + 1, close, "img"))
+                        {
+                            int end = text.IndexOf("[/img]", close + 1, StringComparison.OrdinalIgnoreCase);
+                            i = end >= 0 ? end + "[/img]".Length : close + 1;
+                            continue;
+                        }
                         i = close + 1;
                         continue;
                     }
@@ -176,6 +241,16 @@ namespace Sts2Bridge
                 sb.Append(text[i++]);
             }
             return sb.ToString();
+        }
+
+        /// <summary>标记的名字是否为 name（忽略闭合斜杠与 =value 部分）。</summary>
+        private static bool IsTagNamed(string s, int start, int end, string name)
+        {
+            if (start < end && s[start] == '/') start++;
+            int stop = s.IndexOf('=', start);
+            if (stop < 0 || stop > end) stop = end;
+            return stop - start == name.Length &&
+                   string.Compare(s, start, name, 0, name.Length, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         private static bool IsMarkupTag(string s, int start, int end)
@@ -203,11 +278,13 @@ namespace Sts2Bridge
             catch (Exception ex) { warnings.Add($"{type}.{name} 读取失败: {ex.GetBaseException().Message}"); return null; }
         }
 
-        private static T? Safe<T>(Func<T?> read, string label, List<string> warnings)
+        /// <summary>warnings 为 null 时静默吞掉 —— Screens 那一侧没有警告通道。</summary>
+        private static T? Safe<T>(Func<T?> read, string label, List<string>? warnings)
         {
             try { return read(); }
             catch (Exception ex)
             {
+                if (warnings == null) return default;
                 var msg = $"{label} 失败: {ex.GetBaseException().Message}";
                 if (!warnings.Contains(msg)) warnings.Add(msg);
                 return default;

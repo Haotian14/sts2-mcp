@@ -972,15 +972,11 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
       Boss 战最后一回合因此差 5 点没触发击晕而阵亡，详见 strategy.md §4。
       入口不是 `GetDescriptionForPile`（那条线索是错的，见下方「6.4b 结论」），
       而是 `CardModel.DynamicVars` + `UpdateDynamicVarPreview`
-- [ ] 6.4c **待选卡牌的卡面文本**：卡牌三选一 / 商店 / Boss 遗物给出的只有
-      标识（`Anger` / `Colossus` / `Spite`），`/glossary` 又只覆盖**已持有**的
-      牌与遗物（`Deck.Cards` + `PlayerCombatState.AllCards`），于是**模型是在
-      看不见效果的情况下选牌的**。strategy.md §5 刚得出「构筑决策决定一局上限」，
-      却恰恰卡在这里。2026-08-01 一天之内撞上两次：卡牌三选一只能靠对 StS1 的
-      印象猜 `Anger` 是什么；商店里剩 41 金、38 金的 `Unrelenting` 买得起，
-      因为不知道它是什么而放弃 —— **决策直接被这个缺口否决掉了**。
-      修法：让 `/glossary`（或 `screen.options[]` 自身）把当前奖励界面上的
-      候选卡也渲染进去
+- [x] 6.4c **待选物的名字与效果文本** → `screen.options[].title` / `.text`
+      （外加商店的 `.cost`）。此前卡牌三选一 / 商店 / 宝箱只给标识
+      （`Anger` / `Unrelenting`），而 `/glossary` 只覆盖**已持有**的东西，
+      于是**模型是闭着眼睛做构筑决策的** —— 而 strategy.md §5 的结论正是
+      「构筑决策决定一局上限」。见下方「6.4c 结论」
 - [ ] 6.5 决策日志 `(state, action, 理由)` —— 唯一能让它变强的东西
 - [x] 6.6a 死亡后可脱身：游戏结束界面 → 主菜单 → 开新局，全程经 `pick`
       （靠通用兜底分支实现，见下方「6.6 结论」）
@@ -1066,6 +1062,62 @@ ShrinkerBeetle 39 血    HP 58→55，战后 BurningBlood 回到 61
 | 取整是**截断**不是四舍五入（`5×0.75=3.75→3`） | 导出侧同样截断，否则每张牌多报 1 点 |
 | `PreviewValue` 是共享状态，界面读的是同一份 | 算完逐敌之后**复原成无目标预览**，别让手牌停在针对最后一只怪的数字上 |
 | 每张牌逐敌算一遍不便宜 | 只有 `values` 里真有 `Damage` 键时才逐敌算；技能牌一遍都不多跑 |
+
+#### 6.4c 结论：文本要放在选项上，不能放进 `/glossary`
+
+一眼看去该扩 `/glossary` —— 它本来就是「卡面文本」那一半。但那样是错的：
+
+```
+/glossary   一局取一次的静态缓存，内容是**已持有**的牌与遗物
+候选物      每个奖励界面、每个商店都不一样，且不在牌库里
+```
+
+塞进 glossary 只有两条路，都不行：要么模型照旧只取一次 → 发的是过期数据；
+要么每到一个界面重取一次 → 把整副牌组连同遗物又传一遍，而真正要看的只有
+三张牌。**放在 `screen.options[]` 上天然新鲜，且只在那 3~14 个选项上花字节。**
+
+渲染逻辑从 `GlossaryExporter` 抽成 `TitleOf` / `TextOf` 两个内部方法，两处共用。
+卡牌与遗物的取法本就不同（卡牌 `Title` 是已渲染 string、`GetDescriptionForPile`
+出正文；遗物/药水是 LocString，得过 `LocManager.SmartFormat`），
+靠 `GamePaths.IsA(model, "CardModel")` 分流。
+
+各界面的模型挂在哪：
+
+```
+卡牌三选一   NGridCardHolder.CardModel
+商店         MerchantCardEntry.CreationResult.Card / MerchantRelicEntry.Model
+             / MerchantPotionEntry.Model；除卡服务没有模型
+宝箱         NRelicHolder.Relic.Model
+战斗奖励     无 —— 那一层是**类别**（GoldReward / CardReward），不是具体物品
+```
+
+##### 顺带修掉一个一直存在的文本 bug：`[img]` 剥了标签留下路径
+
+```
+修前  你打出的下一张攻击牌耗能变为0res://images/…/ironclad_energy_icon.png。
+修后  你打出的下一张攻击牌耗能变为0。
+```
+
+`StripMarkup` 原本只剥标签、保留标签之间的正文（`[gold]格挡[/gold]` → `格挡`
+是对的），但 `[img]` 之间是资源路径不是正文。**这个 bug 对 `/glossary` 一样
+成立**，只是一直没人注意 —— 直到商店里的「无情猛攻」把它顶到眼前。
+
+##### 实机验证（2026-08-01，力士，第 3~4 层）
+
+```
+商店 14 个槽位   卡/遗物/药水全部带中文名与效果文本，价格独立成 cost 字段
+卡牌三选一        剑柄打击「造成9点伤害。抽1张牌。」
+                 耸肩无视「获得8点格挡。抽1张牌。」
+                 武装「获得5点格挡。升级你手牌中的一张牌。」
+```
+
+**当场就做成了两个此前做不了的决策**：花 38 金买「无情猛攻」（14 点伤害 +
+下张攻击免费，针对上一局「输出不足被 Boss 磨死」）、48 金买「血墙」（1 费
+16 点格挡）；三选一取「剑柄打击」而非默认第一项。
+下一场战斗里「无情猛攻」14 + 打击 6 + 愤怒 6 = 26 一回合斩杀 21 血的敌人 ——
+这是买之前打不出来的。
+
+顺带验证了商店买**卡**的路径（`MerchantCardEntry`），此前只验过除卡服务。
 
 #### 6.6 结论：认不出的界面不该等于死路
 

@@ -192,6 +192,19 @@ namespace Sts2Bridge
         /// </summary>
         public static string? Id(object? model) => model?.GetType().Name;
 
+        /// <summary>
+        /// 运行时类型是否派生自某个类型（按短名比对，不必编译期引用）。
+        ///
+        /// 用于区分「这是张牌还是件遗物」这类多态判断 —— 两者的文本渲染路径
+        /// 完全不同（卡牌的 Title 是已渲染 string，遗物的是 LocString）。
+        /// </summary>
+        public static bool IsA(object? o, string baseTypeName)
+        {
+            for (var t = o?.GetType(); t != null; t = t.BaseType)
+                if (t.Name == baseTypeName) return true;
+            return false;
+        }
+
         // ------------------------------------------------------------------
         //  集合
         // ------------------------------------------------------------------
