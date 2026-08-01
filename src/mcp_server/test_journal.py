@@ -268,3 +268,74 @@ def test_摘要给出到达层数与是否已结束():
 
 def test_没有日志文件时摘要为空():
     assert journal.digest()["runs"] == []
+
+
+# --------------------------------------------------------------------------
+#  开局复盘（spec.md 6.3b）
+# --------------------------------------------------------------------------
+
+
+def test_没有上一局时brief为空():
+    assert journal.brief()["run"] is None
+
+
+def test_只有菜单桶时视同没有上一局():
+    journal.record({"in_run": False, "screen": {"type": "NMainMenu"}}, "pick 单人模式", "")
+    assert journal.brief()["run"] is None
+
+
+def test_brief取的是上一局而不是本局():
+    journal.record(state(floor=9, character="Ironclad"), "上一局最后一步", "")
+    journal.record(state(floor=1, character="Silent"), "本局第一步", "")
+    b = journal.brief()
+    assert b["character"] == "Ironclad"
+    assert b["floor"] == 9
+
+
+def test_brief给出死亡层数与死时血量():
+    journal.record(state(floor=17, hp=11), "end_turn", "没牌可打了")
+    journal.observe(state(floor=17, hp=0, game_over=True))
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert b["ended"] is True
+    assert b["floor"] == 17 and b["hp"] == 0
+
+
+def test_brief给出停手点分组与最后几条理由():
+    combat = state(in_combat=True, combat={"turn": 4})
+    journal.record(combat, "auto_combat 停手", "血量过低", by="heuristic", kind="stop")
+    journal.record(state(screen={"type": "NMerchantRoom"}), "auto_run 停手", "商店要挑",
+                   by="heuristic", kind="stop")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert b["stops"] == {"combat T4": 1, "NMerchantRoom": 1}
+    assert "血量过低" in b["stop_reasons"]
+
+
+def test_brief只收模型亲自做的构筑决策():
+    journal.record(state(screen={"type": "NRewardsScreen"}), "pick 剑柄打击", "补输出")
+    journal.record(state(in_combat=True, combat={"turn": 2}), "play_card 打击", "常规",
+                   by="heuristic")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert [x["action"] for x in b["builds"]] == ["pick 剑柄打击"]
+
+
+def test_brief带出上一局写下的计划():
+    journal.record_plan(state(floor=1), "这一局优先拿降费件")
+    journal.record(state(floor=5), "往下打", "")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    assert journal.brief()["plan"] == "这一局优先拿降费件"
+
+
+def test_上一局没有终局记录时降级为见过的最大层数():
+    journal.record(state(floor=3), "a", "")
+    journal.record(state(floor=8), "b", "")
+    journal.record(state(floor=1, character="Silent"), "新局第一步", "")
+    b = journal.brief()
+    assert b["ended"] is False and b["floor"] == 8
+
+
+def test_brief读不到日志也不抛(monkeypatch):
+    monkeypatch.setattr(journal, "PATH", "Z:/根本不存在的盘/decisions.jsonl")
+    assert journal.brief()["run"] is None
