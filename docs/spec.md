@@ -523,22 +523,18 @@ Rng       : SerializableRunRngSet
       「失去 9 点生命，选择一张牌变化」只能靠读文本区分。
       故兜底分支会从按钮的后代里找第一个非空 `Text`，剥掉 BBCode 后截断到 80 字。
       实测事件生效：金币 181→147、药水到手
-- [x] 3.4f **商店** —— 槽位带价格与 `EnoughGold`，点 `Hitbox` 购买；**待实机验证**。
-      2026-08-01 曾专门去找：一路把 `Shop` 排在路线偏好第一位，但该局地图从
-      所在位置起就没有可达的商店节点。属地图随机性，非实现问题
-- [ ] 3.4g 商店的除卡服务、Boss 遗物三选一（预期已被通用兜底覆盖，待验证）。
+- [x] 3.4f **商店** —— 槽位带商品名与价格、`available` 即 `EnoughGold`，
+      购买走槽位自己的 `OnSelected()`。**2026-08-01 已实机验证**（导出 + 购买），
+      但**验证当场揪出两个 bug**，详见下方「3.4f 结论」——
+      在此之前商店从实现之日起就一直报空，没人知道
+- [ ] 3.4g **Boss 遗物三选一**（商店除卡已随 3.4f 一并验证：`pick` 买服务 →
+      `choice` 自动接管 → `choose` 除牌，金币 116→41、牌组 -1）。
       Boss 遗物**必须打赢 Boss 才会出现** —— 2026-08-01 打到了第一章 Boss
       `CeremonialBeast`（252 血），但基础牌组每回合仅约 14 点伤害、而它每回合
       打 22 且力量持续增长，数值上不可能赢。**验证它的前提是先有一套能打过
-      Boss 的牌组**，那是阶段 6 的事，不是「多走几步」能解决的
-      **不必再从零测绘**，两条现成的路（详见 `game-model.md`）：
-      - **选牌一律走 `CardSelectCmd.UseSelector(ICardSelector)`** —— 官方注入点，
-        弃牌/检索/除卡/升级/转化/卡牌奖励/三选一全部收口于此，`options` 与
-        `minSelect/maxSelect` 正是要回报给模型的东西。用 BCL 的
-        `DispatchProxy` 在运行时实现该接口即可
-      - 地图、商店按钮、事件选项这类非选牌交互才退回 UI 点击
-        （`UiHelper.FindAll<T>` 找节点再 `UiHelper.Click`，AutoSlay 就这么干）
-      - 阻塞式选择的应答也一并解决 3.7 那条「有未决选择时动作会被取消」
+      Boss 的牌组**，那是阶段 6 的事，不是「多走几步」能解决的。
+      遗物三选一不走选牌器（`CardSelectCmd`），是 UI 点击，预期落进通用兜底；
+      但商店的教训摆在这里 —— **在真站到那个界面前，不要认为它是好的**
 - [x] 3.5 **就绪判据**：轮询至队列空、执行器停、`!IsExecutingCardOrPotionEffect`
       且 `Phase == Play`（或战斗已结束）方返回。见下方「3.5 结论」
 - [x] 3.6 错误回传：以 `CanPlay` / `IsValidTarget` 预检，非法动作返回
@@ -823,6 +819,65 @@ proceed     → can_move=true，可走节点 (2,1)Monster  713 ms
 改用语义互斥判定：**地图可走 = 游戏在等你选路**，此时任何残留界面都不该抢镜。
 两件事不可能同时成立，用互斥关系比猜界面可见性可靠得多。
 
+#### 3.4f 结论：写完不等于能用 —— 商店一进去就是两个 bug
+
+2026-08-01 头一回真站进商店（此前一直没遇到过商店节点），当场发现导出是
+**空的**。两个 bug 叠在一起，任何一个都足以让整个商店不可用：
+
+**bug 1 · 按类型短名精确匹配，漏掉了抽象基类的全部子类**
+
+```
+Screens.Collect:  GamePaths.Id(node) == typeName     ← 运行时类型短名精确比对
+场景树里实际是：  NMerchantCard / NMerchantRelic / NMerchantPotion / NMerchantCardRemoval
+NMerchantSlot：   abstract class NMerchantSlot : Control   ← 没有任何节点叫这个
+```
+
+于是 `FindAll(top, "NMerchantSlot")` 永远返回 0 个。修法是给 `FindAll` 加
+`includeSubclasses` 开关，命中时改用既有的 `IsA`（沿基类链比对）——
+旁边的 `CollectClickable` 一直用的就是 `IsA`，两条路子不一致才埋了这个雷。
+
+**bug 2 · `ForceClick` 被 `_isHovered` 前置挡掉，且不报错**
+
+```csharp
+private void OnMouseReleased(InputEvent ev)
+{
+    if (_isHovered && !_ignoreMouseRelease && ev is InputEventMouseButton mb) { … }
+}
+```
+
+我们从没「悬停」过槽位，合成的释放事件被静默丢弃 —— 点了没反应、金币不变、
+也不抛异常。改走槽位自己的 `OnSelected()`（那正是该处理器校验通过后要调的
+东西），与 `CardRewardScreen` 直接调 `SelectCard` 同一路数。
+**这和 6.6 的「点角色按钮不生效」是同一个模式**：`ForceClick` 只对把逻辑挂在
+`Released` 信号上的按钮有效，凡是自己拦 `_GuiInput` / 校验悬停状态的控件都得
+另找正规入口。
+
+**bug 3 · 标签读出来是价格数字**
+
+`LabelOf` 从后代里找第一个非空 `Text`，而槽位上唯一的文本是价格标签 ——
+读出来是「54」，模型根本不知道自己在买什么。改从 entry 上取模型：
+
+```
+MerchantCardEntry   .CreationResult.Card : CardModel    ← 取 Card 不取 originalCard（遗物可能改过它）
+MerchantRelicEntry  .Model               : RelicModel
+MerchantPotionEntry .Model               : PotionModel
+MerchantCardRemovalEntry                   除卡服务，没有模型
+```
+
+##### 实机验证（2026-08-01，力士，第 3 层，116 金）
+
+```
+14 个槽位全部导出：5 张角色卡 + 2 张无色卡 + 3 遗物 + 3 药水 + 除卡服务
+  SwordBoomerang(48金) Unrelenting(38金) … Mayhem(170金) MerchantCardRemovalEntry(75金)
+available 即 EnoughGold：170/200/152/182 金的四件超出余额 → false ✓
+买除卡服务 → choice 自动接管，11 张牌可选 → choose[0] 除掉一张打击
+  金币 116 → 41 ✓   除卡槽位从列表消失（IsStocked 转 false）✓
+  其余商品的 available 按新余额重算，只剩 38 金的 Unrelenting 为 true ✓
+```
+
+**这一条本身就是「必须实机验证」的最好论据**：代码写完、编译通过、
+review 过、清单上打了勾，但从实现之日起商店就一直是空的。
+
 ### 阶段 4 · 传输层（C#）
 
 - [x] 4.1 游戏内 HTTP on `127.0.0.1:8765`（**仅绑 loopback**）：
@@ -918,7 +973,9 @@ play_card 求生者 → ok=true, awaiting_choice=true, 746 ms
       标识（`Anger` / `Colossus` / `Spite`），`/glossary` 又只覆盖**已持有**的
       牌与遗物（`Deck.Cards` + `PlayerCombatState.AllCards`），于是**模型是在
       看不见效果的情况下选牌的**。strategy.md §5 刚得出「构筑决策决定一局上限」，
-      却恰恰卡在这里。2026-08-01 实机撞上：只能靠对 StS1 的印象猜 `Anger` 是什么。
+      却恰恰卡在这里。2026-08-01 一天之内撞上两次：卡牌三选一只能靠对 StS1 的
+      印象猜 `Anger` 是什么；商店里剩 41 金、38 金的 `Unrelenting` 买得起，
+      因为不知道它是什么而放弃 —— **决策直接被这个缺口否决掉了**。
       修法：让 `/glossary`（或 `screen.options[]` 自身）把当前奖励界面上的
       候选卡也渲染进去
 - [ ] 6.5 决策日志 `(state, action, 理由)` —— 唯一能让它变强的东西
@@ -1028,6 +1085,13 @@ ShrinkerBeetle 39 血    HP 58→55，战后 BurningBlood 回到 61
 `ForceClick` 点 `SILENT_button` 后确认，开出来的却是 Ironclad。AutoSlay 用的
 是 `NCharacterSelectButton.Select()` 而非点击 —— 该按钮的选中逻辑不在
 `Released` 信号上。需要专门处理，暂记。
+
+**2026-08-01 补：这不是孤例，是一整类问题。** 商店槽位也栽在同一处
+（`OnMouseReleased` 里有 `if (_isHovered)` 前置，`ForceClick` 静默失效），
+见 §3.4f 结论。规律是：`ForceClick` 只对把逻辑挂在 `Released` 信号上的按钮
+有效；凡是自己拦 `_GuiInput`、或在处理器里校验悬停/焦点状态的控件，
+都必须另找正规入口（`Select()` / `OnSelected()` / `SelectCard()` 之类）。
+**且失败是静默的** —— 不抛异常、状态不变，只能靠实机点一下才看得出来。
 
 ---
 
