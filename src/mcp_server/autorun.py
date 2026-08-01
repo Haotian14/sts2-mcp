@@ -274,11 +274,8 @@ def play_run(
     unclear = 0
     last_sig = None
     # 一次 play_run 调用期间这个值不会变（set_plan 只可能发生在两次调用之间），
-    # 故只求值一次，不必每步都读日志。但若 run_id 改变（倒退或新局），需重算。
-    # 初始若已在第 1 层或更早，默认 has_plan=True，避免不必要的复盘判断。
-    initial_floor = (state.get("run") or {}).get("total_floor")
-    has_plan = True if isinstance(initial_floor, int) and initial_floor <= 1 else journal.has_plan(state)
-    last_run_id = journal.run_id(state) if isinstance(initial_floor, int) and initial_floor > 1 else None
+    # 故只求值一次，不必每步都读日志。
+    has_plan = journal.has_plan(state)
 
     def note(before: dict[str, Any], label: str, why: str) -> None:
         log.append({"floor": (before.get("run") or {}).get("total_floor"),
@@ -290,14 +287,6 @@ def play_run(
                 pass
 
     while steps < max_steps:
-        # 若 run_id 改变（倒退或进入新局），重新计算 has_plan
-        if last_run_id is not None:
-            current_run_id = journal.run_id(state)
-            if current_run_id != last_run_id:
-                current_floor = (state.get("run") or {}).get("total_floor")
-                has_plan = True if isinstance(current_floor, int) and current_floor <= 1 else journal.has_plan(state)
-                last_run_id = current_run_id
-
         action, arg, why = decide(state, new_run_character=new_run_character,
                                   has_plan=has_plan)
 

@@ -13,7 +13,22 @@
 
 from __future__ import annotations
 
+import pytest
+
 import autorun
+import journal
+
+
+@pytest.fixture(autouse=True)
+def 隔离日志(tmp_path, monkeypatch):
+    """runner 的用例不该碰仓库里真实的 logs/ —— has_plan 会读它、run_id 会写它。
+
+    默认让 has_plan 返回 True：既有用例关心的是 runner 的决策，不是开局复盘；
+    要验复盘的用例自己再 monkeypatch 一次。
+    """
+    monkeypatch.setattr(journal, "PATH", str(tmp_path / "decisions.jsonl"))
+    monkeypatch.setattr(journal, "_RUN_FILE", str(tmp_path / "current-run.json"))
+    monkeypatch.setattr(journal, "has_plan", lambda state: True)
 
 
 def state(floor=5, hp=60, gold=99, in_combat=False, screen=None, map_=None, **kw):
@@ -385,3 +400,14 @@ def test_战斗中不因缺计划打断():
     """第 1 层直接开打时，停手要等这场打完 —— 半场撂挑子比漏一次复盘更糟。"""
     action, _, _ = autorun.decide(state(floor=1, in_combat=True), has_plan=False)
     assert action == "combat"
+
+
+def test_经play_run时开局无计划真的会停手(monkeypatch):
+    """5 条 decide 级用例都发现不了 play_run 把 has_plan 写死的情况 ——
+    这条走完整路径，钉住「auto_run 真的会停」。"""
+    monkeypatch.setattr(journal, "has_plan", lambda state: False)
+    s = state(floor=1, map_=ONE_ROAD)
+    fake = Fake([s])
+    result = run(fake)
+    assert result["stopped"] == "handoff"
+    assert "复盘" in result["reason"]
