@@ -686,8 +686,25 @@ FromChooseACardScreen / FromChooseABundleScreen         事件类
 按类型分派 handler、处理完继续，并带「同一界面处理 3 次仍不关闭即报死循环」
 的保护。**这个结构就是阶段 3.4 的骨架。**
 
-## 尚未探查
+## 探查进度
 
-- 商店条目的读取与购买（`MerchantEntry` 系列 + `ShopRoomHandler` 的点法）
-- 事件选项的文本与后果（`EventRoomHandler` 只是随机点，读不出语义）
-- 休息点选项集合 `RestSiteOption`
+这里原先列着三条「尚未探查」，到 2026-08-01 全部落地并实机验证过了。过期的
+「尚未」标记比没有标记更坏 —— 它会让后来的人以为这条路还没走过，故改为记去处：
+
+- **商店条目的读取与购买** → `Screens.cs` 的 `MerchantRoom` 分支。每个
+  `NMerchantSlot`（**抽象基类，必须按基类匹配**）挂一个 `Entry`：`Cost` 给价格、
+  `EnoughGold` 给「钱够不够」、`IsStocked` 为假的槽位不列出（卖掉之后槽位还在
+  但已无内容）。除卡服务没有商品模型，标识退回 `entry` 的类型名。买 = `pick(i)`，
+  除卡会接着弹 `choice`，用 `choose` 应答。见 spec.md §3.4f
+- **事件选项的文本** → 走 `Screens.cs` 的 `default:` 兜底分支列出可点按钮，
+  选项的中文名与效果文本由 6.4c 补在 `screen.options[].title` / `.text` 上。
+  ⚠️ 读到的是**游戏显示给玩家的那段文本**，不是程序化的后果预测；后果仍然只能
+  从文本里读，读错就是选错。见 spec.md §3.4e / §6.4c
+- **休息点选项集合 `RestSiteOption`** → `Screens.cs` 的 `RestSiteRoom` 分支。
+  标识取 `Option.OptionId`，**可用性挂在 `Option.IsEnabled` 上，不在按钮上** ——
+  这是当初最容易踩空的一处。见 spec.md §3.4d
+
+真正还没探到的是**第二章 Boss 之后的房间与界面**：截至 2026-08-01，
+`logs/decisions.jsonl` 里 5 局最远只到第 2 章 19 层，之后的界面类型一次都没见过。
+但已见过的 15 种停手界面全部有名有姓，`bridge.log` 里没有任何「认不出界面」的
+记录 —— 所以这更像是**没打到**，不是读不出来。
