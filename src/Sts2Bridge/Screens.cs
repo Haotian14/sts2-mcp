@@ -234,12 +234,21 @@ namespace Sts2Bridge
             w.Prop("type", type);
 
             w.BeginArray("options");
-            foreach (var (node, id, available) in OptionsOf(top, type))
+            foreach (var opt in OptionsOf(top, type))
             {
                 w.BeginObject();
-                w.Prop("i", (int?)OptionIndex(top, type, node));
-                w.Prop("id", id);
-                if (available.HasValue) w.Prop("available", available);
+                w.Prop("i", (int?)OptionIndex(top, type, opt.Node));
+                w.Prop("id", opt.Id);
+                if (opt.Available.HasValue) w.Prop("available", opt.Available);
+                if (opt.Cost.HasValue) w.Prop("cost", opt.Cost);
+
+                // 待选物的名字与效果 —— 只有卡牌/遗物/药水这类有模型的选项才有。
+                // 不发进 /glossary 的理由见 GlossaryExporter.TitleOf 上方注释。
+                if (opt.Model != null)
+                {
+                    w.Prop("title", GlossaryExporter.TitleOf(opt.Model));
+                    w.Prop("text",  GlossaryExporter.TextOf(opt.Model));
+                }
                 w.EndObject();
             }
             w.EndArray();
@@ -252,25 +261,48 @@ namespace Sts2Bridge
         }
 
         /// <summary>
-        /// 栈顶界面上可点的选项。返回节点、可读标识、以及是否可点。
-        /// 顺序即下标，由场景树顺序保证稳定。
+        /// 界面上的一个选项。
+        ///
+        /// <see cref="Model"/> 是这个选项**对应的东西本身**（卡牌/遗物/药水模型），
+        /// 只有待选物才有。有它才能就地渲染出效果文本 —— 光给标识
+        /// （`Anger` / `Unrelenting`）等于让模型闭着眼睛选，见任务 6.4c。
         /// </summary>
-        private static List<(object? node, string? id, bool? available)> OptionsOf(object? top, string? type)
+        private sealed class Option
         {
-            var result = new List<(object?, string?, bool?)>();
+            public object? Node;
+            public string? Id;
+            public bool? Available;
+            public object? Model;
+            public int? Cost;      // 商店价格，其余界面为 null
+        }
+
+        /// <summary>
+        /// 栈顶界面上可点的选项。顺序即下标，由场景树顺序保证稳定。
+        /// </summary>
+        private static List<Option> OptionsOf(object? top, string? type)
+        {
+            var result = new List<Option>();
             switch (type)
             {
                 case RewardsScreen:
-                    // 奖励按钮：GoldReward / PotionReward / RelicReward / CardReward
+                    // 奖励按钮：GoldReward / PotionReward / RelicReward / CardReward。
+                    // 这一层是**类别**不是具体物品（点开 CardReward 才有三选一），
+                    // 故不带模型。
                     foreach (var b in FindAll(top, RewardButton))
-                        result.Add((b, GamePaths.Id(GamePaths.Get(b, "Reward")),
-                                    GamePaths.Bool(b, "IsEnabled")));
+                        result.Add(new Option {
+                            Node = b,
+                            Id = GamePaths.Id(GamePaths.Get(b, "Reward")),
+                            Available = GamePaths.Bool(b, "IsEnabled"),
+                        });
                     break;
 
                 case CardRewardScreen:
                     // 卡牌三选一：持卡节点，标识取卡牌模型类型短名
                     foreach (var h in FindAll(top, GridCardHolder))
-                        result.Add((h, GamePaths.Id(GamePaths.Get(h, "CardModel")), null));
+                    {
+                        var card = GamePaths.Get(h, "CardModel");
+                        result.Add(new Option { Node = h, Id = GamePaths.Id(card), Model = card });
+                    }
                     break;
 
                 case RestSiteRoom:
@@ -278,8 +310,11 @@ namespace Sts2Bridge
                     foreach (var b in FindAll(top, RestSiteButton))
                     {
                         var option = GamePaths.Get(b, "Option");
-                        result.Add((b, GamePaths.Text(option, "OptionId") ?? GamePaths.Id(option),
-                                    GamePaths.Bool(option, "IsEnabled")));
+                        result.Add(new Option {
+                            Node = b,
+                            Id = GamePaths.Text(option, "OptionId") ?? GamePaths.Id(option),
+                            Available = GamePaths.Bool(option, "IsEnabled"),
+                        });
                     }
                     break;
 
@@ -293,10 +328,15 @@ namespace Sts2Bridge
                         if (entry == null) continue;
                         if (!(GamePaths.Bool(entry, "IsStocked") ?? false)) continue;
 
-                        var cost = GamePaths.Int(entry, "Cost");
-                        var label = MerchantLabel(entry);
-                        result.Add((slot, cost.HasValue ? $"{label} ({cost}金)" : label,
-                                    GamePaths.Bool(entry, "EnoughGold")));
+                        var goods = MerchantGoods(entry);
+                        result.Add(new Option {
+                            Node = slot,
+                            // 除卡服务没有模型，退回 entry 的类型名
+                            Id = GamePaths.Id(goods) ?? GamePaths.Id(entry),
+                            Available = GamePaths.Bool(entry, "EnoughGold"),
+                            Model = goods,
+                            Cost = GamePaths.Int(entry, "Cost"),
+                        });
                     }
                     break;
 
@@ -305,7 +345,10 @@ namespace Sts2Bridge
                     if (!(GamePaths.Bool(top, "_hasChestBeenOpened") ?? false))
                     {
                         var chest = GamePaths.Get(top, "_chestButton");
-                        if (chest != null) result.Add((chest, "Chest", GamePaths.Bool(chest, "IsEnabled")));
+                        if (chest != null)
+                            result.Add(new Option {
+                                Node = chest, Id = "Chest", Available = GamePaths.Bool(chest, "IsEnabled"),
+                            });
                     }
                     else
                     {
@@ -314,9 +357,14 @@ namespace Sts2Bridge
                             bool visible = false;
                             try { visible = GamePaths.Call(h, "IsVisibleInTree") is bool v && v; } catch { }
                             if (!visible) continue;
-                            result.Add((h, GamePaths.Id(GamePaths.Get(GamePaths.Get(h, "Relic"), "Model"))
-                                           ?? "Relic",
-                                        GamePaths.Bool(h, "IsEnabled")));
+
+                            var relic = GamePaths.Get(GamePaths.Get(h, "Relic"), "Model");
+                            result.Add(new Option {
+                                Node = h,
+                                Id = GamePaths.Id(relic) ?? "Relic",
+                                Available = GamePaths.Bool(h, "IsEnabled"),
+                                Model = relic,
+                            });
                         }
                     }
                     break;
@@ -335,9 +383,15 @@ namespace Sts2Bridge
                     // 这条兜底的价值在 2026-08-01 那次死亡上体现得很清楚：当时
                     // NGameOverScreen 报了 0 个选项、can_proceed 也是 false，
                     // 整个链路彻底卡死 —— 认不出的界面不该等于死路。
+                    //
+                    // Boss 遗物三选一预期也落在这里。真站到那个界面前，
+                    // 若它同样只报节点名而没有遗物模型，就得像商店那样单开一个 case。
                     foreach (var b in FindClickable(top))
-                        result.Add((b, LabelOf(b) ?? GamePaths.Text(b, "Name"),
-                                    GamePaths.Bool(b, "IsEnabled")));
+                        result.Add(new Option {
+                            Node = b,
+                            Id = LabelOf(b) ?? GamePaths.Text(b, "Name"),
+                            Available = GamePaths.Bool(b, "IsEnabled"),
+                        });
                     break;
             }
             return result;
@@ -415,11 +469,10 @@ namespace Sts2Bridge
         }
 
         /// <summary>
-        /// 商品的标识。
+        /// 槽位上卖的那件东西本身（卡牌/遗物/药水模型）。除卡服务没有模型，返回 null。
         ///
-        /// **不能用 <see cref="LabelOf"/>** —— 槽位上唯一的文本是价格标签，
+        /// **不能用 <see cref="LabelOf"/> 顶替** —— 槽位上唯一的文本是价格标签，
         /// 读出来是「54」这样的数字，模型据此根本不知道自己在买什么。
-        /// 商品身份只能从 entry 上的模型取：
         ///
         /// <code>
         /// MerchantCardEntry    .CreationResult.Card : CardModel   ← 遗物可能改过它，取 Card 而非 originalCard
@@ -428,30 +481,21 @@ namespace Sts2Bridge
         /// MerchantCardRemovalEntry                    除卡服务，没有模型
         /// </code>
         /// </summary>
-        private static string MerchantLabel(object? entry)
+        private static object? MerchantGoods(object? entry)
         {
             if (GamePaths.TryGet(entry, "CreationResult", out var created) && created != null)
-                return GamePaths.Id(GamePaths.Get(created, "Card")) ?? "Card";
+                return GamePaths.Get(created, "Card");
 
-            if (GamePaths.TryGet(entry, "Model", out var model) && model != null)
-                return GamePaths.Id(model) ?? "Item";
-
-            return GamePaths.Id(entry) ?? "MerchantEntry";   // 除卡服务走这条
+            return GamePaths.TryGet(entry, "Model", out var model) ? model : null;
         }
 
-        /// <summary>运行时类型是否派生自某个类型（按短名比对，不必编译期引用）。</summary>
-        private static bool IsA(object? node, string baseTypeName)
-        {
-            for (var t = node?.GetType(); t != null; t = t.BaseType)
-                if (t.Name == baseTypeName) return true;
-            return false;
-        }
+        private static bool IsA(object? node, string baseTypeName) => GamePaths.IsA(node, baseTypeName);
 
         private static int OptionIndex(object? top, string? type, object? node)
         {
             var all = OptionsOf(top, type);
             for (int i = 0; i < all.Count; i++)
-                if (ReferenceEquals(all[i].node, node)) return i;
+                if (ReferenceEquals(all[i].Node, node)) return i;
             return -1;
         }
 
@@ -468,9 +512,10 @@ namespace Sts2Bridge
             if (index < 0 || index >= options.Count)
                 return $"选项下标 {index} 越界（共 {options.Count} 个）";
 
-            var (node, id, available) = options[index];
-            if (available == false)
-                return $"第 {index} 个选项（{id}）当前不可点（可能已领过，或药水栏已满）";
+            var opt = options[index];
+            var node = opt.Node;
+            if (opt.Available == false)
+                return $"第 {index} 个选项（{opt.Id}）当前不可点（可能已领过，钱不够，或药水栏已满）";
 
             switch (type)
             {
