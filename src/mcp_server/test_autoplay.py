@@ -286,6 +286,32 @@ def test_斩杀不得绕过格挡硬约束():
 # --------------------------------------------------------------------------
 
 
+def test_当作防御牌打出的攻击牌也要带目标():
+    """实机撞到的（2026-08-01，第 11 层）：铁斩波「5 点格挡 + 5 点伤害」。
+
+    它是被当成防御牌选出来的，却是 AnyEnemy —— 下发时没带目标，被判
+    bad_target，整场战斗就此交还。要不要目标由牌自己说了算，与我们为什么
+    打它无关。
+    """
+    iron_wave = card(0, "IronWave", cost=1, type="Attack", target="AnyEnemy",
+                     damage=5, block=5)
+    s = state(hp=60, max_hp=80, energy=1,
+              enemies=[enemy(0, 40, damage=9, id="小"), enemy(1, 40, damage=20, id="大")],
+              hand=[iron_wave])
+    move, why = autoplay.decide(s)
+    assert move["card"] == 0
+    assert move["target"] == 1          # 没有指定目标时，打威胁最大的那只
+
+
+def test_不需要目标的牌不带目标():
+    """反过来也要成立：AllEnemies 传了目标反而非法。"""
+    s = state(hp=60, max_hp=80, energy=3,
+              enemies=[enemy(0, 40, damage=9)],
+              hand=[card(0, "Thunderclap", cost=1, target="AllEnemies", damage=4)])
+    move, _ = autoplay.decide(s)
+    assert "target" not in move
+
+
 def test_有荆棘时先叠格挡():
     s = state(hp=60, max_hp=80, energy=3,
               enemies=[enemy(0, 40, damage=9, powers=[{"id": "ThornsPower", "amount": 2}])],
