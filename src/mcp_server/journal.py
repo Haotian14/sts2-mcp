@@ -341,3 +341,108 @@ def digest(runs: int = 3, per_run: int = 40) -> dict[str, Any]:
             ],
         })
     return {"path": PATH, "runs": out}
+
+
+def record_plan(state: dict[str, Any], plan: str) -> None:
+    """记下本局的开局计划（spec.md 6.3b）。
+
+    形状上就是一条普通决策，只是 `kind="plan"`。`digest` 的筛选规则是
+    「带 kind 的一律留」，所以它天然会出现在下一局的 `brief()` 里 ——
+    闭环不需要额外代码。
+    """
+    record(state, "本局计划", plan, by="model", kind="plan")
+
+
+def has_plan(state: dict[str, Any]) -> bool:
+    """本局是否已经写过开局计划。
+
+    ⚠️ **失败方向是「放行」**：读不到日志、日志坏了，一律返回 True。
+    这条判据只用来决定 runner 要不要停一次手，而日志是旁路 —— 让一次磁盘
+    错误把整局卡在第 1 层，比漏做一次复盘糟得多。
+    """
+    try:
+        rid = run_id(state)
+        if rid == "menu":
+            return True
+        return any(e.get("run") == rid and e.get("kind") == "plan" for e in _read_all())
+    except Exception:      # noqa: BLE001 —— 日志绝不能弄坏一步棋
+        return True
+
+
+# 上一局的「构筑决策」：模型亲自做的、且不在战斗内的那些。
+# 判据与 digest 同源（by != heuristic），因为二者要的是同一批东西：
+# 决定一局上限的地方（strategy.md §3）。
+def _is_build(entry: dict[str, Any]) -> bool:
+    return (entry.get("by") != "heuristic"
+            and not str(entry.get("where", "")).startswith("combat")
+            and entry.get("kind") != "plan")
+
+
+def brief(runs_back: int = 1) -> dict[str, Any]:
+    """上一局的硬事实。**不生成任何建议**（spec.md 6.3b）。
+
+    「所以这一局该改什么」由模型自己写，再经 `record_plan` 记回日志 ——
+    与 6.5 的结论一致：理由得由做决定的人写，模板拼出来的建议只会是套话。
+    """
+    empty: dict[str, Any] = {
+        "run": None, "character": None, "ended": False, "floor": None,
+        "act": None, "hp": None, "stops": {}, "stop_reasons": [],
+        "builds": [], "plan": None,
+    }
+    try:
+        entries = _read_all()
+        current = str((_load_current() or {}).get("id") or "")
+
+        order: list[str] = []
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for e in entries:
+            rid = str(e.get("run") or "?")
+            if rid == "menu":
+                continue          # 主菜单上的点击不属于任何一局
+            if rid not in grouped:
+                grouped[rid] = []
+                order.append(rid)
+            grouped[rid].append(e)
+
+        previous = [rid for rid in order if rid != current]
+        if not previous or runs_back > len(previous):
+            return empty
+        rid = previous[-runs_back]
+        items = grouped[rid]
+
+        end = next((e for e in items if e.get("kind") == "run_end"), None)
+        floors = [e["floor"] for e in items if isinstance(e.get("floor"), int)]
+        hps = [e["hp"] for e in items if isinstance(e.get("hp"), int)]
+
+        stops: dict[str, int] = {}
+        reasons: list[str] = []
+        for e in items:
+            if e.get("kind") != "stop":
+                continue
+            where = str(e.get("where") or "?")
+            stops[where] = stops.get(where, 0) + 1
+            if e.get("why"):
+                reasons.append(str(e["why"]))
+
+        plan = next((str(e.get("why") or "") for e in items if e.get("kind") == "plan"), None)
+
+        return {
+            "run": rid,
+            # 角色名只存在于局标识里（`20260801-124500-Ironclad`），日志条目
+            # 本身不记角色。这是本模块自己生成的格式，故可以拆；`#2` 后缀是
+            # 同秒撞号时加的，要先去掉。
+            "character": rid.split("#")[0].split("-")[-1] or None,
+            "ended": end is not None,
+            "floor": (end or {}).get("floor") or (max(floors) if floors else None),
+            "act": (end or {}).get("act"),
+            "hp": (end or {}).get("hp") if end else (hps[-1] if hps else None),
+            "stops": stops,
+            "stop_reasons": reasons[-3:],
+            "builds": [
+                {"floor": e.get("floor"), "action": e.get("action"), "why": e.get("why", "")}
+                for e in items if _is_build(e)
+            ],
+            "plan": plan,
+        }
+    except Exception:      # noqa: BLE001 —— 复盘坏了不该影响下一步棋
+        return empty
