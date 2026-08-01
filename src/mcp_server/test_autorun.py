@@ -2,7 +2,7 @@
 
 【测什么】
 这个 runner 唯一的风险是**它替模型做了不该做的决定**。上一局整局的卡牌奖励
-都由脚本「拿第一张」，牌组因此打不动 Boss（strategy.md §5）—— 那正是这里
+都由脚本「拿第一张」，牌组因此打不动 Boss（strategy.md §3.1）—— 那正是这里
 每一条「必须交还」用例要钉死的东西。
 
 另一半是「动作没生效却一直转」：商店槽位曾经点了没反应、不报错也不改状态
@@ -137,7 +137,7 @@ def test_宝箱先开箱再拿遗物():
 
 
 def test_卡牌三选一交还():
-    """整局的卡牌奖励都「拿第一张」，牌组因此打不动 Boss（strategy.md §5）。"""
+    """整局的卡牌奖励都「拿第一张」，牌组因此打不动 Boss（strategy.md §3.1）。"""
     s = state(screen=screen("NCardRewardSelectionScreen",
                             [opt(0, "Havoc"), opt(1, "Armaments"), opt(2, "Cinder")]))
     assert autorun.decide(s)[0] == "handoff"

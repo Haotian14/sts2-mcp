@@ -24,7 +24,7 @@ from typing import Any, Callable
 # --------------------------------------------------------------------------
 #  安全线（6.1 分层）
 #
-#  阈值直接取自 strategy.md §3 的「必须交还的信号」表。改这里等于改策略，
+#  阈值直接取自 strategy.md §2 的「必须交还的信号」表。改这里等于改策略，
 #  两边必须同步。
 # --------------------------------------------------------------------------
 
@@ -166,7 +166,7 @@ def _damage(card: dict[str, Any], enemy_i: int, enemy_count: int = 1) -> int:
     `values.Damage` / `damage_vs` 是单段伤害，须乘 `hits` / `hits_vs`。
     RandomEnemy 的多段攻击在多怪场无法保证落到指定目标，斩杀估算只算一段；
     只剩一只怪时全部段数必然命中，可以照乘。绝不能用 get_glossary 的卡面
-    文本，那是裸值（strategy.md §4，为此死过一局）。
+    文本，那是裸值（strategy.md §5，为此死过一局）。
     """
     vs = card.get("damage_vs")
     if isinstance(vs, list) and 0 <= enemy_i < len(vs) and isinstance(vs[enemy_i], int):
