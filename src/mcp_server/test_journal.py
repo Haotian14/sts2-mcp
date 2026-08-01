@@ -184,6 +184,16 @@ def test_终局记录只补一次():
     assert sum(1 for e in lines() if e.get("kind") == "run_end") == 1
 
 
+def test_主菜单上的点击不算一局():
+    """开新局前要在主菜单点好几下，那几下不属于任何一局 —— 早先每次都会
+    凭空造出一个 `…-unknown` 的局，混在真实战绩里。"""
+    journal.record({"in_run": False, "screen": {"type": "NMainMenu"}}, "pick 单人模式", "")
+    journal.record(state(floor=1), "pick 涅奥骨骰", "开局祝福")
+    menu, first = lines()
+    assert menu["run"] == "menu"
+    assert first["run"] != "menu"
+
+
 def test_读不到层数不算新局():
     """主菜单、游戏结束界面都读不到层数，那不代表换了一局。"""
     journal.record(state(floor=5), "a", "")

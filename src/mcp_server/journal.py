@@ -102,6 +102,12 @@ def run_id(state: dict[str, Any]) -> str:
 
     每次调用都会顺手把「见过的最大层数」记下来，供下次判断是否倒退。
     """
+    # 不在局中（主菜单、角色选择、死亡后往外走的那几下）不属于任何一局。
+    # 早先没分开，于是每次开新局前的几次点击都会凭空造出一个
+    # `…-unknown` 的「局」，混在真实战绩里。它们归进一个固定的 menu 桶。
+    if not state.get("in_run"):
+        return "menu"
+
     mark = _marker(state)
     game_over = bool((state.get("run") or {}).get("game_over"))
     cur = _load_current()
