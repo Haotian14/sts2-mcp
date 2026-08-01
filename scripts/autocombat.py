@@ -22,6 +22,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src", "mcp_server"))
 import autoplay  # noqa: E402
+import journal  # noqa: E402
 
 BRIDGE = os.environ.get("STS2MCP_URL", "http://127.0.0.1:8765").rstrip("/")
 
@@ -50,7 +51,13 @@ def main() -> int:
         ),
         end_turn=lambda: _call("POST", "/action/end_turn"),
         max_turns=args.turns,
+        # 与 MCP 那条路走同一份决策日志（6.5）：开发期跑出来的战斗同样进日志，
+        # 否则「跨局累积」会漏掉所有用本脚本打的场次
+        on_step=lambda before, label, why: journal.record(before, label, why, by="heuristic"),
     )
+    journal.record(result.get("state") or {},
+                   f"auto_combat 停手（{result['stopped']}）", result["reason"],
+                   by="heuristic", kind="stop")
 
     for entry in result["log"]:
         print(f"  回合{entry['turn']}  {entry['play']:<34} {entry['why']}")
@@ -58,6 +65,7 @@ def main() -> int:
     player = (result["state"].get("player") or {})
     print(f"\n停手：{result['stopped']}  —— {result['reason']}")
     print(f"回合数 {result['turns']}   HP {player.get('hp')}/{player.get('max_hp')}")
+    print(f"决策日志 → {journal.PATH}")
     return 0
 
 

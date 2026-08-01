@@ -360,14 +360,27 @@ def play_combat(
     play_card: Callable[[int, int | None], dict[str, Any]],
     end_turn: Callable[[], dict[str, Any]],
     max_turns: int = 20,
+    on_step: Callable[[dict[str, Any], str, str], None] | None = None,
 ) -> dict[str, Any]:
     """自动打，直到战斗结束、触及安全线、或打满 max_turns 回合。
 
     `play_card` / `end_turn` 由调用方注入 —— 本模块因此不依赖 httpx，
     可以脱离游戏单测。
+
+    `on_step(出手前的局面, 动作, 理由)` 是决策日志的挂钩点（6.5）。放在这里
+    而不是让调用方事后遍历 `log`，是因为**出手前的局面只有这里有** ——
+    事后拿到的 `log` 早已不知道当时是几点血、场上有几只怪。
     """
     log: list[dict[str, Any]] = []
     turns = 0
+
+    def step(before: dict[str, Any], label: str, why: str) -> None:
+        log.append({"turn": (before.get("combat") or {}).get("turn"), "play": label, "why": why})
+        if on_step:
+            try:
+                on_step(before, label, why)
+            except Exception:      # noqa: BLE001 —— 记日志失败绝不能打断战斗
+                pass
 
     def snapshot(result: dict[str, Any]) -> dict[str, Any]:
         # 动作工具的返回值里带着执行后的新状态，不必再读一次
@@ -381,13 +394,12 @@ def play_combat(
                 return _done(state, log, turns, "combat_ended", reason)
             return _done(state, log, turns, "handoff", reason)
 
-        turn_no = (state.get("combat") or {}).get("turn")
-
         # 打完这一回合能打的牌
         while True:
             move, why = decide(state)
             if move is None:
                 break
+            before, label = state, _label(state, move)
             result = play_card(move["card"], move.get("target"))
             if not result.get("ok"):
                 # 桥接层说这步不能走 —— 启发式和游戏的判断出现分歧，
@@ -395,7 +407,7 @@ def play_combat(
                 return _done(snapshot(result) or state, log, turns, "handoff",
                              f"动作被拒绝（{result.get('error')}：{result.get('reason')}），"
                              f"启发式与游戏判断不一致，交还")
-            log.append({"turn": turn_no, "play": _label(state, move), "why": why})
+            step(before, label, why)
             state = snapshot(result) or state
 
             if not state.get("in_combat"):
@@ -412,11 +424,12 @@ def play_combat(
                          f"还有打得起、但本启发式不认识的牌（{names}）—— "
                          f"不闷头结束回合，交给你判断")
 
+        before = state
         result = end_turn()
         if not result.get("ok"):
             return _done(state, log, turns, "handoff",
                          f"结束回合被拒绝（{result.get('error')}）")
-        log.append({"turn": turn_no, "play": "end_turn", "why": "本回合已无值得打出的牌"})
+        step(before, "end_turn", "本回合已无值得打出的牌")
         state = snapshot(result) or state
         turns += 1
 
