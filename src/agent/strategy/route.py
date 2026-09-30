@@ -17,6 +17,7 @@ from functools import lru_cache
 from ..gamedata import db
 
 MAX_PATHS = 20000
+DAMAGE_SCALE = 0.7
 
 # 数据缺失时的兜底期望掉血（按章）
 FALLBACK_DAMAGE = {"Monster": (7, 11, 14), "Elite": (22, 28, 32), "Boss": (40, 55, 70)}
@@ -31,7 +32,8 @@ def expected_damage(room: str, act: int) -> float:
     vals = [e["avg_damage"] for e in db().encounters.values()
             if e.get("room") == kind and e.get("act") == act and e.get("avg_damage") is not None]
     if vals:
-        return sum(vals) / len(vals)
+        # 社区平均含大量弱势对局；成型牌组实际掉血明显更少
+        return DAMAGE_SCALE * sum(vals) / len(vals)
     return FALLBACK_DAMAGE[room][min(act, 3) - 1]
 
 
@@ -127,10 +129,13 @@ def _best_from(start, graph, v: RunView) -> tuple[float, list[str]]:
         gain, hp2, gold2 = _step(room, hp, v, gold, fights)
         total = acc + gain
         path = path + [room]
-        died = hp2 <= 0 and room != "Boss"
-        if died:
-            total -= 300.0
-        if not nxt or died:
+        # 推演里「死了」不截断路径：截断会让先死的路线少算后面的代价，
+        # 而当所有路线都推演到死时，又会变成谁排第一走谁。改为按缺口扣分、
+        # 血量压到 1 继续推演，危险程度仍然可比。
+        if hp2 <= 0 and room != "Boss":
+            total -= 40.0 + 6.0 * (1 - hp2)
+            hp2 = 1.0
+        if not nxt:
             count[0] += 1
             if total > best[0]:
                 best[0], best[1] = total, path

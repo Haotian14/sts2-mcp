@@ -40,6 +40,7 @@ KILL_BASE = 4.0
 ALL_DEAD_BONUS = 40.0
 DEATH_PENALTY = 1000.0
 DRAW_W = 1.4          # 抽 1 张（还有能量打它）
+DEBUFF_EARLY = 0.03   # 减益越早挂越好的微小偏好，只用来打破平局
 POTION_KEEP = {"monster": 6.0, "elite": 2.5, "boss": 0.0}
 
 # 能力的长期价值：每层每回合约等于多少分。没列出的己方能力按能力牌的社区估值折算。
@@ -215,6 +216,11 @@ def _per_hit(card: Card, foe: Foe, node: Node, ctx: Ctx, var: Any, x: int) -> in
     dmg += node.str_gain
     if foe.vuln_add > 0 and not already_vuln:
         dmg = int(dmg * 1.5)
+    # 跟踪（TrackingPower）：对虚弱的敌人伤害 ×层数。已经虚弱的，实时数值里已含；
+    # 本回合模拟中才挂上的虚弱要自己乘 —— 这就是「先打中和」的收益来源。
+    tracking = ctx.player_powers.get("TrackingPower", 0)
+    if tracking > 1 and foe.weak_add > 0 and not foe.weak:
+        dmg = int(dmg * tracking)
     return max(0, dmg)
 
 
@@ -297,6 +303,8 @@ def _apply_effects(n: Node, ctx: Ctx, card: Card, effects: list[dict], tgt: Foe 
                 targets = [f for f in n.foes if f.alive] if e.get("to") == "all" else ([tgt] if tgt else [])
                 for foe in targets:
                     _foe_power(foe, power, amount)
+                # 同分时先挂减益：没有坏处，而且挂上后意图与数值当场更新，后续规划更准
+                n.future += DEBUFF_EARLY * max(0, MAX_DEPTH - len(n.line))
         elif op == "draw":
             # 抽到的牌要有能量打才值钱：剩的能量越多，这次抽牌越值（也就越该先打）
             k = _var(card, e.get("var"), x)

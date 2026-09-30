@@ -612,6 +612,13 @@ namespace Sts2Bridge
                     return null;
 
                 case CardRewardScreen:
+                    // 「跳过 / 重抽」是普通按钮（NButton），ForceClick 即可；
+                    // 只有持卡节点要走 SelectCard（实测把按钮传进去会类型转换失败）。
+                    if (opt.Id?.StartsWith("Alt:") == true)
+                    {
+                        GamePaths.Call(node, "ForceClick");
+                        return null;
+                    }
                     // 持卡节点继承的是 Godot.Control，没有 ForceClick；
                     // 界面把它的 Pressed 信号接到了自己的私有方法 SelectCard 上，
                     // 直接调该方法与点击等效（它就是把选中下标塞进 TCS）。

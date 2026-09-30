@@ -12,7 +12,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-from .bridge import Bridge
+from .bridge import Bridge, BridgeError
 from .gamedata import db
 from .strategy import choices, combat, rooms, route
 from .strategy.rooms import Decision
@@ -43,12 +43,13 @@ class Memory:
     rerolled: bool = False
     bought: set[str] = field(default_factory=set)
     hint: str | None = None
+    rested: bool = False          # 休息点每层只能用一次；用过之后按钮仍显示可用
     run_logged: bool = False
 
     def at(self, floor: int | None) -> None:
         if floor != self.floor:
             self.floor = floor
-            self.skipped_cards = self.rerolled = False
+            self.skipped_cards = self.rerolled = self.rested = False
             self.bought = set()
 
 
@@ -88,7 +89,8 @@ def decide(state: dict, mem: Memory, new_run: str | None = None) -> Decision:
     handler: dict[str, Callable[[], Decision]] = {
         "NRewardsScreen": lambda: rooms.rewards(state, mem.skipped_cards),
         "NCardRewardSelectionScreen": lambda: rooms.card_reward(state, mem.rerolled),
-        "NRestSiteRoom": lambda: rooms.rest_site(state),
+        "NRestSiteRoom": lambda: (rooms._proceed_or_wait(state, "休息点已用过")
+                                  if mem.rested else rooms.rest_site(state)),
         "NMerchantRoom": lambda: rooms.shop(state, mem.bought),
         "NTreasureRoom": lambda: rooms.treasure(state),
         "NEventRoom": lambda: rooms.event(state),
@@ -190,8 +192,8 @@ def execute(bridge: Bridge, d: Decision) -> dict:
 
 
 def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
-         verbose: Callable[[str], None] | None = None) -> dict[str, Any]:
-    """一路打下去，直到局结束（不开新局时）、出故障，或走满 max_steps 步。"""
+         verbose: Callable[[str], None] | None = None, max_runs: int | None = None) -> dict[str, Any]:
+    """一路打下去，直到局结束（不开新局时）、出故障、打满 max_runs 局，或走满 max_steps 步。"""
     mem = Memory()
     state = bridge.state()
     log: list[str] = []
@@ -203,8 +205,12 @@ def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
         if verbose:
             verbose(line)
 
+    finished = 0
     for step in range(max_steps):
-        _record_run_end(state, mem)
+        if _record_run_end(state, mem):
+            finished += 1
+            if max_runs is not None and finished >= max_runs:
+                return _summary(state, log, step, f"已打完 {finished} 局")
         d = decide(state, mem, new_run)
 
         if d.action == "stop":
@@ -226,7 +232,10 @@ def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
 
         floor = (state.get("run") or {}).get("total_floor")
         note(f"[{floor}] {d.action} {d.arg if d.arg is not None else ''} — {d.why}")
-        result = execute(bridge, d)
+        try:
+            result = execute(bridge, d)
+        except BridgeError as exc:
+            return _summary(state, log, step, f"桥接层出错（{d.action} {d.arg}）：{exc}")
         if d.hint:
             mem.hint = d.hint
         if d.action == "pick" and isinstance(d.arg, int):
@@ -235,6 +244,8 @@ def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
                 mem.skipped_cards = True
             if picked.get("id") == "Alt:REROLL":
                 mem.rerolled = True
+            if screen_of(state).get("type") == "NRestSiteRoom" and result.get("ok"):
+                mem.rested = True
         if not result.get("ok"):
             note(f"    被拒绝：{result.get('error')} {result.get('reason') or ''} {result.get('detail') or ''}")
         state = result.get("state") or bridge.state()
@@ -252,13 +263,14 @@ def _summary(state: dict, log: list[str], steps: int, reason: str) -> dict[str, 
             "log_tail": log[-40:]}
 
 
-def _record_run_end(state: dict, mem: Memory) -> None:
+def _record_run_end(state: dict, mem: Memory) -> bool:
+    """本局刚结束时记一行，返回 True；其余时候返回 False。"""
     run = state.get("run") or {}
     if not run.get("game_over"):
         mem.run_logged = False
-        return
+        return False
     if mem.run_logged:
-        return
+        return False
     mem.run_logged = True
     player = state.get("player") or {}
     line = {"t": time.strftime("%Y-%m-%d %H:%M:%S"), "character": player.get("character"),
@@ -270,3 +282,4 @@ def _record_run_end(state: dict, mem: Memory) -> None:
             f.write(json.dumps(line, ensure_ascii=False) + "\n")
     except OSError:
         pass
+    return True

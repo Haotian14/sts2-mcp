@@ -111,3 +111,20 @@ def test_aoe_on_many_enemies():
     s = state(hand, [enemy(0, 8, attack=5), enemy(1, 8, attack=5), enemy(2, 8, attack=5)], energy=1)
     cid, plan = first_card(s)
     assert cid == "DaggerSpray", plan.why()
+
+
+def test_neutralize_first():
+    """中和不花能量、挂虚弱：同分时先打，而不是留到最后。"""
+    s = state([strike(0), strike(1), card(2, "Neutralize", cost=0, Damage=3, WeakPower=1)],
+              [enemy(0, 60, attack=10)], energy=2)
+    cid, plan = first_card(s)
+    assert cid == "Neutralize", plan.why()
+
+
+def test_tracking_doubles_after_weak():
+    """有跟踪时，先挂虚弱让后面的攻击翻倍：3 + 6×2 + 6×2 = 27 ≥ 25，斩杀。"""
+    s = state([strike(0), strike(1), card(2, "Neutralize", cost=0, Damage=3, WeakPower=1)],
+              [enemy(0, 25, attack=10)], energy=2)
+    s["player"]["powers"] = [{"id": "TrackingPower", "amount": 2}]
+    plan = plan_turn(s)
+    assert plan.line[0].startswith("中和") and plan.score > 40, plan.why()

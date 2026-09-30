@@ -69,9 +69,11 @@ def answer(state: dict, ctx: DeckContext, hint: str | None = None) -> tuple[list
     else:
         ranked = sorted(options, key=lambda o: deckval.value_in_deck(cid(o), ctx), reverse=True)
         n = hi if hi else lo
-        # 「获得」类可以少拿：分数低于门槛的不要（但至少满足下限）
-        n = max(lo, sum(1 for o in ranked[:n]
-                        if deckval.value_in_deck(cid(o), ctx) >= deckval.skip_threshold(ctx)))
+        # 「加进牌组」可以少拿：分数低于门槛的不要（但至少满足下限）。
+        # 战斗中的检索/回手是白拿，不稀释牌组，一律拿满。
+        if not state.get("in_combat"):
+            n = max(lo, sum(1 for o in ranked[:n]
+                            if deckval.value_in_deck(cid(o), ctx) >= deckval.skip_threshold(ctx)))
 
     picked = ranked[:max(lo, min(n, hi if hi else n))]
     names = "、".join(db().name(o.get("id", "")) for o in picked) or "（不选）"

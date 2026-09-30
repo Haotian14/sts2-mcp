@@ -24,7 +24,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--advise", action="store_true")
-    ap.add_argument("--new-run", default=None)
+    ap.add_argument("--new-run", default=None, help="不在局中/局结束时开新局用的角色")
+    ap.add_argument("--runs", type=int, default=None, help="打满几局就停")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -33,7 +34,8 @@ def main() -> None:
         d = runner.decide(bridge.state(), runner.Memory())
         print(d.action, d.arg, "—", d.why)
         return
-    summary = runner.play(bridge, max_steps=args.steps, new_run=args.new_run, verbose=print)
+    summary = runner.play(bridge, max_steps=args.steps, new_run=args.new_run, verbose=print,
+                          max_runs=args.runs)
     summary.pop("log_tail", None)
     print(json.dumps(summary, ensure_ascii=False, indent=1))
 
