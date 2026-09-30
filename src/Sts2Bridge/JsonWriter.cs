@@ -41,6 +41,7 @@ namespace Sts2Bridge
         public JsonWriter BeginObject(string name)  { Sep(); Key(name); _sb.Append('{'); Push(); return this; }
         public JsonWriter EndObject()               { _sb.Append('}'); Pop(); return this; }
 
+        public JsonWriter BeginArray()              { Sep(); _sb.Append('['); Push(); return this; }
         public JsonWriter BeginArray(string name)   { Sep(); Key(name); _sb.Append('['); Push(); return this; }
         public JsonWriter EndArray()                { _sb.Append(']'); Pop(); return this; }
 

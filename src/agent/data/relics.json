@@ -1,0 +1,3333 @@
+{
+ "game_version": "v0.107.1",
+ "relics": {
+  "Akabeko": {
+   "key": "AKABEKO",
+   "name": "Akabeko",
+   "name_zh": "赤牛",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, gain [blue]{VigorPower}[/blue] [gold]Vigor[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{VigorPower}[/blue]点[gold]活力[/gold]。",
+   "vars": {
+    "VigorPower": 8.0
+   }
+  },
+  "AlchemicalCoffer": {
+   "key": "ALCHEMICAL_COFFER",
+   "name": "Alchemical Coffer",
+   "name_zh": "炼金箱",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]{PotionSlots}[/blue] potion slots filled with random potions.",
+   "text_zh": "拾起时，获得[blue]{PotionSlots}[/blue]个放有随机药水的药水栏位。",
+   "vars": {
+    "PotionSlots": 4.0
+   }
+  },
+  "AmethystAubergine": {
+   "key": "AMETHYST_AUBERGINE",
+   "name": "Amethyst Aubergine",
+   "name_zh": "紫水晶茄子",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Enemies drop [blue]{Gold}[/blue] additional [gold]Gold[/gold].",
+   "text_zh": "敌人额外掉落[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 15.0
+   }
+  },
+  "Anchor": {
+   "key": "ANCHOR",
+   "name": "Anchor",
+   "name_zh": "锚",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Start each combat with [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每场战斗开始时获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 10.0
+   }
+  },
+  "ArcaneScroll": {
+   "key": "ARCANE_SCROLL",
+   "name": "Arcane Scroll",
+   "name_zh": "奥术卷轴",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain a random [gold]Rare Card[/gold] to add to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将一张随机[gold]稀有牌[/gold]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "ArchaicTooth": {
+   "key": "ARCHAIC_TOOTH",
+   "name": "Archaic Tooth",
+   "name_zh": "古老牙齿",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Transform[/gold] {StarterCard.StringValue:cond:[gold]{StarterCard}[/gold] into [gold]{AncientCard}[/gold]|a starter card into an ancient version}.",
+   "text_zh": "拾起时，将{StarterCard.StringValue:cond:[gold]{StarterCard}[/gold][gold]变化[/gold]为[gold]{AncientCard}[/gold]|一张初始卡牌[gold]变化[/gold]为先古版本}。"
+  },
+  "ArtOfWar": {
+   "key": "ART_OF_WAR",
+   "name": "Art of War",
+   "name_zh": "孙子兵法",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "If you do not play any Attacks during your turn, gain an additional {Energy:energyIcons()} next turn.",
+   "text_zh": "如果你在本回合中没有打出过攻击牌，则在下一回合额外获得1点{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "Astrolabe": {
+   "key": "ASTROLABE",
+   "name": "Astrolabe",
+   "name_zh": "星盘",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Transform[/gold] [blue]{Cards}[/blue] {Cards:plural:card|cards}, then [gold]Upgrade[/gold] them.",
+   "text_zh": "拾起时，选择[blue]{Cards}[/blue]张牌进行[gold]变化[/gold]，然后将这些牌[gold]升级[/gold]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "BagOfMarbles": {
+   "key": "BAG_OF_MARBLES",
+   "name": "Bag of Marbles",
+   "name_zh": "弹珠袋",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, apply [blue]{VulnerablePower}[/blue] [gold]Vulnerable[/gold] to ALL enemies.",
+   "text_zh": "在每场战斗开始时，给予所有敌人[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
+   "vars": {
+    "VulnerablePower": 1.0
+   }
+  },
+  "BagOfPreparation": {
+   "key": "BAG_OF_PREPARATION",
+   "name": "Bag of Preparation",
+   "name_zh": "准备背包",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}.",
+   "text_zh": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "BeatingRemnant": {
+   "key": "BEATING_REMNANT",
+   "name": "Beating Remnant",
+   "name_zh": "律动残余",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "You cannot lose more than [blue]20[/blue] HP in a single turn.",
+   "text_zh": "你在一回合内失去的生命值不会超过[blue]20[/blue]点。",
+   "vars": {
+    "MaxHpLoss": 20.0
+   }
+  },
+  "BeautifulBracelet": {
+   "key": "BEAUTIFUL_BRACELET",
+   "name": "Beautiful Bracelet",
+   "name_zh": "华美手镯",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, choose [blue]{Cards}[/blue] {Cards:plural:card|cards} in your [gold]Deck[/gold]. [gold]Enchant[/gold] them with [purple]Swift[/purple] [blue]3[/blue].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中选择[blue]{Cards}[/blue]张牌，[gold]附魔[/gold]：[purple]迅捷[/purple][blue]3[/blue]。",
+   "vars": {
+    "Cards": 3.0,
+    "Swift": 3.0
+   }
+  },
+  "Bellows": {
+   "key": "BELLOWS",
+   "name": "Bellows",
+   "name_zh": "风箱",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "The first [gold]Hand[/gold] you draw each combat is [gold]Upgraded[/gold].",
+   "text_zh": "你在每场战斗开始时的[gold]手牌[/gold]，将被[gold]升级[/gold]。"
+  },
+  "BeltBuckle": {
+   "key": "BELT_BUCKLE",
+   "name": "Belt Buckle",
+   "name_zh": "腰带扣",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "While you have no potions, you have [blue]{DexterityPower}[/blue] additional [gold]Dexterity[/gold].",
+   "text_zh": "当你没有药水时，你额外拥有[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "DexterityPower": 2.0
+   }
+  },
+  "BigHat": {
+   "key": "BIG_HAT",
+   "name": "Big Hat",
+   "name_zh": "大帽子",
+   "pool": "Necrobinder",
+   "rarity": "Rare",
+   "text": "At the start of each combat, add [blue]{Cards}[/blue] random [gold]Ethereal[/gold] {Cards:plural:card|cards} into your [gold]Hand[/gold].",
+   "text_zh": "在每场战斗开始时，将[blue]{Cards}[/blue]张随机[gold]虚无[/gold]牌加入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "BigMushroom": {
+   "key": "BIG_MUSHROOM",
+   "name": "Big Mushroom",
+   "name_zh": "大蘑菇",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue]. At the start of each combat, draw [blue]{Cards}[/blue] fewer {Cards:plural:card|cards}.",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。在每场战斗开始时，少抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0,
+    "MaxHp": 20.0
+   }
+  },
+  "BiiigHug": {
+   "key": "BIIIG_HUG",
+   "name": "Biiig Hug",
+   "name_zh": "大～抱抱",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] cards from your [gold]Deck[/gold]. Whenever you shuffle your [gold]Draw Pile[/gold], add a [gold]Soot[/gold] into your [gold]Draw Pile[/gold].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中移除[blue]{Cards}[/blue]张牌。每当你的[gold]抽牌堆[/gold]打乱洗牌时，将一张[gold]煤灰[/gold]加入你的[gold]抽牌堆[/gold]。",
+   "vars": {
+    "Cards": 4.0
+   }
+  },
+  "BingBong": {
+   "key": "BING_BONG",
+   "name": "Bing Bong",
+   "name_zh": "宾邦",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you add a card to your [gold]Deck[/gold], add one additional copy.",
+   "text_zh": "每当你往[gold]牌组[/gold]中增添卡牌时，都将额外添加一张相同的牌。"
+  },
+  "BlackBlood": {
+   "key": "BLACK_BLOOD",
+   "name": "Black Blood",
+   "name_zh": "黑暗之血",
+   "pool": "Event",
+   "rarity": "Starter",
+   "text": "At the end of combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 12.0
+   }
+  },
+  "BlackStar": {
+   "key": "BLACK_STAR",
+   "name": "Black Star",
+   "name_zh": "黑星",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "[gold]Elites[/gold] drop an additional Relic when defeated.",
+   "text_zh": "[gold]精英[/gold]敌人在被打败时多掉落一件遗物。"
+  },
+  "BlessedAntler": {
+   "key": "BLESSED_ANTLER",
+   "name": "Blessed Antler",
+   "name_zh": "赐福鹿角",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. At the start of each combat, shuffle [blue]{Cards}[/blue] [gold]Dazed[/gold] into your [gold]Draw Pile[/gold].",
+   "text_zh": "在每回合开始时获得{Energy:energyIcons()}。在战斗开始时，将[blue]{Cards}[/blue]张[gold]晕眩[/gold]放入你的[gold]抽牌堆[/gold]。",
+   "vars": {
+    "Cards": 3.0,
+    "Energy": 1.0
+   }
+  },
+  "BloodSoakedRose": {
+   "key": "BLOOD_SOAKED_ROSE",
+   "name": "Blood-Soaked Rose",
+   "name_zh": "血染玫瑰",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]1[/blue] [red]Enthralled[/red] to your [gold]Deck[/gold]. Gain {Energy:energyIcons()} at the start of each turn.",
+   "text_zh": "拾起时，将[blue]1[/blue]张[red]执迷[/red]加入你的[gold]牌组[/gold]。在回合开始时获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "BloodVial": {
+   "key": "BLOOD_VIAL",
+   "name": "Blood Vial",
+   "name_zh": "小血瓶",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "在每场战斗开始时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 2.0
+   }
+  },
+  "BoneFlute": {
+   "key": "BONE_FLUTE",
+   "name": "Bone Flute",
+   "name_zh": "骨笛",
+   "pool": "Necrobinder",
+   "rarity": "Common",
+   "text": "Whenever [gold]Osty[/gold] attacks, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每当[gold]奥斯提[/gold]攻击时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 2.0
+   }
+  },
+  "BoneTea": {
+   "key": "BONE_TEA",
+   "name": "Bone Tea",
+   "name_zh": "骨茶",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of the next {Combats:plural:combat|[blue]{}[/blue] combats}, [gold]Upgrade[/gold] your starting hand.",
+   "text_zh": "在你接下来的[blue]{Combats}[/blue]场战斗开始时，[gold]升级[/gold]你的初始手牌。"
+  },
+  "BookOfFiveRings": {
+   "key": "BOOK_OF_FIVE_RINGS",
+   "name": "Book of Five Rings",
+   "name_zh": "五轮书",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Every [blue]{Cards}[/blue] {Cards:plural:card|cards} you add to your [gold]Deck[/gold], heal [green]{Heal}[/green] HP.",
+   "text_zh": "你每将[blue]{Cards}[/blue]张牌加入你的[gold]牌组[/gold]时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Cards": 5.0,
+    "Heal": 20.0
+   }
+  },
+  "BookRepairKnife": {
+   "key": "BOOK_REPAIR_KNIFE",
+   "name": "Book Repair Knife",
+   "name_zh": "修书小刀",
+   "pool": "Necrobinder",
+   "rarity": "Uncommon",
+   "text": "Whenever a non-Minion enemy dies to [gold]Doom[/gold], heal [green]{Heal}[/green] HP.",
+   "text_zh": "每当有一名不是“爪牙”的敌人死于[gold]灾厄[/gold]时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 3.0
+   }
+  },
+  "Bookmark": {
+   "key": "BOOKMARK",
+   "name": "Bookmark",
+   "name_zh": "书签",
+   "pool": "Necrobinder",
+   "rarity": "Rare",
+   "text": "At the end of each turn, lower the cost of a random [gold]Retained[/gold] card by [blue]1[/blue] until played.",
+   "text_zh": "每回合结束时，随机一张被[gold]保留[/gold]的牌在被打出前的耗能减少[blue]1[/blue]。"
+  },
+  "BoomingConch": {
+   "key": "BOOMING_CONCH",
+   "name": "Booming Conch",
+   "name_zh": "轰鸣海螺",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of [gold]Elite[/gold] combats, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards} and gain {Energy:energyIcons()}.",
+   "text_zh": "在[gold]精英[/gold]战的战斗开始时，额外抽[blue]{Cards}[/blue]张牌并获得{Energy:energyIcons()}。",
+   "vars": {
+    "Cards": 2.0,
+    "Energy": 1.0
+   }
+  },
+  "BoundPhylactery": {
+   "key": "BOUND_PHYLACTERY",
+   "name": "Bound Phylactery",
+   "name_zh": "缚魂命匣",
+   "pool": "Necrobinder",
+   "rarity": "Starter",
+   "text": "At the start of your turn, [gold]Summon[/gold] [blue]{Summon}[/blue].",
+   "text_zh": "在你的回合开始时，[gold]召唤[/gold][blue]{Summon}[/blue]",
+   "vars": {
+    "Summon": 1.0
+   }
+  },
+  "BowlerHat": {
+   "key": "BOWLER_HAT",
+   "name": "Bowler Hat",
+   "name_zh": "圆顶礼帽",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Gain [blue]{GoldIncrease:percentMore()}%[/blue] additional [gold]Gold[/gold].",
+   "text_zh": "额外获得[blue]{GoldIncrease:percentMore()}%[/blue]的[gold]金币[/gold]。",
+   "vars": {
+    "GoldIncrease": 1.25
+   }
+  },
+  "Bread": {
+   "key": "BREAD",
+   "name": "Bread",
+   "name_zh": "面包",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "At the start of your first turn, lose {LoseEnergy:energyIcons()}. At the start of all other turns, gain {GainEnergy:energyIcons()}.",
+   "text_zh": "在你的第一个回合开始时，失去{LoseEnergy:energyIcons()}。在其余的回合开始时，获得{GainEnergy:energyIcons()}。",
+   "vars": {
+    "GainEnergy": 1.0,
+    "LoseEnergy": 2.0
+   }
+  },
+  "BrilliantScarf": {
+   "key": "BRILLIANT_SCARF",
+   "name": "Brilliant Scarf",
+   "name_zh": "艳丽围巾",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "The [blue]5th[/blue] card you play from your hand each turn is free.",
+   "text_zh": "你每回合从你的手牌打出的第[blue]5[/blue]张牌可以被免费打出。",
+   "vars": {
+    "Cards": 5.0
+   }
+  },
+  "Brimstone": {
+   "key": "BRIMSTONE",
+   "name": "Brimstone",
+   "name_zh": "硫磺",
+   "pool": "Ironclad",
+   "rarity": "Shop",
+   "text": "At the start of your turn, gain [blue]{SelfStrength}[/blue] [gold]Strength[/gold] and ALL enemies gain [blue]{EnemyStrength}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在你的每个回合开始时，你获得[blue]{SelfStrength}[/blue]点[gold]力量[/gold]，所有敌人获得[blue]{EnemyStrength}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "EnemyStrength": 1.0,
+    "SelfStrength": 2.0
+   }
+  },
+  "BronzeScales": {
+   "key": "BRONZE_SCALES",
+   "name": "Bronze Scales",
+   "name_zh": "铜质鳞片",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Start each combat with [blue]{ThornsPower}[/blue] [gold]Thorns[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{ThornsPower}[/blue]点[gold]荆棘[/gold]。",
+   "vars": {
+    "ThornsPower": 3.0
+   }
+  },
+  "BurningBlood": {
+   "key": "BURNING_BLOOD",
+   "name": "Burning Blood",
+   "name_zh": "燃烧之血",
+   "pool": "Ironclad",
+   "rarity": "Starter",
+   "text": "At the end of combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "在战斗结束时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 6.0
+   }
+  },
+  "BurningSticks": {
+   "key": "BURNING_STICKS",
+   "name": "Burning Sticks",
+   "name_zh": "燃烧木棍",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "The first time each combat you [gold]Exhaust[/gold] a Skill, add a copy of it into your [gold]Hand[/gold].",
+   "text_zh": "每场战斗中你第一次[gold]消耗[/gold]技能牌时，将那张牌的复制品加入你的[gold]手牌[/gold]"
+  },
+  "Byrdpip": {
+   "key": "BYRDPIP",
+   "name": "Byrdpip",
+   "name_zh": "异鸟宝宝",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Upon pickup, gain the card [gold]Byrd Swoop[/gold]. A [gold]Byrdpip[/gold] will accompany you in battles.",
+   "text_zh": "拾起时，获得一张[gold]异鸟扑击[/gold]。一只[gold]幼年异鸟[/gold]会在战斗中陪伴你。"
+  },
+  "CallingBell": {
+   "key": "CALLING_BELL",
+   "name": "Calling Bell",
+   "name_zh": "召唤铃铛",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain a unique [red]Curse[/red] and [blue]{Relics}[/blue] [gold]Relics[/gold].",
+   "text_zh": "拾起时，获得一个独特的[red]诅咒[/red]和[blue]{Relics}[/blue]件[gold]遗物[/gold]。",
+   "vars": {
+    "Relics": 3.0
+   }
+  },
+  "Candelabra": {
+   "key": "CANDELABRA",
+   "name": "Candelabra",
+   "name_zh": "烛台",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of your [blue]2nd[/blue] turn, gain {Energy:energyIcons()}.",
+   "text_zh": "在你的[blue]第2[/blue]回合开始时，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 2.0
+   }
+  },
+  "CaptainsWheel": {
+   "key": "CAPTAINS_WHEEL",
+   "name": "Captain's Wheel",
+   "name_zh": "舵盘",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the start of your [blue]3rd[/blue] turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "在你的[blue]第三[/blue]回合开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 18.0
+   }
+  },
+  "Cauldron": {
+   "key": "CAULDRON",
+   "name": "Cauldron",
+   "name_zh": "大锅",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, brews [blue]{Potions}[/blue] random {Potions:plural:potion|potions}.",
+   "text_zh": "拾起时，制作[blue]{Potions}[/blue]瓶随机药水。",
+   "vars": {
+    "Potions": 5.0
+   }
+  },
+  "CentennialPuzzle": {
+   "key": "CENTENNIAL_PUZZLE",
+   "name": "Centennial Puzzle",
+   "name_zh": "百年积木",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "The first time you lose HP each combat, draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "Chandelier": {
+   "key": "CHANDELIER",
+   "name": "Chandelier",
+   "name_zh": "吊灯",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the start of your [blue]3rd[/blue] turn, gain {Energy:energyIcons()}.",
+   "text_zh": "在你的[blue]第三[/blue]回合开始时，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 3.0
+   }
+  },
+  "CharonsAshes": {
+   "key": "CHARONS_ASHES",
+   "name": "Charon's Ashes",
+   "name_zh": "卡戎之灰",
+   "pool": "Ironclad",
+   "rarity": "Rare",
+   "text": "Whenever you [gold]Exhaust[/gold] a card, deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "每当你[gold]消耗[/gold]一张牌，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 3.0
+   }
+  },
+  "ChemicalX": {
+   "key": "CHEMICAL_X",
+   "name": "Chemical X",
+   "name_zh": "化学物X",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "The effects of your cost [blue]X[/blue] cards are increased by [blue]{Increase}[/blue].",
+   "text_zh": "耗能为[blue]X[/blue]的牌的效果数值增加[blue]{Increase}[/blue]点。",
+   "vars": {
+    "Increase": 2.0
+   }
+  },
+  "ChoicesParadox": {
+   "key": "CHOICES_PARADOX",
+   "name": "Choices Paradox",
+   "name_zh": "选择悖论",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of each combat, add [blue]1[/blue] of [blue]{Cards}[/blue] random cards into your [gold]Hand[/gold]. Add [gold]Retain[/gold] to the chosen card.",
+   "text_zh": "在每场战斗开始时，从[blue]{Cards}[/blue]张随机牌中选择[blue]1[/blue]张放入你的[gold]手牌[/gold]。被选中的牌获得[gold]保留[/gold]。",
+   "vars": {
+    "Cards": 5.0
+   }
+  },
+  "ChosenCheese": {
+   "key": "CHOSEN_CHEESE",
+   "name": "The Chosen Cheese",
+   "name_zh": "天选芝士",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the end of combat, gain [blue]{MaxHp}[/blue] Max HP.",
+   "text_zh": "在战斗结束时，获得[blue]{MaxHp}[/blue]点最大生命值。",
+   "vars": {
+    "MaxHp": 1.0
+   }
+  },
+  "Circlet": {
+   "key": "CIRCLET",
+   "name": "Circlet",
+   "name_zh": "头环",
+   "pool": "Fallback",
+   "rarity": "None",
+   "text": "It's a circlet.",
+   "text_zh": "这是一个头环。"
+  },
+  "Claws": {
+   "key": "CLAWS",
+   "name": "Claws",
+   "name_zh": "利爪",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Transform[/gold] up to [blue]{Cards}[/blue] {Cards:plural:card|cards} into [gold]Maul[/gold].",
+   "text_zh": "拾起时，将至多[blue]{Cards}[/blue]张牌[gold]变化[/gold]为[gold]撕咬[/gold]。",
+   "vars": {
+    "Cards": 6.0
+   }
+  },
+  "CloakClasp": {
+   "key": "CLOAK_CLASP",
+   "name": "Cloak Clasp",
+   "name_zh": "斗篷扣",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the end of your turn, gain [blue]{Block}[/blue] [gold]Block[/gold] for each card in your [gold]Hand[/gold].",
+   "text_zh": "在你的回合结束时，每有一张[gold]手牌[/gold]，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]",
+   "vars": {
+    "Block": 1.0
+   }
+  },
+  "CrackedCore": {
+   "key": "CRACKED_CORE",
+   "name": "Cracked Core",
+   "name_zh": "破损核心",
+   "pool": "Defect",
+   "rarity": "Starter",
+   "text": "At the start of each combat, [gold]Channel[/gold] [blue]{Lightning}[/blue] [gold]Lightning[/gold].",
+   "text_zh": "在每场战斗开始时，[gold]生成[/gold][blue]{Lightning}[/blue]个[gold]闪电[/gold]充能球。",
+   "vars": {
+    "Lightning": 1.0
+   }
+  },
+  "Crossbow": {
+   "key": "CROSSBOW",
+   "name": "Crossbow",
+   "name_zh": "十字弓",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, add a random [gold]Attack[/gold] into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "在你的回合开始时，将一张随机[gold]攻击牌[/gold]加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。"
+  },
+  "CursedPearl": {
+   "key": "CURSED_PEARL",
+   "name": "Cursed Pearl",
+   "name_zh": "诅咒珍珠",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, receive [red]Greed[/red]. Gain [blue]{Gold}[/blue] [gold]Gold[/gold].",
+   "text_zh": "拾起时，获得一张[red]贪婪[/red]，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 333.0
+   }
+  },
+  "DarkstonePeriapt": {
+   "key": "DARKSTONE_PERIAPT",
+   "name": "Darkstone Periapt",
+   "name_zh": "黑石护符",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you obtain a [red]Curse[/red], raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "每当你获得一张[red]诅咒[/red]，就将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 6.0
+   }
+  },
+  "DataDisk": {
+   "key": "DATA_DISK",
+   "name": "Data Disk",
+   "name_zh": "数据磁盘",
+   "pool": "Defect",
+   "rarity": "Common",
+   "text": "Start each combat with [blue]{FocusPower}[/blue] [gold]Focus[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{FocusPower}[/blue]点[gold]集中[/gold]。",
+   "vars": {
+    "FocusPower": 1.0
+   }
+  },
+  "DaughterOfTheWind": {
+   "key": "DAUGHTER_OF_THE_WIND",
+   "name": "Daughter of the Wind",
+   "name_zh": "风的女儿",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you play an Attack, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你打出一张攻击牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 1.0
+   }
+  },
+  "DelicateFrond": {
+   "key": "DELICATE_FROND",
+   "name": "Delicate Frond",
+   "name_zh": "娇嫩蕨草",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of each combat, fill all empty potion slots with random potions.",
+   "text_zh": "在每场战斗开始时，用随机药水将你的空药水栏位填满。"
+  },
+  "DemonTongue": {
+   "key": "DEMON_TONGUE",
+   "name": "Demon Tongue",
+   "name_zh": "恶魔之舌",
+   "pool": "Ironclad",
+   "rarity": "Rare",
+   "text": "The first time you lose HP on your turn, heal HP equal to the amount lost.",
+   "text_zh": "每回合第一次在回合内失去生命值时，回复等量的生命值。"
+  },
+  "DiamondDiadem": {
+   "key": "DIAMOND_DIADEM",
+   "name": "Diamond Diadem",
+   "name_zh": "钻石头冠",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Whenever you play [blue]{CardThreshold}[/blue] or fewer cards in a turn, take half damage from enemies.",
+   "text_zh": "如果你在本回合打出的牌少于等于[blue]{CardThreshold}[/blue]张，则受到敌人的伤害减半。",
+   "vars": {
+    "CardThreshold": 2.0
+   }
+  },
+  "DingyRug": {
+   "key": "DINGY_RUG",
+   "name": "Dingy Rug",
+   "name_zh": "肮脏地毯",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Card rewards can now contain Colorless cards.",
+   "text_zh": "卡牌奖励现在会包括无色牌。"
+  },
+  "DistinguishedCape": {
+   "key": "DISTINGUISHED_CAPE",
+   "name": "Distinguished Cape",
+   "name_zh": "卓越斗篷",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, lose [blue]9[/blue] Max HP. Add [blue]{Cards}[/blue] [gold]{Cards:plural:Apparition|Apparitions}[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，失去[red]9[/red]点最大生命值。将[blue]{Cards}[/blue]张[gold]灵体[/gold]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Cards": 3.0,
+    "HpLoss": 9.0
+   }
+  },
+  "DivineDestiny": {
+   "key": "DIVINE_DESTINY",
+   "name": "Divine Destiny",
+   "name_zh": "天命所归",
+   "pool": "Event",
+   "rarity": "Starter",
+   "text": "At the start of each combat, gain {Stars:starIcons()}.",
+   "text_zh": "在每场战斗开始时，获得{Stars:starIcons()}。",
+   "vars": {
+    "Stars": 6.0
+   }
+  },
+  "DivineRight": {
+   "key": "DIVINE_RIGHT",
+   "name": "Divine Right",
+   "name_zh": "天赋君权",
+   "pool": "Regent",
+   "rarity": "Starter",
+   "text": "At the start of each combat, gain {Stars:starIcons()}.",
+   "text_zh": "在每场战斗开始时，获得{Stars:starIcons()}。",
+   "vars": {
+    "Stars": 3.0
+   }
+  },
+  "DollysMirror": {
+   "key": "DOLLYS_MIRROR",
+   "name": "Dolly's Mirror",
+   "name_zh": "多利之镜",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, obtain an additional copy of a card in your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中选择一张牌进行复制。"
+  },
+  "DragonFruit": {
+   "key": "DRAGON_FRUIT",
+   "name": "Dragon Fruit",
+   "name_zh": "火龙果",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Whenever you gain [gold]Gold[/gold], raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "每当你获得[gold]金币[/gold]时，提升[blue]{MaxHp}[/blue]点你的最大生命值。",
+   "vars": {
+    "MaxHp": 1.0
+   }
+  },
+  "DreamCatcher": {
+   "key": "DREAM_CATCHER",
+   "name": "Dream Catcher",
+   "name_zh": "捕梦网",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you [gold]Rest[/gold], you may add a card to your [gold]Deck[/gold].",
+   "text_zh": "每当你[gold]休息[/gold]时，可以添加一张牌到你的[gold]牌组[/gold]。"
+  },
+  "DustyTome": {
+   "key": "DUSTY_TOME",
+   "name": "Dusty Tome",
+   "name_zh": "尘封魔典",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain {AncientCard.StringValue:cond:[gold]{}[/gold]|an [gold]Ancient Card[/gold]}.",
+   "text_zh": "拾起时，获得一张{AncientCard.StringValue:cond:[gold]{}+[/gold]|[gold]先古牌[/gold]}。"
+  },
+  "Ectoplasm": {
+   "key": "ECTOPLASM",
+   "name": "Ectoplasm",
+   "name_zh": "灵体外质",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "You can no longer gain [gold]Gold[/gold]. Gain {Energy:energyIcons()} at the start of each turn.",
+   "text_zh": "你不能再获得任何[gold]金币[/gold]。在回合开始时获得{Energy:energyIcons()}",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "ElectricShrymp": {
+   "key": "ELECTRIC_SHRYMP",
+   "name": "Electric Shrymp",
+   "name_zh": "放电异虾",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Enchant[/gold] a Skill with [purple]Imbued[/purple].",
+   "text_zh": "拾起时，选择一张技能牌为它[gold]附魔[/gold]：[purple]注能[/purple]。"
+  },
+  "EmberTea": {
+   "key": "EMBER_TEA",
+   "name": "Ember Tea",
+   "name_zh": "余烬茶",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of the next {Combats:plural:combat|[blue]{}[/blue] combats}, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在接下来的[blue]{Combats}[/blue]场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 2.0
+   }
+  },
+  "EmotionChip": {
+   "key": "EMOTION_CHIP",
+   "name": "Emotion Chip",
+   "name_zh": "情感芯片",
+   "pool": "Defect",
+   "rarity": "Rare",
+   "text": "If you lost HP during the previous turn, trigger the passive ability of all Orbs at the start of your turn.",
+   "text_zh": "在每回合开始时，如果你在之前回合受到过伤害，则触发所有充能球的被动效果。"
+  },
+  "EmptyCage": {
+   "key": "EMPTY_CAGE",
+   "name": "Empty Cage",
+   "name_zh": "空鸟笼",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] {Cards:plural:card|cards} from your [gold]Deck[/gold].",
+   "text_zh": "拾起时，选择移除[gold]牌组[/gold]中的[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "EternalFeather": {
+   "key": "ETERNAL_FEATHER",
+   "name": "Eternal Feather",
+   "name_zh": "永恒羽毛",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "For every {Cards:plural:card|[blue]{}[/blue] cards} in your [gold]Deck[/gold], heal [green]{Heal}[/green] HP whenever you enter a [gold]Rest Site[/gold].",
+   "text_zh": "你的[gold]牌组[/gold]中每有[blue]{Cards}[/blue]张牌，当你进入[gold]休息处[/gold]时就会回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Cards": 5.0,
+    "Heal": 3.0
+   }
+  },
+  "FakeAnchor": {
+   "key": "FAKE_ANCHOR",
+   "name": "Anchor???",
+   "name_zh": "锚？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Start each combat with [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 4.0
+   }
+  },
+  "FakeBloodVial": {
+   "key": "FAKE_BLOOD_VIAL",
+   "name": "Blood Vial???",
+   "name_zh": "小血瓶？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of each combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "在每场战斗开始时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 1.0
+   }
+  },
+  "FakeHappyFlower": {
+   "key": "FAKE_HAPPY_FLOWER",
+   "name": "Happy Flower???",
+   "name_zh": "开心小花？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Every [blue]{Turns}[/blue] {Turns:plural:turn|turns}, gain {Energy:energyIcons()}.",
+   "text_zh": "每[blue]{Turns}[/blue]个回合，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0,
+    "Turns": 5.0
+   }
+  },
+  "FakeLeesWaffle": {
+   "key": "FAKE_LEES_WAFFLE",
+   "name": "Lee's Waffle???",
+   "name_zh": "李家华夫饼？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Upon pickup, heal [green]{Heal}%[/green] of your HP.",
+   "text_zh": "拾起时，回复你[green]{Heal}%[/green]的生命值。",
+   "vars": {
+    "Heal": 10.0
+   }
+  },
+  "FakeMango": {
+   "key": "FAKE_MANGO",
+   "name": "Mango???",
+   "name_zh": "芒果？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 3.0
+   }
+  },
+  "FakeMerchantsRug": {
+   "key": "FAKE_MERCHANTS_RUG",
+   "name": "The Merchant's Rug???",
+   "name_zh": "商人的地毯？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Poor imitation. Does nothing.",
+   "text_zh": "低劣的仿制品。没有任何作用。"
+  },
+  "FakeOrichalcum": {
+   "key": "FAKE_ORICHALCUM",
+   "name": "Orichalcum???",
+   "name_zh": "奥利哈钢？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "If you end your turn without [gold]Block[/gold], gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "如果你在回合结束时没有任何[gold]格挡[/gold]，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 3.0
+   }
+  },
+  "FakeSneckoEye": {
+   "key": "FAKE_SNECKO_EYE",
+   "name": "Snecko Eye???",
+   "name_zh": "异蛇之眼？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Start each combat [red]Confused[/red].",
+   "text_zh": "每场战斗开始时获得[red]混乱[/red]效果。"
+  },
+  "FakeStrikeDummy": {
+   "key": "FAKE_STRIKE_DUMMY",
+   "name": "Strike Dummy???",
+   "name_zh": "打击木偶？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Cards containing “Strike” deal [blue]{ExtraDamage}[/blue] additional damage.",
+   "text_zh": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+   "vars": {
+    "ExtraDamage": 1.0
+   }
+  },
+  "FakeVenerableTeaSet": {
+   "key": "FAKE_VENERABLE_TEA_SET",
+   "name": "Venerable Tea Set???",
+   "name_zh": "古茶具套装？？？",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you enter a [gold]Rest Site[/gold], start the next combat with an additional {Energy:energyIcons()}.",
+   "text_zh": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "FencingManual": {
+   "key": "FENCING_MANUAL",
+   "name": "Fencing Manual",
+   "name_zh": "击剑指南",
+   "pool": "Regent",
+   "rarity": "Common",
+   "text": "At the start of each combat, [gold]Forge[/gold] [blue]{Forge}[/blue].",
+   "text_zh": "在每场战斗开始时，[gold]铸造[/gold][blue]{Forge}[/blue]。",
+   "vars": {
+    "Forge": 10.0
+   }
+  },
+  "FestivePopper": {
+   "key": "FESTIVE_POPPER",
+   "name": "Festive Popper",
+   "name_zh": "节日拉炮",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "在每场战斗开始时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 9.0
+   }
+  },
+  "Fiddle": {
+   "key": "FIDDLE",
+   "name": "Fiddle",
+   "name_zh": "小提琴",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of each turn, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}. You may not draw cards during your turn.",
+   "text_zh": "在每个回合开始时，额外抽[blue]{Cards}[/blue]张牌。你在回合进行中不再能抽任何牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "FishingRod": {
+   "key": "FISHING_ROD",
+   "name": "Fishing Rod",
+   "name_zh": "钓鱼竿",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Every {Combats:plural:normal combat|[blue]{}[/blue] normal combats}, [gold]Upgrade[/gold] a random card in your [gold]Deck[/gold].",
+   "text_zh": "每[blue]{Combats}[/blue]场普通战斗，随机[gold]升级[/gold]你[gold]牌组[/gold]中的一张牌。",
+   "vars": {
+    "Combats": 3.0
+   }
+  },
+  "ForgottenSoul": {
+   "key": "FORGOTTEN_SOUL",
+   "name": "Forgotten Soul",
+   "name_zh": "遗忘之魂",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you [gold]Exhaust[/gold] a card, deal [blue]{Damage}[/blue] damage to a random enemy.",
+   "text_zh": "每当你[gold]消耗[/gold]一张牌，随机对一名敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 1.0
+   }
+  },
+  "FragrantMushroom": {
+   "key": "FRAGRANT_MUSHROOM",
+   "name": "Fragrant Mushroom",
+   "name_zh": "芳香蘑菇",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Upon pickup, lose [blue]{HpLoss}[/blue] HP and [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:card|cards}.",
+   "text_zh": "拾起时，失去[blue]{HpLoss}[/blue]点生命，然后随机[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0,
+    "HpLoss": 15.0
+   }
+  },
+  "FresnelLens": {
+   "key": "FRESNEL_LENS",
+   "name": "Fresnel Lens",
+   "name_zh": "菲涅耳透镜",
+   "pool": "Shared",
+   "rarity": "Event",
+   "text": "Whenever you add a card that gains [gold]Block[/gold] to your [gold]Deck[/gold], [gold]Enchant[/gold] it with [purple]Nimble[/purple] [blue]{NimbleAmount}[/blue].",
+   "text_zh": "每当你将一张带有[gold]格挡[/gold]的牌加入你的[gold]牌组[/gold]时，为那张牌[gold]附魔[/gold]：[purple]灵巧[/purple][blue]{NimbleAmount}[/blue]",
+   "vars": {
+    "NimbleAmount": 2.0
+   }
+  },
+  "FrozenEgg": {
+   "key": "FROZEN_EGG",
+   "name": "Frozen Egg",
+   "name_zh": "冻结之蛋",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you add a Power into your [gold]Deck[/gold], [gold]Upgrade[/gold] it.",
+   "text_zh": "每当你获得能力牌时，将其[gold]升级[/gold]。"
+  },
+  "FuneraryMask": {
+   "key": "FUNERARY_MASK",
+   "name": "Funerary Mask",
+   "name_zh": "葬礼面具",
+   "pool": "Necrobinder",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, add [blue]{Cards}[/blue] [gold]{Cards:plural:Soul|Souls}[/gold] into your [gold]Draw Pile[/gold].",
+   "text_zh": "在每场战斗开始时，将[blue]{Cards}[/blue]张[gold]灵魂[/gold]加入你的[gold]抽牌堆[/gold]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "FurCoat": {
+   "key": "FUR_COAT",
+   "name": "Fur Coat",
+   "name_zh": "皮草大衣",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, mark [blue]{Combats}[/blue] random combats. Enemies in those rooms have [blue]1[/blue] HP.",
+   "text_zh": "拾起时，随机标记[blue]{Combats}[/blue]处战斗。这些战斗中的敌人将只有[blue]1[/blue]点生命。",
+   "vars": {
+    "Combats": 7.0
+   }
+  },
+  "GalacticDust": {
+   "key": "GALACTIC_DUST",
+   "name": "Galactic Dust",
+   "name_zh": "星系尘埃",
+   "pool": "Regent",
+   "rarity": "Uncommon",
+   "text": "For every [blue]{Stars}[/blue] {singleStarIcon} spent, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每消耗[blue]{Stars}[/blue]点{singleStarIcon}，就获得[blue]{Block}[/blue][gold]格挡[/gold]。",
+   "vars": {
+    "Block": 10.0,
+    "Stars": 10.0
+   }
+  },
+  "GamblingChip": {
+   "key": "GAMBLING_CHIP",
+   "name": "Gambling Chip",
+   "name_zh": "赌博筹码",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the start of each combat, discard any number of cards then draw that many.",
+   "text_zh": "在每场战斗开始时，丢弃任意张牌，然后抽相同数量张牌。"
+  },
+  "GamePiece": {
+   "key": "GAME_PIECE",
+   "name": "Game Piece",
+   "name_zh": "棋子",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you play a Power, draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "每当你打出能力牌时，抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "GhostSeed": {
+   "key": "GHOST_SEED",
+   "name": "Ghost Seed",
+   "name_zh": "幽灵种子",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "[gold]Strikes[/gold] and [gold]Defends[/gold] gain [gold]Ethereal[/gold].",
+   "text_zh": "[gold]打击[/gold]和[gold]防御[/gold]获得[gold]虚无[/gold]。"
+  },
+  "Girya": {
+   "key": "GIRYA",
+   "name": "Girya",
+   "name_zh": "壶铃",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "You can now gain [gold]Strength[/gold] at [gold]Rest Sites[/gold]. ([blue]3[/blue] times max)",
+   "text_zh": "你现在能在[gold]休息处[/gold]获得[gold]力量[/gold]。（最多[blue]3[/blue]次）"
+  },
+  "GlassEye": {
+   "key": "GLASS_EYE",
+   "name": "Glass Eye",
+   "name_zh": "玻璃眼珠",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain [blue]2[/blue] [gold]Common[/gold] cards, [blue]2[/blue] [gold]Uncommon[/gold] cards, and [blue]1[/blue] [gold]Rare[/gold] card.",
+   "text_zh": "拾起时，获得[blue]2[/blue]组[gold]普通[/gold]、[blue]2[/blue]组[gold]罕见[/gold]、和[blue]1[/blue]组[gold]稀有[/gold]卡牌奖励。"
+  },
+  "Glitter": {
+   "key": "GLITTER",
+   "name": "Glitter",
+   "name_zh": "亮片",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "[gold]Enchant[/gold] all card rewards with [purple]Glam[/purple].",
+   "text_zh": "为之后的所有卡牌奖励[gold]附魔[/gold]：[purple]华彩[/purple]。"
+  },
+  "GnarledHammer": {
+   "key": "GNARLED_HAMMER",
+   "name": "Gnarled Hammer",
+   "name_zh": "扭曲锤子",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, [gold]Enchant[/gold] up to [blue]{Cards}[/blue] {Cards:plural:Attack|Attacks} with [purple]Sharp[/purple] [blue]{SharpAmount:diff()}[/blue].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中选择至多[blue]{Cards}[/blue]张攻击牌，[gold]附魔[/gold]：[purple]锋利[/purple][blue]{SharpAmount:diff()}[/blue]。",
+   "vars": {
+    "Cards": 3.0,
+    "SharpAmount": 3.0
+   }
+  },
+  "GoldPlatedCables": {
+   "key": "GOLD_PLATED_CABLES",
+   "name": "Gold-Plated Cables",
+   "name_zh": "镀金缆线",
+   "pool": "Defect",
+   "rarity": "Uncommon",
+   "text": "Your rightmost Orb triggers its passive an additional time.",
+   "text_zh": "你最右侧的充能球会额外触发一次被动效果。"
+  },
+  "GoldenCompass": {
+   "key": "GOLDEN_COMPASS",
+   "name": "Golden Compass",
+   "name_zh": "黄金罗盘",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, replace the [gold]Act[/gold] [blue]2[/blue] Map with a single special path.",
+   "text_zh": "拾起时，将第[blue]2[/blue][gold]阶段[/gold]的地图替换为一条特殊的直道。"
+  },
+  "GoldenPearl": {
+   "key": "GOLDEN_PEARL",
+   "name": "Golden Pearl",
+   "name_zh": "金色珍珠",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]{Gold}[/blue] [gold]Gold[/gold].",
+   "text_zh": "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 150.0
+   }
+  },
+  "Gorget": {
+   "key": "GORGET",
+   "name": "Gorget",
+   "name_zh": "护喉甲",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, gain [blue]{PlatingPower}[/blue] [gold]Plating[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。",
+   "vars": {
+    "PlatingPower": 4.0
+   }
+  },
+  "GremlinHorn": {
+   "key": "GREMLIN_HORN",
+   "name": "Gremlin Horn",
+   "name_zh": "地精之角",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Whenever an enemy dies, gain {Energy:energyIcons()} and draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "每当有一名敌人死亡时，获得{Energy:energyIcons()}并抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 1.0,
+    "Energy": 1.0
+   }
+  },
+  "HandDrill": {
+   "key": "HAND_DRILL",
+   "name": "Hand Drill",
+   "name_zh": "手钻",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you break an enemy's [gold]Block[/gold], apply [blue]{VulnerablePower}[/blue] [gold]Vulnerable[/gold].",
+   "text_zh": "每当你突破敌人的[gold]格挡[/gold]时，给予其[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
+   "vars": {
+    "VulnerablePower": 2.0
+   }
+  },
+  "HappyFlower": {
+   "key": "HAPPY_FLOWER",
+   "name": "Happy Flower",
+   "name_zh": "开心小花",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Every [blue]{Turns}[/blue] {Turns:plural:turn|turns}, gain {Energy:energyIcons()}.",
+   "text_zh": "每[blue]{Turns}[/blue]个回合，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0,
+    "Turns": 3.0
+   }
+  },
+  "HeftyTablet": {
+   "key": "HEFTY_TABLET",
+   "name": "Hefty Tablet",
+   "name_zh": "沉重石板",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, choose [blue]1[/blue] of [blue]{Cards}[/blue] Rare cards to add to your [gold]Deck[/gold], and add [blue]1[/blue] [red]Injury[/red] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从[blue]{Cards}[/blue]张稀有牌中选择[blue]1[/blue]张加入你的[gold]牌组[/gold]，同时将[blue]1[/blue]张[red]受伤[/red]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "HelicalDart": {
+   "key": "HELICAL_DART",
+   "name": "Helical Dart",
+   "name_zh": "螺线飞镖",
+   "pool": "Silent",
+   "rarity": "Rare",
+   "text": "Whenever you play a [gold]Shiv[/gold], gain [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold] this turn.",
+   "text_zh": "你每打出一张[gold]小刀[/gold]，就在本回合获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "DexterityPower": 1.0
+   }
+  },
+  "HistoryCourse": {
+   "key": "HISTORY_COURSE",
+   "name": "History Course",
+   "name_zh": "历史课",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of your turn, play a copy of your last played Attack or Skill.",
+   "text_zh": "在你的回合开始时，打出一张你上一回合最后打出的攻击牌或技能牌的复制品。"
+  },
+  "HornCleat": {
+   "key": "HORN_CLEAT",
+   "name": "Horn Cleat",
+   "name_zh": "船夹板",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of your [blue]2nd[/blue] turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "在你的[blue]第二[/blue]回合开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 14.0
+   }
+  },
+  "IceCream": {
+   "key": "ICE_CREAM",
+   "name": "Ice Cream",
+   "name_zh": "冰淇淋",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Energy is now conserved between turns.",
+   "text_zh": "多余的能量可以留到下一回合。"
+  },
+  "InfusedCore": {
+   "key": "INFUSED_CORE",
+   "name": "Infused Core",
+   "name_zh": "注能核心",
+   "pool": "Event",
+   "rarity": "Starter",
+   "text": "At the start of each combat, [gold]Channel[/gold] [blue]{Lightning}[/blue] [gold]Lightning[/gold]. [gold]Lightning[/gold] deals [blue]{ExtraDamage}[/blue] additional damage.",
+   "text_zh": "在每场战斗开始时，[gold]生成[/gold][blue]{Lightning}[/blue]个[gold]闪电[/gold]充能球。[gold]闪电[/gold]充能球额外造成[blue]{ExtraDamage}[/blue]点伤害。",
+   "vars": {
+    "ExtraDamage": 1.0,
+    "Lightning": 3.0
+   }
+  },
+  "IntimidatingHelmet": {
+   "key": "INTIMIDATING_HELMET",
+   "name": "Intimidating Helmet",
+   "name_zh": "骇人头盔",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you play a card that costs {Energy:energyIcons()} or more, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你打出一张耗能大于等于{Energy:energyIcons()}的牌，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 4.0,
+    "Energy": 2.0
+   }
+  },
+  "IronClub": {
+   "key": "IRON_CLUB",
+   "name": "Iron Club",
+   "name_zh": "铁棒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Every [blue]{Cards}[/blue] {Cards:plural:card|cards} you play, draw [blue]1[/blue] card.",
+   "text_zh": "你每打出[blue]{Cards}[/blue]张牌，就抽[blue]1[/blue]张牌。",
+   "vars": {
+    "Cards": 4.0
+   }
+  },
+  "IvoryTile": {
+   "key": "IVORY_TILE",
+   "name": "Ivory Tile",
+   "name_zh": "象牙麻将牌",
+   "pool": "Necrobinder",
+   "rarity": "Rare",
+   "text": "Whenever you play a card that costs {EnergyThreshold:energyIcons()} or more, gain {Energy:energyIcons()}.",
+   "text_zh": "每当你打出一张耗能大于等于{EnergyThreshold:energyIcons()}的牌时，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0,
+    "EnergyThreshold": 3.0
+   }
+  },
+  "JeweledMask": {
+   "key": "JEWELED_MASK",
+   "name": "Jeweled Mask",
+   "name_zh": "宝石面具",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of each combat, put a random Power from your [gold]Draw Pile[/gold] into your [gold]Hand[/gold]. It's free to play this combat.",
+   "text_zh": "在每场战斗开始时，将一张随机能力牌从你的[gold]抽牌堆[/gold]放入你的[gold]手牌[/gold]，这张牌在本场战斗可以免费打出。"
+  },
+  "JewelryBox": {
+   "key": "JEWELRY_BOX",
+   "name": "Jewelry Box",
+   "name_zh": "珠宝盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]1[/blue] [gold]Apotheosis[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]1[/blue]张[gold]神化[/gold]加入你的[gold]牌组[/gold]。"
+  },
+  "JossPaper": {
+   "key": "JOSS_PAPER",
+   "name": "Joss Paper",
+   "name_zh": "金纸",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every [blue]{ExhaustAmount}[/blue] times you [gold]Exhaust[/gold] a card, draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "你每[gold]消耗[/gold][blue]{ExhaustAmount}[/blue]张牌，就抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 1.0,
+    "ExhaustAmount": 5.0
+   }
+  },
+  "JuzuBracelet": {
+   "key": "JUZU_BRACELET",
+   "name": "Juzu Bracelet",
+   "name_zh": "佛珠手链",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Regular enemy combats are no longer encountered in [gold]?[/gold] rooms.",
+   "text_zh": "你在[gold]?[/gold]房间中不会再遭遇常规战斗。"
+  },
+  "Kaleidoscope": {
+   "key": "KALEIDOSCOPE",
+   "name": "Kaleidoscope",
+   "name_zh": "万花筒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain [blue]{Cards}[/blue] {Cards:plural:card reward|card rewards} from other characters.",
+   "text_zh": "拾起时，获得[blue]{Cards}[/blue]次来自其他角色的卡牌奖励。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "Kifuda": {
+   "key": "KIFUDA",
+   "name": "Kifuda",
+   "name_zh": "木札",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, [gold]Enchant[/gold] up to [blue]{Cards}[/blue] {Cards:plural:card|cards} with [purple]Adroit[/purple].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中选择至多[blue]{Cards}[/blue]张牌，[gold]附魔[/gold]：[purple]伶俐[/purple]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "Kunai": {
+   "key": "KUNAI",
+   "name": "Kunai",
+   "name_zh": "苦无",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Every time you play [blue]{Cards}[/blue] Attacks in a single turn, gain [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "Cards": 3.0,
+    "DexterityPower": 1.0
+   }
+  },
+  "Kusarigama": {
+   "key": "KUSARIGAMA",
+   "name": "Kusarigama",
+   "name_zh": "锁镰",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every time you play [blue]{Cards}[/blue] {Cards:plural:Attack|Attacks} in a single turn, deal [blue]{Damage}[/blue] damage to a random enemy.",
+   "text_zh": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就随机对一名敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Cards": 3.0,
+    "Damage": 6.0
+   }
+  },
+  "Lantern": {
+   "key": "LANTERN",
+   "name": "Lantern",
+   "name_zh": "灯笼",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Start each combat with an additional {Energy:energyIcons()}.",
+   "text_zh": "在每场战斗的第一回合获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "LargeCapsule": {
+   "key": "LARGE_CAPSULE",
+   "name": "Large Capsule",
+   "name_zh": "巨大扭蛋",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain [blue]{Relics}[/blue] random [gold]{Relics:plural:Relic|Relics}[/gold]. Add an additional [gold]Strike[/gold] and [gold]Defend[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Relics": 2.0
+   }
+  },
+  "LastingCandy": {
+   "key": "LASTING_CANDY",
+   "name": "Lasting Candy",
+   "name_zh": "吃不完的糖",
+   "pool": "Event",
+   "rarity": "Uncommon",
+   "text": "Every other combat, your card rewards gain an additional Power.",
+   "text_zh": "每两场战斗，你的卡牌奖励就会额外包含一张能力牌。"
+  },
+  "LavaLamp": {
+   "key": "LAVA_LAMP",
+   "name": "Lava Lamp",
+   "name_zh": "熔岩灯",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "At the end of combat, [gold]Upgrade[/gold] all card rewards if you took no damage.",
+   "text_zh": "在战斗结束时，如果你没有受到伤害，则[gold]升级[/gold]你的所有卡牌奖励。"
+  },
+  "LavaRock": {
+   "key": "LAVA_ROCK",
+   "name": "Lava Rock",
+   "name_zh": "熔岩石",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "The Act 1 Boss drops [blue]{Relics}[/blue] [gold]Relics[/gold].",
+   "text_zh": "第一阶段的Boss敌人额外掉落[blue]{Relics}[/blue]件[gold]遗物[/gold]。",
+   "vars": {
+    "Relics": 2.0
+   }
+  },
+  "LeadPaperweight": {
+   "key": "LEAD_PAPERWEIGHT",
+   "name": "Lead Paperweight",
+   "name_zh": "铅制镇纸",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, choose [blue]1[/blue] of [blue]2[/blue] Colorless cards to add to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从[blue]2[/blue]张无色牌中选择[blue]1张[/blue]加入你的[gold]牌组[/gold]。"
+  },
+  "LeafyPoultice": {
+   "key": "LEAFY_POULTICE",
+   "name": "Leafy Poultice",
+   "name_zh": "树叶药膏",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Transform[/gold] [blue]1[/blue] of your [gold]Strikes[/gold] and [blue]1[/blue] of your [gold]Defends[/gold] and lose [blue]{MaxHp}[/blue] Max HP.",
+   "text_zh": "拾起时，[gold]变化[/gold]你的[blue]1[/blue]张[gold]打击[/gold]和[blue]1[/blue]张[gold]防御[/gold]，然后失去[blue]{MaxHp}[/blue]点最大生命。",
+   "vars": {
+    "MaxHp": 12.0
+   }
+  },
+  "LeesWaffle": {
+   "key": "LEES_WAFFLE",
+   "name": "Lee's Waffle",
+   "name_zh": "李家华夫饼",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue] and heal all of your HP.",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]点，并回复所有生命。",
+   "vars": {
+    "MaxHp": 7.0
+   }
+  },
+  "LetterOpener": {
+   "key": "LETTER_OPENER",
+   "name": "Letter Opener",
+   "name_zh": "开信刀",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every time you play [blue]{Cards}[/blue] {Cards:plural:Skill|Skills} in a single turn, deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "你每在同一回合内打出[blue]{Cards}[/blue]张技能牌，就对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Cards": 3.0,
+    "Damage": 5.0
+   }
+  },
+  "LizardTail": {
+   "key": "LIZARD_TAIL",
+   "name": "Lizard Tail",
+   "name_zh": "蜥蜴尾巴",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "When your HP would be reduced to [blue]0[/blue], heal to [green]{Heal}%[/green] of your Max HP instead (works once).",
+   "text_zh": "当你的生命值将要降低至[blue]0[/blue]或以下时，回复到最大生命值的[green]{Heal}%[/green]（仅能起效一次）。",
+   "vars": {
+    "Heal": 50.0
+   }
+  },
+  "LoomingFruit": {
+   "key": "LOOMING_FRUIT",
+   "name": "Looming Fruit",
+   "name_zh": "布质果实",
+   "pool": "Shared",
+   "rarity": "Ancient",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 31.0
+   }
+  },
+  "LordsParasol": {
+   "key": "LORDS_PARASOL",
+   "name": "Lord's Parasol",
+   "name_zh": "领主阳伞",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "When you encounter the [gold]Merchant[/gold], immediately obtain EVERYTHING he sells.",
+   "text_zh": "当你遇见[gold]商人[/gold]时，立刻获得他所出售的[red]所有[/red]物品。"
+  },
+  "LostCoffer": {
+   "key": "LOST_COFFER",
+   "name": "Lost Coffer",
+   "name_zh": "失物盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]1[/blue] card reward and procure [blue]1[/blue] random potion.",
+   "text_zh": "拾起时，获得[blue]1[/blue]次卡牌奖励和[blue]1[/blue]瓶随机药水。"
+  },
+  "LostWisp": {
+   "key": "LOST_WISP",
+   "name": "Lost Wisp",
+   "name_zh": "迷失鬼火",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you play a Power, deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "你每打出一张能力牌，就对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 8.0
+   }
+  },
+  "LuckyFysh": {
+   "key": "LUCKY_FYSH",
+   "name": "Lucky Fysh",
+   "name_zh": "招财异鱼",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Whenever you add a card to your [gold]Deck[/gold], gain [blue]{Gold}[/blue] [gold]Gold[/gold].",
+   "text_zh": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 15.0
+   }
+  },
+  "LunarPastry": {
+   "key": "LUNAR_PASTRY",
+   "name": "Lunar Pastry",
+   "name_zh": "月亮糕点",
+   "pool": "Regent",
+   "rarity": "Rare",
+   "text": "At the end of your turn, gain {Stars:starIcons()}.",
+   "text_zh": "在你的回合结束时，获得{Stars:starIcons()}。",
+   "vars": {
+    "Stars": 1.0
+   }
+  },
+  "Mango": {
+   "key": "MANGO",
+   "name": "Mango",
+   "name_zh": "芒果",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 14.0
+   }
+  },
+  "MassiveScroll": {
+   "key": "MASSIVE_SCROLL",
+   "name": "Massive Scroll",
+   "name_zh": "巨大卷轴",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, choose [blue]1[/blue] of [blue]3[/blue] [gold]Multiplayer Cards[/gold] to add to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从[blue]3[/blue]张[gold]多人游戏牌[/gold]中选择[blue]1[/blue]张加入你的[gold]牌组[/gold]。"
+  },
+  "MawBank": {
+   "key": "MAW_BANK",
+   "name": "Maw Bank",
+   "name_zh": "巨口储蓄罐",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you climb a floor, gain [blue]{Gold}[/blue] [gold]Gold[/gold]. No longer works when you spend any [gold]Gold[/gold] at the shop.",
+   "text_zh": "每攀爬一层楼层，就获得[blue]{Gold}[/blue][gold]金币[/gold]。一旦在商店中花费[gold]金币[/gold]就会使其失效。",
+   "vars": {
+    "Gold": 12.0
+   }
+  },
+  "MealTicket": {
+   "key": "MEAL_TICKET",
+   "name": "Meal Ticket",
+   "name_zh": "餐券",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Whenever you enter a shop room, heal [green]{Heal}[/green] HP.",
+   "text_zh": "每当你进入商店房间时，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 15.0
+   }
+  },
+  "MeatCleaver": {
+   "key": "MEAT_CLEAVER",
+   "name": "Meat Cleaver",
+   "name_zh": "切肉刀",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "You may [gold]Cook[/gold] at Rest Sites.",
+   "text_zh": "你可以在休息处进行[gold]烹饪[/gold]。"
+  },
+  "MeatOnTheBone": {
+   "key": "MEAT_ON_THE_BONE",
+   "name": "Meat on the Bone",
+   "name_zh": "带骨肉",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "If your HP is at or below [blue]{HpThreshold}%[/blue] at the end of combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "如果你在战斗结束时生命值等于或低于[blue]{HpThreshold}%[/blue]，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 12.0,
+    "HpThreshold": 50.0
+   }
+  },
+  "MembershipCard": {
+   "key": "MEMBERSHIP_CARD",
+   "name": "Membership Card",
+   "name_zh": "会员卡",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "[blue]{Discount}%[/blue] discount on all products!",
+   "text_zh": "所有商品打折[blue]{Discount}%[/blue]！",
+   "vars": {
+    "Discount": 50.0
+   }
+  },
+  "MercuryHourglass": {
+   "key": "MERCURY_HOURGLASS",
+   "name": "Mercury Hourglass",
+   "name_zh": "水银沙漏",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of your turn, deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "在你的回合开始时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 3.0
+   }
+  },
+  "MiniRegent": {
+   "key": "MINI_REGENT",
+   "name": "Mini Regent",
+   "name_zh": "迷你储君",
+   "pool": "Regent",
+   "rarity": "Rare",
+   "text": "The first time you spend {singleStarIcon} each turn, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "每回合你第一次花费{singleStarIcon}时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 1.0
+   }
+  },
+  "MiniatureCannon": {
+   "key": "MINIATURE_CANNON",
+   "name": "Miniature Cannon",
+   "name_zh": "微型大炮",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "[gold]Upgraded[/gold] Attacks deal [blue]{ExtraDamage}[/blue] additional damage.",
+   "text_zh": "[gold]升级[/gold]的攻击牌额外造成[blue]{ExtraDamage}[/blue]点伤害。",
+   "vars": {
+    "ExtraDamage": 3.0
+   }
+  },
+  "MiniatureTent": {
+   "key": "MINIATURE_TENT",
+   "name": "Miniature Tent",
+   "name_zh": "微型帐篷",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "You may choose any number of options at [gold]Rest Sites[/gold].",
+   "text_zh": "你可以在[gold]休息处[/gold]选择任意数量的选项。"
+  },
+  "MoltenEgg": {
+   "key": "MOLTEN_EGG",
+   "name": "Molten Egg",
+   "name_zh": "熔火之蛋",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you add an Attack card to your [gold]Deck[/gold], [gold]Upgrade[/gold] it.",
+   "text_zh": "每当你获得[gold]攻击牌[/gold]时，将其[gold]升级[/gold]。"
+  },
+  "MrStruggles": {
+   "key": "MR_STRUGGLES",
+   "name": "Mr. Struggles",
+   "name_zh": "抱抱先生",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of your turn, deal damage equal to the turn number to ALL enemies.",
+   "text_zh": "在你的回合开始时，对所有敌人造成等量于当前回合数的伤害。"
+  },
+  "MummifiedHand": {
+   "key": "MUMMIFIED_HAND",
+   "name": "Mummified Hand",
+   "name_zh": "干瘪之手",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you play a Power, a random card in your [gold]Hand[/gold] is free to play that turn.",
+   "text_zh": "你每打出一张能力牌，[gold]手牌[/gold]中就有一张随机牌在这个回合可以免费打出。"
+  },
+  "MusicBox": {
+   "key": "MUSIC_BOX",
+   "name": "Music Box",
+   "name_zh": "音乐盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Create an [gold]Ethereal[/gold] copy of the first Attack you play each turn.",
+   "text_zh": "将你每回合打出的第一张攻击牌的一张[gold]虚无[/gold]复制品加入你的手牌。"
+  },
+  "MysticLighter": {
+   "key": "MYSTIC_LIGHTER",
+   "name": "Mystic Lighter",
+   "name_zh": "神秘打火机",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "[gold]Enchanted[/gold] Attacks deal [blue]{Damage}[/blue] additional damage.",
+   "text_zh": "有[gold]附魔[/gold]的攻击牌额外造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 9.0
+   }
+  },
+  "NeowsBones": {
+   "key": "NEOWS_BONES",
+   "name": "Neow's Bones",
+   "name_zh": "涅奥骨骰",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]{Relics}[/blue] random [gold]Neow {Relics:plural:Relic|Relics}[/gold]. Add [blue]{Curses}[/blue] random [red]{Curses:plural:Curse|Curses}[/red] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]涅奥{Relics:plural:遗物|遗物}[/gold]。将[blue]{Curses}[/blue]张随机[red]{Curses:plural:诅咒|诅咒}[/red]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Curses": 1.0,
+    "Relics": 2.0
+   }
+  },
+  "NeowsTalisman": {
+   "key": "NEOWS_TALISMAN",
+   "name": "Neow's Talisman",
+   "name_zh": "涅奥的护符",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Upgrade[/gold] [blue]1[/blue] of your [gold]Strikes[/gold] and [blue]1[/blue] of your [gold]Defends[/gold].",
+   "text_zh": "拾起时，[gold]升级[/gold]你的[blue]1[/blue]张[gold]打击[/gold]和[blue]1[/blue]张[gold]防御[/gold]。"
+  },
+  "NeowsTorment": {
+   "key": "NEOWS_TORMENT",
+   "name": "Neow's Torment",
+   "name_zh": "涅奥的苦痛",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]1[/blue] [gold]Neow's Fury[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]1[/blue]张[gold]涅奥之怒[/gold]加入你的[gold]牌组[/gold]。"
+  },
+  "NewLeaf": {
+   "key": "NEW_LEAF",
+   "name": "New Leaf",
+   "name_zh": "新叶",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Transform[/gold] [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "拾起时，[gold]变化[/gold][blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "NinjaScroll": {
+   "key": "NINJA_SCROLL",
+   "name": "Ninja Scroll",
+   "name_zh": "忍术卷轴",
+   "pool": "Silent",
+   "rarity": "Shop",
+   "text": "At the start of each combat, add [blue]{Shivs}[/blue] [gold]{Shivs:plural:Shiv|Shivs}[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "每场战斗开始时，将[blue]{Shivs}[/blue]张[gold]小刀[/gold]加入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Shivs": 3.0
+   }
+  },
+  "Nunchaku": {
+   "key": "NUNCHAKU",
+   "name": "Nunchaku",
+   "name_zh": "双截棍",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every time you play [blue]{Cards}[/blue] Attacks, gain {Energy:energyIcons()}.",
+   "text_zh": "你每打出[blue]{Cards}[/blue]张攻击牌，获得{Energy:energyIcons()}。",
+   "vars": {
+    "Cards": 10.0,
+    "Energy": 1.0
+   }
+  },
+  "NutritiousOyster": {
+   "key": "NUTRITIOUS_OYSTER",
+   "name": "Nutritious Oyster",
+   "name_zh": "营养牡蛎",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 11.0
+   }
+  },
+  "NutritiousSoup": {
+   "key": "NUTRITIOUS_SOUP",
+   "name": "Nutritious Soup",
+   "name_zh": "营养汤",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Enchant[/gold] all [gold]Strikes[/gold] in your [gold]Deck[/gold] with [purple]Tezcatara's Ember[/purple].",
+   "text_zh": "拾起时，为你[gold]牌组[/gold]中的所有“[gold]打击[/gold]”[gold]附魔[/gold]：[purple]特兹卡塔拉的余烬[/purple]"
+  },
+  "OddlySmoothStone": {
+   "key": "ODDLY_SMOOTH_STONE",
+   "name": "Oddly Smooth Stone",
+   "name_zh": "意外光滑的石头",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Start each combat with [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "DexterityPower": 1.0
+   }
+  },
+  "OldCoin": {
+   "key": "OLD_COIN",
+   "name": "Old Coin",
+   "name_zh": "古钱币",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Upon pickup, gain [blue]{Gold}[/blue] [gold]Gold[/gold].",
+   "text_zh": "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 300.0
+   }
+  },
+  "OrangeDough": {
+   "key": "ORANGE_DOUGH",
+   "name": "Orange Dough",
+   "name_zh": "橙色团块",
+   "pool": "Regent",
+   "rarity": "Rare",
+   "text": "At the start of each combat, add [blue]{Cards}[/blue] random Colorless {Cards:plural:card|cards} into your [gold]Hand[/gold].",
+   "text_zh": "在每场战斗开始时，将[blue]{Cards}[/blue]张随机无色牌加入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "Orichalcum": {
+   "key": "ORICHALCUM",
+   "name": "Orichalcum",
+   "name_zh": "奥利哈钢",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "If you end your turn without [gold]Block[/gold], gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "如果你在回合结束时没有任何[gold]格挡[/gold]，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 6.0
+   }
+  },
+  "OrnamentalFan": {
+   "key": "ORNAMENTAL_FAN",
+   "name": "Ornamental Fan",
+   "name_zh": "精致折扇",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every time you play [blue]{Cards}[/blue] Attacks in a single turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 4.0,
+    "Cards": 3.0
+   }
+  },
+  "Orrery": {
+   "key": "ORRERY",
+   "name": "Orrery",
+   "name_zh": "星系仪",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, gain [blue]{Cards}[/blue] card {Cards:plural:reward|rewards}.",
+   "text_zh": "拾起时，获得[blue]{Cards}[/blue]次卡牌奖励",
+   "vars": {
+    "Cards": 5.0
+   }
+  },
+  "PaelsBlood": {
+   "key": "PAELS_BLOOD",
+   "name": "Pael's Blood",
+   "name_zh": "佩尔之血",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}.",
+   "text_zh": "在你的回合开始时，额外抽[blue]{Cards}[/blue]张牌",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "PaelsClaw": {
+   "key": "PAELS_CLAW",
+   "name": "Pael's Claw",
+   "name_zh": "佩尔之爪",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Enchant[/gold] all [gold]Defends[/gold] with [purple]{EnchantmentName}[/purple].",
+   "text_zh": "拾起时，为所有的“[gold]防御[/gold]”[gold]附魔[/gold]：[purple]{EnchantmentName}[/purple]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "PaelsEye": {
+   "key": "PAELS_EYE",
+   "name": "Pael's Eye",
+   "name_zh": "佩尔之眼",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "The first time each combat you end your turn without playing cards, [gold]Exhaust[/gold] your [gold]Hand[/gold], and take an extra turn.",
+   "text_zh": "你在每场战斗中第一次没有打出任何牌就结束回合时，[gold]消耗[/gold]所有[gold]手牌[/gold]然后进行一个额外回合。"
+  },
+  "PaelsFlesh": {
+   "key": "PAELS_FLESH",
+   "name": "Pael's Flesh",
+   "name_zh": "佩尔之肉",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain an additional {Energy:energyIcons()} at the start of your [blue]3rd[/blue] turn, and every turn after that.",
+   "text_zh": "从你的第[blue]3[/blue]回合开始，在回合开始时额外获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "PaelsGrowth": {
+   "key": "PAELS_GROWTH",
+   "name": "Pael's Growth",
+   "name_zh": "佩尔的增生组织",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Enchant[/gold] a card with [purple]{EnchantmentName}[/purple].",
+   "text_zh": "拾起时，从[gold]牌组[/gold]中选择一张牌，为其[gold]附魔[/gold]：[purple]{EnchantmentName}[/purple]。"
+  },
+  "PaelsHorn": {
+   "key": "PAELS_HORN",
+   "name": "Pael's Horn",
+   "name_zh": "佩尔之角",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]2[/blue] [gold]Relax[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]2[/blue]张[gold]放松[/gold]加入你的[gold]牌组[/gold]。"
+  },
+  "PaelsLegion": {
+   "key": "PAELS_LEGION",
+   "name": "Pael's Legion",
+   "name_zh": "佩尔的士兵",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Doubles [gold]Block[/gold] gained from a card, then goes to sleep for [blue]{Turns}[/blue] {Turns:plural:turn|turns}.",
+   "text_zh": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+   "vars": {
+    "Turns": 2.0
+   }
+  },
+  "PaelsTears": {
+   "key": "PAELS_TEARS",
+   "name": "Pael's Tears",
+   "name_zh": "佩尔之泪",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "If you end your turn with unspent {energyPrefix:energyIcons(1)}, gain an additional {Energy:energyIcons()} next turn.",
+   "text_zh": "如果你在拥有未花费的{energyPrefix:energyIcons(1)}情况下结束回合，则下个回合额外获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 2.0
+   }
+  },
+  "PaelsTooth": {
+   "key": "PAELS_TOOTH",
+   "name": "Pael's Tooth",
+   "name_zh": "佩尔之牙",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] {Cards:plural:card|cards} from your [gold]Deck[/gold]. After each combat, randomly add [blue]1[/blue] back [gold]Upgraded[/gold].{CardTitles.StringValue:cond:\n\nCards devoured:\n{}|}",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中选择[blue]{Cards}[/blue]张牌移除。在每场战斗结束时，将其中随机[blue]1[/blue]张牌[gold]升级[/gold]然后返还。{CardTitles.StringValue:cond:\n\n被吞噬的牌：\n{}|}",
+   "vars": {
+    "Cards": 5.0
+   }
+  },
+  "PaelsWing": {
+   "key": "PAELS_WING",
+   "name": "Pael's Wing",
+   "name_zh": "佩尔之翼",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "You may sacrifice card rewards to Pael. Every {Sacrifices:plural:sacrifice|[blue]{}[/blue] sacrifices}, obtain a [gold]Relic[/gold].",
+   "text_zh": "你可以将你的卡牌奖励献祭给佩尔。每献祭[blue]{Sacrifices}[/blue]次，就能获得一件[gold]遗物[/gold]。",
+   "vars": {
+    "Sacrifices": 2.0
+   }
+  },
+  "PandorasBox": {
+   "key": "PANDORAS_BOX",
+   "name": "Pandora's Box",
+   "name_zh": "潘多拉魔盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "[gold]Transform[/gold] ALL [gold]Strikes[/gold] and [gold]Defends[/gold].",
+   "text_zh": "[gold]变化[/gold]所有“[gold]打击[/gold]”和“[gold]防御[/gold]”。"
+  },
+  "Pantograph": {
+   "key": "PANTOGRAPH",
+   "name": "Pantograph",
+   "name_zh": "缩放仪",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of each [gold]Boss[/gold] combat, heal [green]{Heal}[/green] HP.",
+   "text_zh": "在[gold]Boss[/gold]战开始时，回复[green]{Heal}[/green]点生命值。",
+   "vars": {
+    "Heal": 25.0
+   }
+  },
+  "PaperKrane": {
+   "key": "PAPER_KRANE",
+   "name": "Paper Krane",
+   "name_zh": "纸鹤",
+   "pool": "Silent",
+   "rarity": "Rare",
+   "text": "Enemies with [gold]Weak[/gold] deal [blue]40%[/blue] less damage to you rather than [blue]25%[/blue].",
+   "text_zh": "有[gold]虚弱[/gold]状态的敌人造成的伤害降低[blue]40%[/blue]而非[blue]25%[/blue]。"
+  },
+  "PaperPhrog": {
+   "key": "PAPER_PHROG",
+   "name": "Paper Phrog",
+   "name_zh": "纸蛙",
+   "pool": "Ironclad",
+   "rarity": "Uncommon",
+   "text": "Enemies with [gold]Vulnerable[/gold] take [blue]75%[/blue] more damage rather than [blue]50%[/blue].",
+   "text_zh": "有[gold]易伤[/gold]状态的敌人受到的伤害增加[blue]75%[/blue]而非[blue]50%[/blue]。"
+  },
+  "ParryingShield": {
+   "key": "PARRYING_SHIELD",
+   "name": "Parrying Shield",
+   "name_zh": "招架盾",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "If you end a turn with at least [blue]{Block}[/blue] [gold]Block[/gold], deal [blue]{Damage}[/blue] damage to a random enemy.",
+   "text_zh": "如果你在回合结束时拥有至少[blue]{Block}[/blue]点[gold]格挡[/gold]，则对随机敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Block": 10.0,
+    "Damage": 6.0
+   }
+  },
+  "Pear": {
+   "key": "PEAR",
+   "name": "Pear",
+   "name_zh": "梨子",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 10.0
+   }
+  },
+  "PenNib": {
+   "key": "PEN_NIB",
+   "name": "Pen Nib",
+   "name_zh": "钢笔尖",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every [blue]10th[/blue] Attack you play deals double damage.",
+   "text_zh": "你每打出的第[blue]10[/blue]张攻击牌将会造成双倍伤害。"
+  },
+  "Pendulum": {
+   "key": "PENDULUM",
+   "name": "Pendulum",
+   "name_zh": "摆动球",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Every [blue]{Turns}[/blue] {Turns:plural:turn|turns}, draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "每[blue]{Turns}[/blue]个回合，抽[blue]{Cards}[/blue]张牌",
+   "vars": {
+    "Cards": 1.0,
+    "Turns": 3.0
+   }
+  },
+  "Permafrost": {
+   "key": "PERMAFROST",
+   "name": "Permafrost",
+   "name_zh": "永冻冰晶",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "The first time you play a Power each combat, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "当你在战斗中第一次打出能力牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 7.0
+   }
+  },
+  "PetrifiedToad": {
+   "key": "PETRIFIED_TOAD",
+   "name": "Petrified Toad",
+   "name_zh": "石化蟾蜍",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, procure a [gold]Potion-Shaped Rock[/gold].",
+   "text_zh": "在每场战斗开始时，获得一瓶[gold]药水形状的石头[/gold]"
+  },
+  "PhialHolster": {
+   "key": "PHIAL_HOLSTER",
+   "name": "Phial Holster",
+   "name_zh": "药瓶皮套",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]{PotionSlots}[/blue] potion {PotionSlots:plural:slot|slots} and procure [blue]{Potions}[/blue] random {Potions:plural:potion|potions}.",
+   "text_zh": "拾起时，获得[blue]{PotionSlots}[/blue]个药水{PotionSlots:plural:栏位|栏位}并获得[blue]{Potions}[/blue]瓶随机{Potions:plural:药水|药水}。",
+   "vars": {
+    "PotionSlots": 1.0,
+    "Potions": 2.0
+   }
+  },
+  "PhilosophersStone": {
+   "key": "PHILOSOPHERS_STONE",
+   "name": "Philosopher's Stone",
+   "name_zh": "贤者之石",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. ALL enemies start combat with [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在每回合开始时获得{Energy:energyIcons()}。所有敌人初始获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "Energy": 1.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "PhylacteryUnbound": {
+   "key": "PHYLACTERY_UNBOUND",
+   "name": "Phylactery Unbound",
+   "name_zh": "无界命匣",
+   "pool": "Event",
+   "rarity": "Starter",
+   "text": "At the start of each combat, [gold]Summon[/gold] [blue]{StartOfCombat}[/blue]. At the start of your turn, [gold]Summon[/gold] [blue]{StartOfTurn}[/blue].",
+   "text_zh": "在每场战斗开始时，[gold]召唤[/gold][blue]{StartOfCombat}[/blue]。在你的回合开始时，[gold]召唤[/gold][blue]{StartOfTurn}[/blue]。",
+   "vars": {
+    "StartOfCombat": 5.0,
+    "StartOfTurn": 2.0
+   }
+  },
+  "Planisphere": {
+   "key": "PLANISPHERE",
+   "name": "Planisphere",
+   "name_zh": "活动星图",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Whenever you enter a [gold]?[/gold] room, heal [green]{Heal}[/green] HP.",
+   "text_zh": "每当你进入[gold]？[/gold]房间的时候，回复[green]{Heal}[/green]点生命。",
+   "vars": {
+    "Heal": 5.0
+   }
+  },
+  "Pocketwatch": {
+   "key": "POCKETWATCH",
+   "name": "Pocketwatch",
+   "name_zh": "怀表",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you play [blue]{CardThreshold}[/blue] or fewer {CardThreshold:plural:card|cards} during your turn, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards} at the start of your next turn.",
+   "text_zh": "当你在本回合打出的牌少于等于[blue]{CardThreshold}[/blue]张时，则在你的下个回合开始时额外抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "CardThreshold": 3.0,
+    "Cards": 3.0
+   }
+  },
+  "PollinousCore": {
+   "key": "POLLINOUS_CORE",
+   "name": "Pollinous Core",
+   "name_zh": "花粉核心",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Every [blue]{Turns}[/blue] {Turns:plural:turn|turns}, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}.",
+   "text_zh": "每[blue]{Turns}[/blue]个回合，额外抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0,
+    "Turns": 4.0
+   }
+  },
+  "Pomander": {
+   "key": "POMANDER",
+   "name": "Pomander",
+   "name_zh": "橙型香盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Upgrade[/gold] a card.",
+   "text_zh": "拾起时，[gold]升级[/gold]一张牌。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "PotionBelt": {
+   "key": "POTION_BELT",
+   "name": "Potion Belt",
+   "name_zh": "药水腰带",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Upon pickup, gain [blue]{PotionSlots}[/blue] potion {PotionSlots:plural:slot|slots}.",
+   "text_zh": "拾起时，获得[blue]{PotionSlots}[/blue]个药水栏位。",
+   "vars": {
+    "PotionSlots": 2.0
+   }
+  },
+  "PowerCell": {
+   "key": "POWER_CELL",
+   "name": "Power Cell",
+   "name_zh": "能量电池",
+   "pool": "Defect",
+   "rarity": "Rare",
+   "text": "At the start of each combat, add [blue]{Cards}[/blue] zero-cost cards from your [gold]Draw Pile[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "在每场战斗开始时，将[blue]{Cards}[/blue]张耗能为0的卡牌从你的[gold]抽牌堆[/gold]放入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "PrayerWheel": {
+   "key": "PRAYER_WHEEL",
+   "name": "Prayer Wheel",
+   "name_zh": "转经轮",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Normal enemies drop an additional card reward.",
+   "text_zh": "普通敌人额外掉落一次卡牌奖励。"
+  },
+  "PrecariousShears": {
+   "key": "PRECARIOUS_SHEARS",
+   "name": "Precarious Shears",
+   "name_zh": "松动羊毛剪",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] {Cards:plural:card|cards} from your [gold]Deck[/gold] and lose [blue]{Damage}[/blue] HP.",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中移除[blue]{Cards}[/blue]张牌并失去[blue]{Damage}[/blue]点生命。",
+   "vars": {
+    "Cards": 2.0,
+    "Damage": 16.0
+   }
+  },
+  "PreciseScissors": {
+   "key": "PRECISE_SCISSORS",
+   "name": "Precise Scissors",
+   "name_zh": "精准剪刀",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] {Cards:plural:card|cards} from your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中移除[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "PreservedFog": {
+   "key": "PRESERVED_FOG",
+   "name": "Preserved Fog",
+   "name_zh": "腌制活雾",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, remove [blue]{Cards}[/blue] {Cards:plural:card|cards} from your [gold]Deck[/gold]. Add [red]Folly[/red] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从你的[gold]牌组[/gold]中移除[blue]{Cards}[/blue]张牌。将一张[red]愚行[/red]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "PrismaticGem": {
+   "key": "PRISMATIC_GEM",
+   "name": "Prismatic Gem",
+   "name_zh": "棱彩宝石",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. Card rewards now contain cards from other colors.",
+   "text_zh": "在每个回合开始时获得{Energy:energyIcons()}。卡牌奖励现在会包含其他颜色的卡牌。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "PumpkinCandle": {
+   "key": "PUMPKIN_CANDLE",
+   "name": "Pumpkin Candle",
+   "name_zh": "南瓜蜡烛",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. Extinguishes after [blue]{CombatCount}[/blue] combats. Can be [gold]Kindled[/gold] at [gold]Rest Sites[/gold].",
+   "text_zh": "在每个回合开始时获得{Energy:energyIcons()}。这件遗物会在[blue]{CombatCount}[/blue]场战斗后熄灭。可以在[gold]休息处[/gold]为其[gold]添火[/gold]。",
+   "vars": {
+    "CombatCount": 5.0,
+    "Energy": 1.0
+   }
+  },
+  "PunchDagger": {
+   "key": "PUNCH_DAGGER",
+   "name": "Punch Dagger",
+   "name_zh": "拳刃",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, [gold]Enchant[/gold] an Attack with [purple]Momentum[/purple] [blue]{Momentum}[/blue].",
+   "text_zh": "拾起时，选择一张攻击牌为它[gold]附魔[/gold]：[purple]动量[/purple][blue]{Momentum}[/blue]。",
+   "vars": {
+    "Momentum": 5.0
+   }
+  },
+  "RadiantPearl": {
+   "key": "RADIANT_PEARL",
+   "name": "Radiant Pearl",
+   "name_zh": "发光珍珠",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of each combat, add [blue]{Cards}[/blue] [gold]{Cards:plural:Luminesce|Luminesces}[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "在每场战斗开始时，将[blue]{Cards}[/blue]张[gold]冷光[/gold]加入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "RainbowRing": {
+   "key": "RAINBOW_RING",
+   "name": "Rainbow Ring",
+   "name_zh": "彩虹戒指",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "The first time you play an Attack, Skill, and Power each turn, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold] and [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "每回合，你第一次打出攻击牌、技能牌和能力牌各一张时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]和[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "DexterityPower": 1.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "RazorTooth": {
+   "key": "RAZOR_TOOTH",
+   "name": "Razor Tooth",
+   "name_zh": "剃刀牙",
+   "pool": "Event",
+   "rarity": "Rare",
+   "text": "Every time you play an Attack or Skill, [gold]Upgrade[/gold] it for the remainder of combat.",
+   "text_zh": "你打出攻击牌和技能牌时，将其在本场战斗内[gold]升级[/gold]。"
+  },
+  "RedMask": {
+   "key": "RED_MASK",
+   "name": "Red Mask",
+   "name_zh": "红面具",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "At the start of each combat, apply [blue]{WeakPower}[/blue] [gold]Weak[/gold] to ALL enemies.",
+   "text_zh": "在每场战斗开始时，给于所有敌人[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
+   "vars": {
+    "WeakPower": 1.0
+   }
+  },
+  "RedSkull": {
+   "key": "RED_SKULL",
+   "name": "Red Skull",
+   "name_zh": "红头骨",
+   "pool": "Ironclad",
+   "rarity": "Common",
+   "text": "While your HP is at or below [blue]{HpThreshold}%[/blue], you have [blue]{StrengthPower}[/blue] additional [gold]Strength[/gold].",
+   "text_zh": "当你的生命值低于或等于[blue]{HpThreshold}%[/blue]时，你额外获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]",
+   "vars": {
+    "HpThreshold": 50.0,
+    "StrengthPower": 3.0
+   }
+  },
+  "RegalPillow": {
+   "key": "REGAL_PILLOW",
+   "name": "Regal Pillow",
+   "name_zh": "皇家枕头",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Whenever you [gold]Rest[/gold], heal an additional [blue]{Heal}[/blue] HP.",
+   "text_zh": "在[gold]休息[/gold]时，额外回复[blue]{Heal}[/blue]点生命。",
+   "vars": {
+    "Heal": 15.0
+   }
+  },
+  "Regalite": {
+   "key": "REGALITE",
+   "name": "Regalite",
+   "name_zh": "君王矿石",
+   "pool": "Regent",
+   "rarity": "Uncommon",
+   "text": "Whenever you create a card, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你生成一张牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 2.0
+   }
+  },
+  "ReptileTrinket": {
+   "key": "REPTILE_TRINKET",
+   "name": "Reptile Trinket",
+   "name_zh": "爬行动物饰品",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Whenever you use a potion, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold] this turn.",
+   "text_zh": "当你使用药水时，在本回合获得[blue]{StrengthPower}[/blue][gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 3.0
+   }
+  },
+  "RingOfTheDrake": {
+   "key": "RING_OF_THE_DRAKE",
+   "name": "Ring of the Drake",
+   "name_zh": "长蛇戒指",
+   "pool": "Event",
+   "rarity": "Starter",
+   "text": "At the start of your first {Turns:plural:turn|[blue]{}[/blue] turns}, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}.",
+   "text_zh": "在战斗开始时的前[blue]{Turns}[/blue]个回合，你额外抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0,
+    "Turns": 3.0
+   }
+  },
+  "RingOfTheSnake": {
+   "key": "RING_OF_THE_SNAKE",
+   "name": "Ring of the Snake",
+   "name_zh": "蛇之戒指",
+   "pool": "Silent",
+   "rarity": "Starter",
+   "text": "At the start of each combat, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}.",
+   "text_zh": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "RingingTriangle": {
+   "key": "RINGING_TRIANGLE",
+   "name": "Ringing Triangle",
+   "name_zh": "三角铃鼓",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "[gold]Retain[/gold] your [gold]Hand[/gold] on the first turn of combat.",
+   "text_zh": "在每场战斗的第一回合[gold]保留[/gold]你的[gold]手牌[/gold]。"
+  },
+  "RippleBasin": {
+   "key": "RIPPLE_BASIN",
+   "name": "Ripple Basin",
+   "name_zh": "波纹水盆",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "If you did not play any Attacks during your turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "如果你在本回合中没有打出过攻击牌，则获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 4.0
+   }
+  },
+  "RoyalPoison": {
+   "key": "ROYAL_POISON",
+   "name": "Royal Poison",
+   "name_zh": "王室猛毒",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of each combat, lose [blue]{Damage}[/blue] HP.",
+   "text_zh": "在每场战斗开始时，失去[blue]{Damage}[/blue]点生命。",
+   "vars": {
+    "Damage": 4.0
+   }
+  },
+  "RoyalStamp": {
+   "key": "ROYAL_STAMP",
+   "name": "Royal Stamp",
+   "name_zh": "王室印章",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Upon pickup, choose an Attack or Skill in your [gold]Deck[/gold] to [gold]Enchant[/gold] with [purple]{Enchantment}[/purple].",
+   "text_zh": "拾起时，从[gold]牌组[/gold]中选择一张攻击牌或技能牌，为它[gold]附魔[/gold]：[purple]{Enchantment}[/purple]。",
+   "vars": {
+    "Cards": 1.0
+   }
+  },
+  "RuinedHelmet": {
+   "key": "RUINED_HELMET",
+   "name": "Ruined Helmet",
+   "name_zh": "损毁头盔",
+   "pool": "Ironclad",
+   "rarity": "Rare",
+   "text": "The first time you gain [gold]Strength[/gold] each combat, double the amount gained.",
+   "text_zh": "你在每场战斗中第一次获得的[gold]力量[/gold]值翻倍。"
+  },
+  "RunicCapacitor": {
+   "key": "RUNIC_CAPACITOR",
+   "name": "Runic Capacitor",
+   "name_zh": "符文电容器",
+   "pool": "Defect",
+   "rarity": "Shop",
+   "text": "Start each combat with [blue]{Repeat}[/blue] additional [gold]Orb Slots[/gold].",
+   "text_zh": "每场战斗开始时，获得[blue]{Repeat}[/blue]个额外[gold]充能球栏位[/gold]。",
+   "vars": {
+    "Repeat": 3.0
+   }
+  },
+  "RunicPyramid": {
+   "key": "RUNIC_PYRAMID",
+   "name": "Runic Pyramid",
+   "name_zh": "符文金字塔",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the end of your turn, you no longer discard your [gold]Hand[/gold].",
+   "text_zh": "你在回合结束时不再自动丢弃所有[gold]手牌[/gold]。"
+  },
+  "Sai": {
+   "key": "SAI",
+   "name": "Sai",
+   "name_zh": "钗",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "在你的回合开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 7.0
+   }
+  },
+  "SandCastle": {
+   "key": "SAND_CASTLE",
+   "name": "Sand Castle",
+   "name_zh": "沙堡",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:card|cards}.",
+   "text_zh": "拾起时，随机[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 6.0
+   }
+  },
+  "ScreamingFlagon": {
+   "key": "SCREAMING_FLAGON",
+   "name": "Screaming Flagon",
+   "name_zh": "尖叫酒壶",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "If you end your turn with no cards in your [gold]Hand[/gold], deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "如果你在回合结束时没有任何[gold]手牌[/gold]，则对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 20.0
+   }
+  },
+  "ScrollBoxes": {
+   "key": "SCROLL_BOXES",
+   "name": "Scroll Boxes",
+   "name_zh": "卷轴箱",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, choose [blue]1[/blue] of [blue]2[/blue] packs of cards to add to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。"
+  },
+  "SealOfGold": {
+   "key": "SEAL_OF_GOLD",
+   "name": "Seal of Gold",
+   "name_zh": "黄金印",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, spend [blue]{Gold}[/blue] [gold]Gold[/gold] to gain {Energy:energyIcons()}.",
+   "text_zh": "在你的回合开始时，花费[blue]{Gold}[/blue][gold]金币[/gold]来获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0,
+    "Gold": 5.0
+   }
+  },
+  "SelfFormingClay": {
+   "key": "SELF_FORMING_CLAY",
+   "name": "Self-Forming Clay",
+   "name_zh": "自成型黏土",
+   "pool": "Ironclad",
+   "rarity": "Uncommon",
+   "text": "Whenever you lose HP in combat, gain [blue]{BlockNextTurn}[/blue] [gold]Block[/gold] next turn.",
+   "text_zh": "每当你在战斗中失去生命，就在下回合获得[blue]{BlockNextTurn}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "BlockNextTurn": 3.0
+   }
+  },
+  "SereTalon": {
+   "key": "SERE_TALON",
+   "name": "Sere Talon",
+   "name_zh": "原初之爪",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]{Curses}[/blue] random [red]Curses[/red] and [blue]{Wishes}[/blue] [purple]Wishes[/purple] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]{Curses}[/blue]张随机[red]诅咒[/red]牌和[blue]{Wishes}[/blue]张[purple]许愿[/purple]加入你的[gold]牌组[/gold]。",
+   "vars": {
+    "Curses": 2.0,
+    "Wishes": 3.0
+   }
+  },
+  "Shovel": {
+   "key": "SHOVEL",
+   "name": "Shovel",
+   "name_zh": "铲子",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "You can now dig at [gold]Rest Sites[/gold] to obtain a random [gold]Relic[/gold].",
+   "text_zh": "现在你可以在[gold]休息处[/gold]挖掘[gold]遗物[/gold]。"
+  },
+  "Shuriken": {
+   "key": "SHURIKEN",
+   "name": "Shuriken",
+   "name_zh": "手里剑",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Every time you play [blue]{Cards}[/blue] Attacks in a single turn, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "Cards": 3.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "SignetRing": {
+   "key": "SIGNET_RING",
+   "name": "Signet Ring",
+   "name_zh": "图章戒指",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, gain [blue]{Gold}[/blue] [gold]Gold[/gold].",
+   "text_zh": "拾起时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "vars": {
+    "Gold": 999.0
+   }
+  },
+  "SilkenTress": {
+   "key": "SILKEN_TRESS",
+   "name": "Silken Tress",
+   "name_zh": "华美发束",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, lose all [gold]Gold[/gold]. [gold]Enchant[/gold] all cards in the first card reward with [purple]Glam[/purple].",
+   "text_zh": "拾起时，失去所有[gold]金币[/gold]。为第一次卡牌奖励中的所有牌[gold]附魔[/gold]：[purple]华彩[/purple]。"
+  },
+  "SilverCrucible": {
+   "key": "SILVER_CRUCIBLE",
+   "name": "Silver Crucible",
+   "name_zh": "白银熔炉",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "The first [blue]{Cards}[/blue] card rewards you see are [gold]Upgraded[/gold]. The first Treasure Chest you open is [red]empty[/red].",
+   "text_zh": "你遇到的前[blue]{Cards}[/blue]次卡牌奖励将是被[gold]升级[/gold]过的。你打开的第一个宝箱将是[red]空的[/red]",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "SlingOfCourage": {
+   "key": "SLING_OF_COURAGE",
+   "name": "Sling of Courage",
+   "name_zh": "勇气投石索",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Start each [gold]Elite[/gold] combat with [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在与[gold]精英[/gold]敌人战斗时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 2.0
+   }
+  },
+  "SmallCapsule": {
+   "key": "SMALL_CAPSULE",
+   "name": "Small Capsule",
+   "name_zh": "小型扭蛋",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain a random [gold]Relic[/gold].",
+   "text_zh": "拾起时，获得一件随机[gold]遗物[/gold]。"
+  },
+  "SneckoEye": {
+   "key": "SNECKO_EYE",
+   "name": "Snecko Eye",
+   "name_zh": "异蛇之眼",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, draw [blue]{Cards}[/blue] additional {Cards:plural:card|cards}. Start each combat [red]Confused[/red].",
+   "text_zh": "每回合多抽[blue]{Cards}[/blue]张牌。每场战斗开始时获得[red]混乱[/red]效果。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "SneckoSkull": {
+   "key": "SNECKO_SKULL",
+   "name": "Snecko Skull",
+   "name_zh": "异蛇头骨",
+   "pool": "Silent",
+   "rarity": "Common",
+   "text": "Whenever you apply [gold]Poison[/gold], apply an additional [blue]{PoisonPower}[/blue] [gold]Poison[/gold].",
+   "text_zh": "每当你给予敌人[gold]中毒[/gold]时，所给予的[gold]中毒[/gold]层数增加[blue]{PoisonPower}[/blue]层。",
+   "vars": {
+    "PoisonPower": 1.0
+   }
+  },
+  "Sozu": {
+   "key": "SOZU",
+   "name": "Sozu",
+   "name_zh": "添水",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. You can no longer obtain potions.",
+   "text_zh": "你无法再获得药水。在每回合开始时获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "SparklingRouge": {
+   "key": "SPARKLING_ROUGE",
+   "name": "Sparkling Rouge",
+   "name_zh": "闪亮口红",
+   "pool": "Event",
+   "rarity": "Uncommon",
+   "text": "At the start of your [blue]3rd[/blue] turn, gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold] and [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "在你的第[blue]3[/blue]回合开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]和[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "vars": {
+    "DexterityPower": 1.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "SpikedGauntlets": {
+   "key": "SPIKED_GAUNTLETS",
+   "name": "Spiked Gauntlets",
+   "name_zh": "带刺手甲",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. Powers cost [blue]1[/blue] more {energyPrefix:energyIcons(1)}.",
+   "text_zh": "在每回合开始时获得{Energy:energyIcons()}。能力牌的耗能增加[blue]1[/blue]{energyPrefix:energyIcons(1)}。",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "StoneCalendar": {
+   "key": "STONE_CALENDAR",
+   "name": "Stone Calendar",
+   "name_zh": "历石",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the end of turn [blue]{DamageTurn}[/blue], deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 52.0,
+    "DamageTurn": 7.0
+   }
+  },
+  "StoneCracker": {
+   "key": "STONE_CRACKER",
+   "name": "Stone Cracker",
+   "name_zh": "碎石钻",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:card|cards} in your [gold]Draw Pile[/gold] for the rest of combat.",
+   "text_zh": "在每场战斗开始时，在本场战斗中随机[gold]升级[/gold]你[gold]抽牌堆[/gold]中的[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "StoneHumidifier": {
+   "key": "STONE_HUMIDIFIER",
+   "name": "Stone Humidifier",
+   "name_zh": "石炉加湿器",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Whenever you [gold]Rest[/gold] at a [gold]Rest Site[/gold], raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "每当你在[gold]休息处[/gold][gold]休息[/gold]时，将你的最大生命值提升[blue]{MaxHp}[/blue]点。",
+   "vars": {
+    "MaxHp": 5.0
+   }
+  },
+  "Storybook": {
+   "key": "STORYBOOK",
+   "name": "Storybook",
+   "name_zh": "故事书",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]1[/blue] [gold]Brightest Flame[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]1[/blue]张[gold]至亮之焰[/gold]添加到你的[gold]牌组[/gold]中。"
+  },
+  "Strawberry": {
+   "key": "STRAWBERRY",
+   "name": "Strawberry",
+   "name_zh": "草莓",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Upon pickup, raise your Max HP by [blue]{MaxHp}[/blue].",
+   "text_zh": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+   "vars": {
+    "MaxHp": 7.0
+   }
+  },
+  "StrikeDummy": {
+   "key": "STRIKE_DUMMY",
+   "name": "Strike Dummy",
+   "name_zh": "打击木偶",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Cards containing “Strike” deal [blue]{ExtraDamage}[/blue] additional damage.",
+   "text_zh": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+   "vars": {
+    "ExtraDamage": 3.0
+   }
+  },
+  "SturdyClamp": {
+   "key": "STURDY_CLAMP",
+   "name": "Sturdy Clamp",
+   "name_zh": "坚固钳子",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Up to [blue]{Block}[/blue] [gold]Block[/gold] persists across turns.",
+   "text_zh": "可以跨回合保留最多[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 10.0
+   }
+  },
+  "SwordOfJade": {
+   "key": "SWORD_OF_JADE",
+   "name": "Sword of Jade",
+   "name_zh": "玉之剑",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Start each combat with [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 3.0
+   }
+  },
+  "SwordOfStone": {
+   "key": "SWORD_OF_STONE",
+   "name": "Sword of Stone",
+   "name_zh": "石之剑",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Transforms into a powerful [gold]Relic[/gold] after defeating [blue]{Elites}[/blue] [gold]{Elites:plural:Elite|Elites}[/gold].",
+   "text_zh": "在击败[blue]{Elites}[/blue]名[gold]精英[/gold]敌人之后将变化为一件强力[gold]遗物[/gold]。",
+   "vars": {
+    "Elites": 5.0
+   }
+  },
+  "SymbioticVirus": {
+   "key": "SYMBIOTIC_VIRUS",
+   "name": "Symbiotic Virus",
+   "name_zh": "共生病毒",
+   "pool": "Defect",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, [gold]Channel[/gold] [blue]{Dark}[/blue] [gold]Dark[/gold].",
+   "text_zh": "在每场战斗开始时，[gold]生成[/gold][blue]{Dark}[/blue]个[gold]黑暗[/gold]充能球。",
+   "vars": {
+    "Dark": 1.0
+   }
+  },
+  "TanxsWhistle": {
+   "key": "TANXS_WHISTLE",
+   "name": "Tanx's Whistle",
+   "name_zh": "坦克斯的哨子",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, add [blue]1[/blue] [gold]Whistle[/gold] to your [gold]Deck[/gold].",
+   "text_zh": "拾起时，将[blue]1[/blue]张[gold]吹哨[/gold]加入你的[gold]牌组[/gold]。"
+  },
+  "TeaOfDiscourtesy": {
+   "key": "TEA_OF_DISCOURTESY",
+   "name": "Tea of Discourtesy",
+   "name_zh": "无礼之茶",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "At the start of the next combat, shuffle [blue]{DazedCount}[/blue] [gold]Dazed[/gold] into your [gold]Draw Pile[/gold].",
+   "text_zh": "在下一场战斗开始时，将[blue]{DazedCount}[/blue]张[gold]晕眩[/gold]放入你的[gold]抽牌堆[/gold]。",
+   "vars": {
+    "DazedCount": 2.0,
+    "Heal": 1.0
+   }
+  },
+  "TheAbacus": {
+   "key": "THE_ABACUS",
+   "name": "The Abacus",
+   "name_zh": "算盘",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "Whenever you shuffle your [gold]Draw Pile[/gold], gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "你每次将[gold]抽牌堆[/gold]洗牌时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 6.0
+   }
+  },
+  "TheBoot": {
+   "key": "THE_BOOT",
+   "name": "The Boot",
+   "name_zh": "发条靴",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Whenever you would deal [blue]{DamageThreshold}[/blue] or less unblocked attack damage, increase it to [blue]{DamageMinimum}[/blue].",
+   "text_zh": "每当你造成小于等于[blue]{DamageThreshold}[/blue]点未被格挡的攻击伤害时，将伤害提升为[blue]{DamageMinimum}[/blue]。",
+   "vars": {
+    "DamageMinimum": 5.0,
+    "DamageThreshold": 4.0
+   }
+  },
+  "TheCourier": {
+   "key": "THE_COURIER",
+   "name": "The Courier",
+   "name_zh": "送货员",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "The merchant no longer runs out of cards, relics, or potions and his prices are reduced by [blue]{Discount}%[/blue].",
+   "text_zh": "商人的卡牌、遗物和药水不再会卖光，并且所有商品打折[blue]{Discount}%[/blue]。",
+   "vars": {
+    "Discount": 20.0
+   }
+  },
+  "ThrowingAxe": {
+   "key": "THROWING_AXE",
+   "name": "Throwing Axe",
+   "name_zh": "投斧",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "The first card you play each combat is played an extra time.",
+   "text_zh": "你在每场战斗中打出的第一张牌会多打出一次。"
+  },
+  "Tingsha": {
+   "key": "TINGSHA",
+   "name": "Tingsha",
+   "name_zh": "铜钹",
+   "pool": "Silent",
+   "rarity": "Uncommon",
+   "text": "Whenever you discard a card during your turn, deal [blue]{Damage}[/blue] damage to a random enemy for each card discarded.",
+   "text_zh": "你每在你的回合丢弃一张牌，就对一名随机敌人造成[blue]{Damage}[/blue]点伤害。",
+   "vars": {
+    "Damage": 3.0
+   }
+  },
+  "TinyMailbox": {
+   "key": "TINY_MAILBOX",
+   "name": "Tiny Mailbox",
+   "name_zh": "小邮箱",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Whenever you [gold]Rest[/gold], procure [blue]2[/blue] random potions.",
+   "text_zh": "每当你[gold]休息[/gold]时，获得[blue]2[/blue]瓶随机药水。"
+  },
+  "ToastyMittens": {
+   "key": "TOASTY_MITTENS",
+   "name": "Toasty Mittens",
+   "name_zh": "烘焙手套",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "At the start of your turn, [gold]Exhaust[/gold] the top card of your [gold]Draw Pile[/gold] and gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在你的回合开始时，[gold]消耗[/gold]你[gold]抽牌堆[/gold]顶部的牌并获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 1.0
+   }
+  },
+  "Toolbox": {
+   "key": "TOOLBOX",
+   "name": "Toolbox",
+   "name_zh": "工具箱",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "At the start of each combat, choose [blue]1[/blue] of [blue]{Cards}[/blue] random Colorless cards and add the chosen card into your [gold]Hand[/gold].",
+   "text_zh": "在每场战斗开始时，从[blue]{Cards}[/blue]张随机无色牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "TouchOfOrobas": {
+   "key": "TOUCH_OF_OROBAS",
+   "name": "Touch of Orobas",
+   "name_zh": "欧洛巴斯之触",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, replace {StarterRelic.StringValue:cond:[gold]{StarterRelic}[/gold] with [gold]{UpgradedRelic}[/gold]|your starter [gold]Relic[/gold] with an [gold]Ancient[/gold] version}.",
+   "text_zh": "拾起时，将{StarterRelic.StringValue:cond:[gold]{StarterRelic}[/gold]替换为[gold]{UpgradedRelic}[/gold]|你的初始[gold]遗物[/gold]替换为[gold]先古[/gold]版本}。"
+  },
+  "ToughBandages": {
+   "key": "TOUGH_BANDAGES",
+   "name": "Tough Bandages",
+   "name_zh": "结实绷带",
+   "pool": "Silent",
+   "rarity": "Rare",
+   "text": "Whenever you discard a card during your turn, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "你每在你的回合丢弃一张牌，就获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 3.0
+   }
+  },
+  "ToxicEgg": {
+   "key": "TOXIC_EGG",
+   "name": "Toxic Egg",
+   "name_zh": "毒素之蛋",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you add a Skill into your [gold]Deck[/gold], [gold]Upgrade[/gold] it.",
+   "text_zh": "每当你获得[gold]技能牌[/gold]时，将其[gold]升级[/gold]。"
+  },
+  "ToyBox": {
+   "key": "TOY_BOX",
+   "name": "Toy Box",
+   "name_zh": "玩具盒",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, obtain [blue]{Relics}[/blue] [gold]Wax {Relics:plural:Relic|Relics}[/gold]. Every [blue]{Combats}[/blue] {Combats:plural:combat|combats}, your left-most [gold]Wax Relic[/gold] will melt away.",
+   "text_zh": "拾起时，获得[blue]{Relics}[/blue]件[gold]蜡制遗物[/gold]。每经过[blue]{Combats}[/blue]场战斗，你最左侧的[gold]蜡制遗物[/gold]将会融化。",
+   "vars": {
+    "Combats": 3.0,
+    "Relics": 4.0
+   }
+  },
+  "TriBoomerang": {
+   "key": "TRI_BOOMERANG",
+   "name": "Tri-Boomerang",
+   "name_zh": "三刃回旋镖",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Choose [blue]{Cards}[/blue] {Cards:plural:Attack|Attacks} in your [gold]Deck[/gold]. [gold]Enchant[/gold] them with [purple]Instinct[/purple].",
+   "text_zh": "从你的[gold]牌组[/gold]中选择[blue]{Cards}[/blue]张攻击牌。为这些牌[gold]附魔[/gold]：[purple]本能[/purple]。",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "TungstenRod": {
+   "key": "TUNGSTEN_ROD",
+   "name": "Tungsten Rod",
+   "name_zh": "钨合金棍",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you would lose HP, lose [blue]{HpLossReduction}[/blue] less.",
+   "text_zh": "你每次失去生命时，减少失去的生命值[blue]{HpLossReduction}[/blue]点。",
+   "vars": {
+    "HpLossReduction": 1.0
+   }
+  },
+  "TuningFork": {
+   "key": "TUNING_FORK",
+   "name": "Tuning Fork",
+   "name_zh": "音叉",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "Every time you play [blue]{Cards}[/blue] Skills, gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "你每打出[blue]{Cards}[/blue]张技能牌，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "vars": {
+    "Block": 7.0,
+    "Cards": 10.0
+   }
+  },
+  "TwistedFunnel": {
+   "key": "TWISTED_FUNNEL",
+   "name": "Twisted Funnel",
+   "name_zh": "扭曲漏斗",
+   "pool": "Silent",
+   "rarity": "Uncommon",
+   "text": "At the start of each combat, apply [blue]{PoisonPower}[/blue] [gold]Poison[/gold] to ALL enemies.",
+   "text_zh": "在每场战斗开始时，给予所有敌人[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+   "vars": {
+    "PoisonPower": 4.0
+   }
+  },
+  "UnceasingTop": {
+   "key": "UNCEASING_TOP",
+   "name": "Unceasing Top",
+   "name_zh": "不休陀螺",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Whenever you have no cards in [gold]Hand[/gold] during your turn, draw a card.",
+   "text_zh": "在你的回合，当你没有[gold]手牌[/gold]时，抽一张牌。"
+  },
+  "UndyingSigil": {
+   "key": "UNDYING_SIGIL",
+   "name": "Undying Sigil",
+   "name_zh": "不死符文",
+   "pool": "Necrobinder",
+   "rarity": "Shop",
+   "text": "Enemies with at least as much [gold]Doom[/gold] as HP deal [blue]50%[/blue] less damage.",
+   "text_zh": "当敌人的[gold]灾厄[/gold]层数大于等于其生命值时，它造成的伤害降低[blue]50%[/blue]。",
+   "vars": {
+    "DamageDecrease": 0.5
+   }
+  },
+  "UnsettlingLamp": {
+   "key": "UNSETTLING_LAMP",
+   "name": "Unsettling Lamp",
+   "name_zh": "不安油灯",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Each combat, the first time you play a card that [gold]Debuffs[/gold] an enemy, double its effect.",
+   "text_zh": "你在每场战斗中第一次打出能给予敌人[gold]负面状态[/gold]的牌时，将其效果翻倍。"
+  },
+  "Vajra": {
+   "key": "VAJRA",
+   "name": "Vajra",
+   "name_zh": "金刚杵",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Start each combat with [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "在每场战斗开始时，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "vars": {
+    "StrengthPower": 1.0
+   }
+  },
+  "Vambrace": {
+   "key": "VAMBRACE",
+   "name": "Vambrace",
+   "name_zh": "臂甲",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "text": "The first time you gain [gold]Block[/gold] from a card each combat, double the amount gained.",
+   "text_zh": "每场战斗中，你第一次从卡牌中获得的[gold]格挡[/gold]值翻倍。"
+  },
+  "VelvetChoker": {
+   "key": "VELVET_CHOKER",
+   "name": "Velvet Choker",
+   "name_zh": "天鹅绒颈圈",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. You cannot play more than [blue]{Cards}[/blue] {Cards:plural:card|cards} per turn.",
+   "text_zh": "在每回合开始时获得{Energy:energyIcons()}。你每回合不能打出超过[blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 6.0,
+    "Energy": 1.0
+   }
+  },
+  "VenerableTeaSet": {
+   "key": "VENERABLE_TEA_SET",
+   "name": "Venerable Tea Set",
+   "name_zh": "古茶具套装",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Whenever you enter a [gold]Rest Site[/gold], start the next combat with an additional {Energy:energyIcons()}.",
+   "text_zh": "到达[gold]休息处[/gold]后的下一场战斗开始时额外获得{Energy:energyIcons()}。",
+   "vars": {
+    "Energy": 2.0
+   }
+  },
+  "VeryHotCocoa": {
+   "key": "VERY_HOT_COCOA",
+   "name": "Very Hot Cocoa",
+   "name_zh": "烫嘴可可",
+   "pool": "Shared",
+   "rarity": "Ancient",
+   "text": "Start each combat with an additional [blue]{Energy:energyIcons()}[/blue].",
+   "text_zh": "在每场战斗的第一回合额外获得[blue]{Energy:energyIcons()}[/blue]。",
+   "vars": {
+    "Energy": 4.0
+   }
+  },
+  "VexingPuzzlebox": {
+   "key": "VEXING_PUZZLEBOX",
+   "name": "Vexing Puzzlebox",
+   "name_zh": "烦人机关盒",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "At the start of each combat, add a random card into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "在每场战斗开始时，将一张随机卡牌加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。"
+  },
+  "VitruvianMinion": {
+   "key": "VITRUVIAN_MINION",
+   "name": "Vitruvian Minion",
+   "name_zh": "维特鲁威仆从",
+   "pool": "Regent",
+   "rarity": "Shop",
+   "text": "Cards containing “Minion” deal double damage and gain double [gold]Block[/gold].",
+   "text_zh": "名字中有“仆从”的卡牌造成双倍的伤害与[gold]格挡[/gold]。"
+  },
+  "WarHammer": {
+   "key": "WAR_HAMMER",
+   "name": "War Hammer",
+   "name_zh": "战锤",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Whenever you kill an [gold]Elite[/gold], [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:card|cards}.",
+   "text_zh": "每当你击败一名[gold]精英[/gold]敌人的时候，随机[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 4.0
+   }
+  },
+  "WarPaint": {
+   "key": "WAR_PAINT",
+   "name": "War Paint",
+   "name_zh": "战纹涂料",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Upon pickup, [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:Skill|Skills}.",
+   "text_zh": "拾起时，随机[gold]升级[/gold][blue]{Cards}[/blue]张技能牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "Whetstone": {
+   "key": "WHETSTONE",
+   "name": "Whetstone",
+   "name_zh": "磨刀石",
+   "pool": "Shared",
+   "rarity": "Common",
+   "text": "Upon pickup, [gold]Upgrade[/gold] [blue]{Cards}[/blue] random {Cards:plural:Attack|Attacks}.",
+   "text_zh": "拾起时，随机[gold]升级[/gold][blue]{Cards}[/blue]张攻击牌。",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "WhisperingEarring": {
+   "key": "WHISPERING_EARRING",
+   "name": "Whispering Earring",
+   "name_zh": "低语耳环",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Gain {Energy:energyIcons()} at the start of each turn. [red]Vakuu plays your first turn for you.[/red]",
+   "text_zh": "在每个回合开始时，获得{Energy:energyIcons()}。[red]瓦库将接管你的第一回合。[/red]",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "WhiteBeastStatue": {
+   "key": "WHITE_BEAST_STATUE",
+   "name": "White Beast Statue",
+   "name_zh": "白兽雕像",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "Potions always appear in combat rewards.",
+   "text_zh": "战斗结束后必定掉落药水。"
+  },
+  "WhiteStar": {
+   "key": "WHITE_STAR",
+   "name": "White Star",
+   "name_zh": "白星",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "text": "[gold]Elites[/gold] drop an additional [gold]Rare[/gold] card reward.",
+   "text_zh": "[gold]精英[/gold]敌人额外掉落一次[gold]稀有[/gold]卡牌奖励。"
+  },
+  "WingCharm": {
+   "key": "WING_CHARM",
+   "name": "Wing Charm",
+   "name_zh": "羽翼护符",
+   "pool": "Shared",
+   "rarity": "Shop",
+   "text": "A random card in each card reward is [gold]Enchanted[/gold] with [purple]Swift[/purple] [blue]{SwiftAmount}[/blue].",
+   "text_zh": "每次卡牌奖励中，都会有随机一张牌被[gold]附魔[/gold]：[purple]迅捷[/purple][blue]{SwiftAmount}[/blue]。",
+   "vars": {
+    "SwiftAmount": 1.0
+   }
+  },
+  "WingedBoots": {
+   "key": "WINGED_BOOTS",
+   "name": "Winged Boots",
+   "name_zh": "羽翼之靴",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "You may ignore paths when choosing the next rooms to travel to [blue]{Rooms}[/blue] times.",
+   "text_zh": "你在选择下一层的房间时有[blue]{Rooms}[/blue]次机会可以无视当前的路线。",
+   "vars": {
+    "Rooms": 3.0
+   }
+  },
+  "WongoCustomerAppreciationBadge": {
+   "key": "WONGO_CUSTOMER_APPRECIATION_BADGE",
+   "name": "Wongo Customer Appreciation Badge",
+   "name_zh": "旺购客户感恩徽章",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Does nothing.",
+   "text_zh": "没有任何作用。"
+  },
+  "WongosMysteryTicket": {
+   "key": "WONGOS_MYSTERY_TICKET",
+   "name": "Wongo's Mystery Ticket",
+   "name_zh": "旺购神秘券",
+   "pool": "Event",
+   "rarity": "Event",
+   "text": "Receive [blue]{Repeat}[/blue] random [gold]{Repeat:plural:Relic|Relics}[/gold] after [blue]{RemainingCombats}[/blue] {RemainingCombats:plural:combat|combats}.",
+   "text_zh": "在[blue]{RemainingCombats}[/blue]场战斗后，获得随机[blue]{Repeat}[/blue]件[gold]遗物[/gold]。",
+   "vars": {
+    "RemainingCombats": 5.0,
+    "Repeat": 3.0
+   }
+  },
+  "YummyCookie": {
+   "key": "YUMMY_COOKIE",
+   "name": "Yummy Cookie",
+   "name_zh": "美味饼干",
+   "pool": "Event",
+   "rarity": "Ancient",
+   "text": "Upon pickup, [gold]Upgrade[/gold] [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "拾起时，[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+   "vars": {
+    "Cards": 4.0
+   }
+  }
+ }
+}

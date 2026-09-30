@@ -1,0 +1,1262 @@
+{
+ "game_version": "v0.107.1",
+ "potions": {
+  "Ashwater": {
+   "effects": [
+    {
+     "kind": "exhaust",
+     "op": "choose"
+    }
+   ],
+   "key": "ASHWATER",
+   "name": "Ashwater",
+   "name_zh": "灰水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "[gold]Exhaust[/gold] any number of cards in your [gold]Hand[/gold].",
+   "text_zh": "[gold]消耗[/gold]你[gold]手牌[/gold]中的任意张牌。",
+   "usage": "CombatOnly"
+  },
+  "AttackPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "select",
+     "op": "choose"
+    }
+   ],
+   "key": "ATTACK_POTION",
+   "name": "Attack Potion",
+   "name_zh": "攻击药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Choose [blue]1[/blue] of [blue]3[/blue] random Attack cards to add into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "BeetleJuice": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "ShrinkPower",
+     "to": "enemy",
+     "var": "Repeat"
+    }
+   ],
+   "key": "BEETLE_JUICE",
+   "name": "Beetle Juice",
+   "name_zh": "甲虫汁",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyEnemy",
+   "text": "Enemy's attacks deal [blue]{DamageDecrease}%[/blue] less damage {Repeat:plural:next turn|for the next [blue]{}[/blue] turns}.",
+   "text_zh": "敌人的攻击在下[blue]{Repeat}[/blue]个回合中造成的伤害减少[blue]{DamageDecrease}%[/blue]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "DamageDecrease": 30.0,
+    "Repeat": 4.0
+   }
+  },
+  "BlessingOfTheForge": {
+   "complex": true,
+   "effects": [],
+   "key": "BLESSING_OF_THE_FORGE",
+   "name": "Blessing of the Forge",
+   "name_zh": "熔炉的祝福",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "[gold]Upgrade[/gold] all cards in your [gold]Hand[/gold] for the rest of combat.",
+   "text_zh": "在本场战斗中[gold]升级[/gold]你[gold]手牌[/gold]中的所有牌。",
+   "usage": "CombatOnly"
+  },
+  "BlockPotion": {
+   "effects": [
+    {
+     "op": "block",
+     "var": "Block"
+    }
+   ],
+   "key": "BLOCK_POTION",
+   "name": "Block Potion",
+   "name_zh": "格挡药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{Block}[/blue] [gold]Block[/gold].",
+   "text_zh": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Block": 12.0
+   }
+  },
+  "BloodPotion": {
+   "effects": [
+    {
+     "op": "heal",
+     "var": "Heal"
+    }
+   ],
+   "key": "BLOOD_POTION",
+   "name": "Blood Potion",
+   "name_zh": "鲜血药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Heal for [green]{HealPercent}%[/green] of your Max HP.",
+   "text_zh": "回复你最大生命值的[green]{HealPercent}%[/green]。",
+   "usage": "AnyTime",
+   "vars": {
+    "HealPercent": 20.0
+   }
+  },
+  "BoneBrew": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "summon"
+    }
+   ],
+   "key": "BONE_BREW",
+   "name": "Bone Brew",
+   "name_zh": "骨头酿",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "[gold]Summon[/gold] [blue]{Summon}[/blue].",
+   "text_zh": "[gold]召唤[/gold][blue]{Summon}[/blue]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Summon": 15.0
+   }
+  },
+  "BottledPotential": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "draw",
+     "var": "Cards"
+    }
+   ],
+   "key": "BOTTLED_POTENTIAL",
+   "name": "Bottled Potential",
+   "name_zh": "瓶装潜能",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Shuffle ALL your cards into your [gold]Draw Pile[/gold]. Draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "将你的所有牌洗入你的[gold]抽牌堆[/gold]。抽[blue]{Cards}[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 5.0
+   }
+  },
+  "Clarity": {
+   "effects": [
+    {
+     "op": "draw",
+     "var": "Cards"
+    },
+    {
+     "op": "apply",
+     "power": "ClarityPower",
+     "to": "enemy",
+     "var": "ClarityPower"
+    }
+   ],
+   "key": "CLARITY",
+   "name": "Clarity Extract",
+   "name_zh": "明晰提取物",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Draw [blue]{Cards}[/blue] {Cards:plural:card|cards}. At the start of your next {ClarityPower:plural:turn|[blue]{}[/blue] turns}, draw [blue]1[/blue] additional card.",
+   "text_zh": "抽[blue]{Cards}[/blue]张牌。在你的下[blue]{ClarityPower}[/blue]个回合开始时，额外抽[blue]1[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 1.0,
+    "ClarityPower": 3.0
+   }
+  },
+  "ColorlessPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "select",
+     "op": "choose"
+    }
+   ],
+   "key": "COLORLESS_POTION",
+   "name": "Colorless Potion",
+   "name_zh": "无色药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Choose [blue]1[/blue] of [blue]3[/blue] random Colorless cards to add into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "从[blue]3[/blue]张随机无色牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "CosmicConcoction": {
+   "complex": true,
+   "effects": [],
+   "key": "COSMIC_CONCOCTION",
+   "name": "Cosmic Concoction",
+   "name_zh": "宇宙药剂",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Add [blue]{Cards}[/blue] [gold]Upgraded[/gold] Colorless {Cards:plural:card|cards} into your [gold]Hand[/gold].",
+   "text_zh": "将[blue]{Cards}[/blue]张[gold]升级[/gold]的无色牌加入你的[gold]手牌[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "CunningPotion": {
+   "effects": [
+    {
+     "card": "Shiv",
+     "count": 1,
+     "op": "make",
+     "pile": "hand"
+    }
+   ],
+   "key": "CUNNING_POTION",
+   "name": "Cunning Potion",
+   "name_zh": "狡诈药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "Add [blue]{Cards}[/blue] [gold]Upgraded {Cards:plural:Shiv|Shivs}[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "将[blue]{Cards}[/blue]张[gold]小刀+[/gold]加入你的[gold]手牌[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "CureAll": {
+   "effects": [
+    {
+     "op": "energy",
+     "var": "Energy"
+    },
+    {
+     "op": "draw",
+     "var": "Cards"
+    }
+   ],
+   "key": "CURE_ALL",
+   "name": "Cure All",
+   "name_zh": "痊愈药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain {Energy:energyIcons()}. Draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "获得{Energy:energyIcons()}。抽[blue]{Cards}[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 2.0,
+    "Energy": 1.0
+   }
+  },
+  "DexterityPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "DexterityPower",
+     "to": "enemy",
+     "var": "DexterityPower"
+    }
+   ],
+   "key": "DEXTERITY_POTION",
+   "name": "Dexterity Potion",
+   "name_zh": "敏捷药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "DexterityPower": 2.0
+   }
+  },
+  "DistilledChaos": {
+   "complex": true,
+   "effects": [],
+   "key": "DISTILLED_CHAOS",
+   "name": "Distilled Chaos",
+   "name_zh": "精炼混沌",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Play the top [blue]{Repeat}[/blue] cards of your [gold]Draw Pile[/gold].",
+   "text_zh": "打出你[gold]抽牌堆[/gold]顶部的[blue]{Repeat}[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Repeat": 3.0
+   }
+  },
+  "DropletOfPrecognition": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "fetch",
+     "op": "choose"
+    }
+   ],
+   "key": "DROPLET_OF_PRECOGNITION",
+   "name": "Droplet of Precognition",
+   "name_zh": "预知之滴",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Choose a card in your [gold]Draw Pile[/gold] and add it into your [gold]Hand[/gold].",
+   "text_zh": "选择你[gold]抽牌堆[/gold]中的一张牌加入你的[gold]手牌[/gold]。",
+   "usage": "CombatOnly"
+  },
+  "Duplicator": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "DuplicationPower",
+     "to": "self",
+     "var": 1
+    }
+   ],
+   "key": "DUPLICATOR",
+   "name": "Duplicator",
+   "name_zh": "复制药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "This turn, your next card is played an extra time.",
+   "text_zh": "本回合，你打出的下一张牌会额外打出一次。",
+   "usage": "CombatOnly"
+  },
+  "EnergyPotion": {
+   "effects": [
+    {
+     "op": "energy",
+     "var": "Energy"
+    }
+   ],
+   "key": "ENERGY_POTION",
+   "name": "Energy Potion",
+   "name_zh": "能量药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain {Energy:energyIcons()}.",
+   "text_zh": "获得{Energy:energyIcons()}。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Energy": 2.0
+   }
+  },
+  "EntropicBrew": {
+   "complex": true,
+   "effects": [],
+   "key": "ENTROPIC_BREW",
+   "name": "Entropic Brew",
+   "name_zh": "混沌药水",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Fill all your empty potion slots with random potions.",
+   "text_zh": "在所有空药水栏位中获得随机药水。",
+   "usage": "AnyTime"
+  },
+  "EssenceOfDarkness": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "orb"
+    }
+   ],
+   "key": "ESSENCE_OF_DARKNESS",
+   "name": "Essence of Darkness",
+   "name_zh": "黑暗精华",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "[gold]Channel[/gold] a [gold]Dark[/gold] for each of your [gold]Orb Slots[/gold].",
+   "text_zh": "[gold]生成[/gold]你[gold]充能球栏位[/gold]数量个[gold]黑暗[/gold]充能球。",
+   "usage": "CombatOnly"
+  },
+  "ExplosiveAmpoule": {
+   "effects": [],
+   "key": "EXPLOSIVE_AMPOULE",
+   "name": "Explosive Ampoule",
+   "name_zh": "爆炸安瓿",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AllEnemies",
+   "text": "Deal [blue]{Damage}[/blue] damage to ALL enemies.",
+   "text_zh": "对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Damage": 10.0
+   }
+  },
+  "FairyInABottle": {
+   "effects": [
+    {
+     "op": "heal",
+     "var": "Heal"
+    }
+   ],
+   "key": "FAIRY_IN_A_BOTTLE",
+   "name": "Fairy in a Bottle",
+   "name_zh": "瓶中精灵",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "When your HP would be reduced to [blue]0[/blue], instead this potion is discarded and you heal to [blue]30%[/blue] of your Max HP.",
+   "text_zh": "当你的生命值将被减少至[blue]0[/blue]或以下时，改为丢弃这瓶药水，然后将你回复到你最大生命值的[blue]30%[/blue]。",
+   "usage": "Automatic"
+  },
+  "FirePotion": {
+   "effects": [],
+   "key": "FIRE_POTION",
+   "name": "Fire Potion",
+   "name_zh": "火焰药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyEnemy",
+   "text": "Deal [blue]{Damage}[/blue] damage.",
+   "text_zh": "造成[blue]{Damage}[/blue]点伤害。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Damage": 20.0
+   }
+  },
+  "FlexPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "apply",
+     "power": "FlexPotionPower",
+     "to": "enemy",
+     "var": null
+    }
+   ],
+   "key": "FLEX_POTION",
+   "name": "Flex Potion",
+   "name_zh": "肌肉药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold]. At the end of your turn, lose [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。在你的这个回合结束时，失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "StrengthPower": 5.0
+   }
+  },
+  "FocusPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "FocusPower",
+     "to": "self",
+     "var": "FocusPower"
+    }
+   ],
+   "key": "FOCUS_POTION",
+   "name": "Focus Potion",
+   "name_zh": "集中药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Gain [blue]{FocusPower}[/blue] [gold]Focus[/gold].",
+   "text_zh": "获得[blue]{FocusPower}[/blue]点[gold]集中[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "FocusPower": 2.0
+   }
+  },
+  "Fortifier": {
+   "effects": [
+    {
+     "op": "block",
+     "var": "Block"
+    }
+   ],
+   "key": "FORTIFIER",
+   "name": "Fortifier",
+   "name_zh": "固化药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Triple your [gold]Block[/gold].",
+   "text_zh": "将你的[gold]格挡[/gold]变为三倍。",
+   "usage": "CombatOnly"
+  },
+  "FoulPotion": {
+   "complex": true,
+   "effects": [],
+   "key": "FOUL_POTION",
+   "name": "Foul Potion",
+   "name_zh": "污浊药水",
+   "pool": "Shared",
+   "rarity": "Event",
+   "text": "Deal [blue]{Damage}[/blue] damage to ALL players and enemies.\nCan be thrown at the [gold]Merchant[/gold] for [blue]{Gold}[/blue] [gold]Gold[/gold] instead.",
+   "text_zh": "对所有玩家和敌人造成[blue]{Damage}[/blue]点伤害。\n也可以投掷给[gold]商人[/gold]换取[blue]{Gold}[/blue][gold]金币[/gold]。",
+   "usage": "AnyTime",
+   "vars": {
+    "Damage": 12.0,
+    "Gold": 100.0
+   }
+  },
+  "FruitJuice": {
+   "complex": true,
+   "effects": [],
+   "key": "FRUIT_JUICE",
+   "name": "Fruit Juice",
+   "name_zh": "果汁",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{MaxHp}[/blue] Max HP.",
+   "text_zh": "获得[blue]{MaxHp}[/blue]点最大生命值。",
+   "usage": "AnyTime",
+   "vars": {
+    "MaxHp": 5.0
+   }
+  },
+  "FyshOil": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "StrengthPower",
+     "to": "enemy",
+     "var": "StrengthPower"
+    },
+    {
+     "op": "apply",
+     "power": "DexterityPower",
+     "to": "enemy",
+     "var": "DexterityPower"
+    }
+   ],
+   "key": "FYSH_OIL",
+   "name": "Fysh Oil",
+   "name_zh": "异鱼之油",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold] and [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]和[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "DexterityPower": 1.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "GamblersBrew": {
+   "effects": [
+    {
+     "kind": "discard",
+     "op": "choose"
+    }
+   ],
+   "key": "GAMBLERS_BREW",
+   "name": "Gambler's Brew",
+   "name_zh": "赌徒特酿",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "Discard any number of cards, then draw that many.",
+   "text_zh": "丢弃任意张牌，然后抽相同数量的牌。",
+   "usage": "CombatOnly"
+  },
+  "GhostInAJar": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "IntangiblePower",
+     "to": "enemy",
+     "var": "IntangiblePower"
+    }
+   ],
+   "key": "GHOST_IN_A_JAR",
+   "name": "Ghost in a Jar",
+   "name_zh": "罐装幽灵",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]1[/blue] [gold]Intangible[/gold].",
+   "text_zh": "获得[blue]1[/blue]层[gold]无实体[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "IntangiblePower": 1.0
+   }
+  },
+  "GigantificationPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "GigantificationPower",
+     "to": "enemy",
+     "var": "GigantificationPower"
+    }
+   ],
+   "key": "GIGANTIFICATION_POTION",
+   "name": "Gigantification Potion",
+   "name_zh": "超巨化药水",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "The next Attack you play deals triple damage.",
+   "text_zh": "你打出的下一张攻击牌将会造成三倍伤害。",
+   "usage": "CombatOnly",
+   "vars": {
+    "GigantificationPower": 1.0
+   }
+  },
+  "GlowwaterPotion": {
+   "effects": [
+    {
+     "op": "draw",
+     "var": "Cards"
+    }
+   ],
+   "key": "GLOWWATER_POTION",
+   "name": "Glowwater Potion",
+   "name_zh": "发光水",
+   "pool": "Shared",
+   "rarity": "Event",
+   "targettype": "Self",
+   "text": "[gold]Exhaust[/gold] your [gold]Hand[/gold]. Draw [blue]{Cards}[/blue] cards.",
+   "text_zh": "[gold]消耗[/gold]你的[gold]手牌[/gold]。抽[blue]{Cards}[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 10.0
+   }
+  },
+  "HeartOfIron": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "PlatingPower",
+     "to": "enemy",
+     "var": "PlatingPower"
+    }
+   ],
+   "key": "HEART_OF_IRON",
+   "name": "Heart of Iron",
+   "name_zh": "铁心药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{PlatingPower}[/blue] [gold]Plating[/gold].",
+   "text_zh": "获得[blue]{PlatingPower}[/blue]层[gold]覆甲[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "PlatingPower": 7.0
+   }
+  },
+  "KingsCourage": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "forge"
+    }
+   ],
+   "key": "KINGS_COURAGE",
+   "name": "King's Courage",
+   "name_zh": "王之勇气",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "[gold]Forge[/gold] [blue]{Forge}[/blue].",
+   "text_zh": "[gold]铸造[/gold][blue]{Forge}[/blue]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Forge": 15.0
+   }
+  },
+  "LiquidBronze": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "ThornsPower",
+     "to": "enemy",
+     "var": "ThornsPower"
+    }
+   ],
+   "key": "LIQUID_BRONZE",
+   "name": "Liquid Bronze",
+   "name_zh": "流动铜液",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{ThornsPower}[/blue] [gold]Thorns[/gold].",
+   "text_zh": "获得[blue]{ThornsPower}[/blue]点[gold]荆棘[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "ThornsPower": 3.0
+   }
+  },
+  "LiquidMemories": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "fetch",
+     "op": "choose"
+    }
+   ],
+   "key": "LIQUID_MEMORIES",
+   "name": "Liquid Memories",
+   "name_zh": "液态记忆",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Put a card from your [gold]Discard Pile[/gold] into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "将你[gold]弃牌堆[/gold]中的一张牌放入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "LuckyTonic": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "BufferPower",
+     "to": "enemy",
+     "var": "BufferPower"
+    }
+   ],
+   "key": "LUCKY_TONIC",
+   "name": "Lucky Tonic",
+   "name_zh": "幸运补剂",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{BufferPower}[/blue] [gold]Buffer[/gold].",
+   "text_zh": "获得[blue]{BufferPower}[/blue]层[gold]缓冲[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "BufferPower": 1.0
+   }
+  },
+  "MazalethsGift": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "RitualPower",
+     "to": "enemy",
+     "var": "RitualPower"
+    }
+   ],
+   "key": "MAZALETHS_GIFT",
+   "name": "Mazaleth's Gift",
+   "name_zh": "马萨雷斯的赠礼",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{RitualPower}[/blue] [gold]Ritual[/gold].",
+   "text_zh": "获得[blue]{RitualPower}[/blue]层[gold]仪式[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "RitualPower": 1.0
+   }
+  },
+  "OrobicAcid": {
+   "complex": true,
+   "effects": [],
+   "key": "OROBIC_ACID",
+   "name": "Orobic Acid",
+   "name_zh": "欧洛巴斯之酸",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Add a random Attack, Skill, and Power into your [gold]Hand[/gold]. They're free to play this turn.",
+   "text_zh": "往你的[gold]手牌[/gold]中加入一张随机攻击牌、一张随机技能牌和一张随机能力牌。这些牌在本回合免费。",
+   "usage": "CombatOnly"
+  },
+  "PoisonPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "PoisonPower",
+     "to": "enemy",
+     "var": "PoisonPower"
+    }
+   ],
+   "key": "POISON_POTION",
+   "name": "Poison Potion",
+   "name_zh": "毒药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyEnemy",
+   "text": "Apply [blue]{PoisonPower}[/blue] [gold]Poison[/gold].",
+   "text_zh": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "PoisonPower": 6.0
+   }
+  },
+  "PotOfGhouls": {
+   "effects": [
+    {
+     "card": "Soul",
+     "count": 1,
+     "op": "make",
+     "pile": "hand"
+    }
+   ],
+   "key": "POT_OF_GHOULS",
+   "name": "Pot of Ghouls",
+   "name_zh": "尸鬼瓮",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "Self",
+   "text": "Add [blue]{Cards}[/blue] [gold]{Cards:plural:Soul|Souls}[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "将[blue]{Cards}[/blue]张[gold]灵魂[/gold]加入你的[gold]手牌[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 2.0
+   }
+  },
+  "PotionOfBinding": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "WeakPower",
+     "to": "other",
+     "var": "VulnerablePower"
+    },
+    {
+     "op": "apply",
+     "power": "VulnerablePower",
+     "to": "other",
+     "var": "WeakPower"
+    }
+   ],
+   "key": "POTION_OF_BINDING",
+   "name": "Potion of Binding",
+   "name_zh": "缚魂药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AllEnemies",
+   "text": "Apply [blue]{WeakPower:diff()}[/blue] [gold]Weak[/gold] and [blue]{VulnerablePower:diff()}[/blue] [gold]Vulnerable[/gold] to ALL enemies.",
+   "text_zh": "给予所有敌人[blue]{WeakPower:diff()}[/blue]层[gold]虚弱[/gold]和[blue]{VulnerablePower:diff()}[/blue]层[gold]易伤[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "VulnerablePower": 1.0,
+    "WeakPower": 1.0
+   }
+  },
+  "PotionOfCapacity": {
+   "complex": true,
+   "effects": [],
+   "key": "POTION_OF_CAPACITY",
+   "name": "Potion of Capacity",
+   "name_zh": "扩容药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "Gain [blue]{Repeat}[/blue] [gold]Orb {Repeat:plural:Slot|Slots}[/gold].",
+   "text_zh": "获得[blue]{Repeat}[/blue]个[gold]充能球栏位[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Repeat": 2.0
+   }
+  },
+  "PotionOfDoom": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "DoomPower",
+     "to": "enemy",
+     "var": "DoomPower"
+    }
+   ],
+   "key": "POTION_OF_DOOM",
+   "name": "Potion of Doom",
+   "name_zh": "灾厄药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyEnemy",
+   "text": "Apply [blue]{DoomPower}[/blue] [gold]Doom[/gold].",
+   "text_zh": "给予[blue]{DoomPower}[/blue]层[gold]灾厄[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "DoomPower": 33.0
+   }
+  },
+  "PotionShapedRock": {
+   "effects": [],
+   "key": "POTION_SHAPED_ROCK",
+   "name": "Potion-Shaped Rock",
+   "name_zh": "药水形状的石头",
+   "pool": "Shared",
+   "rarity": "Token",
+   "targettype": "AnyEnemy",
+   "text": "Deal [blue]{Damage}[/blue] damage.",
+   "text_zh": "造成[blue]{Damage}[/blue]点伤害。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Damage": 15.0
+   }
+  },
+  "PowderedDemise": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "DemisePower",
+     "to": "enemy",
+     "var": "Demise"
+    }
+   ],
+   "key": "POWDERED_DEMISE",
+   "name": "Powdered Demise",
+   "name_zh": "消亡粉末",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyEnemy",
+   "text": "Enemy loses [blue]{Demise}[/blue] HP at the end of each of its turns.",
+   "text_zh": "敌人在自身的每个回合结束时，失去[blue]{Demise}[/blue]点生命。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Demise": 9.0
+   }
+  },
+  "PowerPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "select",
+     "op": "choose"
+    }
+   ],
+   "key": "POWER_POTION",
+   "name": "Power Potion",
+   "name_zh": "能力药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Choose [blue]1[/blue] of [blue]3[/blue] random Power cards to add into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "从[blue]3[/blue]张随机能力牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "RadiantTincture": {
+   "effects": [
+    {
+     "op": "energy",
+     "var": "Energy"
+    },
+    {
+     "op": "apply",
+     "power": "RadiancePower",
+     "to": "enemy",
+     "var": "RadiancePower"
+    }
+   ],
+   "key": "RADIANT_TINCTURE",
+   "name": "Radiant Tincture",
+   "name_zh": "明耀酊剂",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain {Energy:energyIcons()}. Gain an additional {energyPrefix:energyIcons(1)} at the start of your next [blue]{RadiancePower}[/blue] {RadiancePower:plural:turn|turns}.",
+   "text_zh": "获得{Energy:energyIcons()}。在你的下[blue]{RadiancePower}[/blue]个回合开始时，额外获得{energyPrefix:energyIcons(1)}。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Energy": 1.0,
+    "RadiancePower": 3.0
+   }
+  },
+  "RegenPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "RegenPower",
+     "to": "enemy",
+     "var": "RegenPower"
+    }
+   ],
+   "key": "REGEN_POTION",
+   "name": "Regen Potion",
+   "name_zh": "再生药水",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "Gain [green]{RegenPower}[/green] [gold]Regen[/gold].",
+   "text_zh": "获得[green]{RegenPower}[/green]层[gold]再生[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "RegenPower": 5.0
+   }
+  },
+  "ShacklingPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "ShacklingPotionPower",
+     "to": "all",
+     "var": "StrengthPower"
+    }
+   ],
+   "key": "SHACKLING_POTION",
+   "name": "Shackling Potion",
+   "name_zh": "镣铐药水",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AllEnemies",
+   "text": "ALL enemies lose [blue]{StrengthPower}[/blue] [gold]Strength[/gold] this turn.",
+   "text_zh": "所有敌人在这个回合失去[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "StrengthPower": 7.0
+   }
+  },
+  "ShipInABottle": {
+   "effects": [
+    {
+     "op": "block",
+     "var": "Block"
+    },
+    {
+     "op": "apply",
+     "power": "BlockNextTurnPower",
+     "to": "enemy",
+     "var": "Block"
+    }
+   ],
+   "key": "SHIP_IN_A_BOTTLE",
+   "name": "Ship in a Bottle",
+   "name_zh": "瓶中船",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{Block:diff()}[/blue] [gold]Block[/gold]. Next turn, gain [blue]{Block:diff()}[/blue] [gold]Block[/gold].",
+   "text_zh": "获得[blue]{Block:diff()}[/blue]点[gold]格挡[/gold]。在下个回合开始时获得[blue]{Block:diff()}[/blue]点[gold]格挡[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Block": 10.0
+   }
+  },
+  "SkillPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "kind": "select",
+     "op": "choose"
+    }
+   ],
+   "key": "SKILL_POTION",
+   "name": "Skill Potion",
+   "name_zh": "技能药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Choose [blue]1[/blue] of [blue]3[/blue] random Skill cards to add into your [gold]Hand[/gold]. It's free to play this turn.",
+   "text_zh": "从[blue]3[/blue]张随机技能牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "SneckoOil": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "draw",
+     "var": "Cards"
+    }
+   ],
+   "key": "SNECKO_OIL",
+   "name": "Snecko Oil",
+   "name_zh": "异蛇之油",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "Draw [blue]{Cards}[/blue] cards. Randomize the cost of cards in your [gold]Hand[/gold] this turn.",
+   "text_zh": "抽[blue]{Cards}[/blue]张牌。在本回合随机化你[gold]手牌[/gold]中所有牌的耗能。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 7.0
+   }
+  },
+  "SoldiersStew": {
+   "effects": [],
+   "key": "SOLDIERS_STEW",
+   "name": "Soldier's Stew",
+   "name_zh": "士兵炖汤",
+   "pool": "Shared",
+   "rarity": "Rare",
+   "targettype": "AnyPlayer",
+   "text": "All cards containing [gold]Strike[/gold] gain [blue]1[/blue] [gold]Replay[/gold] this combat.",
+   "text_zh": "在本场战斗中，所有名字中有“[gold]打击[/gold]”的牌获得[gold]重放[/gold]：[blue]1[/blue]。",
+   "usage": "CombatOnly"
+  },
+  "SpeedPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "apply",
+     "power": "SpeedPotionPower",
+     "to": "enemy",
+     "var": null
+    }
+   ],
+   "key": "SPEED_POTION",
+   "name": "Speed Potion",
+   "name_zh": "速度药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold]. At the end of your turn, lose [blue]{DexterityPower}[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。在你的这个回合结束时，失去[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "DexterityPower": 5.0
+   }
+  },
+  "StableSerum": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "RetainHandPower",
+     "to": "enemy",
+     "var": "Repeat"
+    }
+   ],
+   "key": "STABLE_SERUM",
+   "name": "Stable Serum",
+   "name_zh": "稳定血清",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "AnyPlayer",
+   "text": "[gold]Retain[/gold] your [gold]Hand[/gold] for [blue]{Repeat}[/blue] {Repeat:plural:turn|turns}.",
+   "text_zh": "[gold]保留[/gold]你的[gold]手牌[/gold][blue]{Repeat}[/blue]回合。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Repeat": 2.0
+   }
+  },
+  "StarPotion": {
+   "complex": true,
+   "effects": [
+    {
+     "op": "stars"
+    }
+   ],
+   "key": "STAR_POTION",
+   "name": "Star Potion",
+   "name_zh": "星星药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "Self",
+   "text": "Gain {Stars:starIcons()}.",
+   "text_zh": "获得{Stars:starIcons()}。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Stars": 3.0
+   }
+  },
+  "StrengthPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "StrengthPower",
+     "to": "enemy",
+     "var": "StrengthPower"
+    }
+   ],
+   "key": "STRENGTH_POTION",
+   "name": "Strength Potion",
+   "name_zh": "力量药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Gain [blue]{StrengthPower}[/blue] [gold]Strength[/gold].",
+   "text_zh": "获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "StrengthPower": 2.0
+   }
+  },
+  "SwiftPotion": {
+   "effects": [
+    {
+     "op": "draw",
+     "var": "Cards"
+    }
+   ],
+   "key": "SWIFT_POTION",
+   "name": "Swift Potion",
+   "name_zh": "迅捷药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyPlayer",
+   "text": "Draw [blue]{Cards}[/blue] {Cards:plural:card|cards}.",
+   "text_zh": "抽[blue]{Cards}[/blue]张牌。",
+   "usage": "CombatOnly",
+   "vars": {
+    "Cards": 3.0
+   }
+  },
+  "TouchOfInsanity": {
+   "effects": [
+    {
+     "kind": "select",
+     "op": "choose"
+    }
+   ],
+   "key": "TOUCH_OF_INSANITY",
+   "name": "Touch of Insanity",
+   "name_zh": "癫狂之触",
+   "pool": "Shared",
+   "rarity": "Uncommon",
+   "targettype": "Self",
+   "text": "Choose a card in your [gold]Hand[/gold]. It is free to play this combat.",
+   "text_zh": "选择你[gold]手牌[/gold]中的一张牌，使其在本场战斗可以免费打出。",
+   "usage": "CombatOnly"
+  },
+  "VulnerablePotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "VulnerablePower",
+     "to": "enemy",
+     "var": "VulnerablePower"
+    }
+   ],
+   "key": "VULNERABLE_POTION",
+   "name": "Vulnerable Potion",
+   "name_zh": "易伤药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyEnemy",
+   "text": "Apply [blue]{VulnerablePower}[/blue] [gold]Vulnerable[/gold].",
+   "text_zh": "给予[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "VulnerablePower": 3.0
+   }
+  },
+  "WeakPotion": {
+   "effects": [
+    {
+     "op": "apply",
+     "power": "WeakPower",
+     "to": "enemy",
+     "var": "WeakPower"
+    }
+   ],
+   "key": "WEAK_POTION",
+   "name": "Weak Potion",
+   "name_zh": "虚弱药水",
+   "pool": "Shared",
+   "rarity": "Common",
+   "targettype": "AnyEnemy",
+   "text": "Apply [blue]{WeakPower}[/blue] [gold]Weak[/gold].",
+   "text_zh": "给予[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
+   "usage": "CombatOnly",
+   "vars": {
+    "WeakPower": 3.0
+   }
+  }
+ }
+}

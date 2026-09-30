@@ -354,7 +354,7 @@ namespace Sts2Bridge
         /// <c>UpdateDynamicVarPreview</c> 才是修正后的数字**，否则等于
         /// <c>BaseValue</c>（游戏界面正是在悬停时先 ClearPreview 再 Update）。
         /// 加之 glossary 一局只取一次，拿它算斩杀线必然是卡面裸值。
-        /// 2026-08-01 第一章 Boss 战即因此差 5 点没触发击晕而阵亡（strategy.md §5）。
+        /// 2026-08-01 第一章 Boss 战即因此差 5 点没触发击晕而阵亡。
         ///
         /// 【为什么分 values 与 damage_vs 两块】
         /// 力量、虚弱这类自身修正与目标无关，易伤这类目标侧修正则每只怪各不相同。
@@ -602,6 +602,16 @@ namespace Sts2Bridge
             w.BeginArray("relics");
             foreach (var relic in GamePaths.Enumerate(g.Obj(player, "Relics")))
                 w.Value(GamePaths.Id(relic));
+            w.EndArray();
+
+            // 牌库：选牌、商店、休息点、除卡都要看整副牌。升级过的牌以 "+" 结尾，
+            // 一副牌 20~40 张，每张十几个字节，远比每次再发一遍 /glossary 便宜。
+            w.BeginArray("deck");
+            foreach (var card in GamePaths.Enumerate(g.Obj(g.Obj(player, "Deck"), "Cards")))
+            {
+                var level = GamePaths.Int(card, "CurrentUpgradeLevel") ?? 0;
+                w.Value(GamePaths.Id(card) + (level > 0 ? "+" : ""));
+            }
             w.EndArray();
 
             // PotionSlots 中空槽为 null，实测 [null, null]。保留 null 占位，

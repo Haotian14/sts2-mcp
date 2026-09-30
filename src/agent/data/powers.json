@@ -1,0 +1,2207 @@
+{
+ "game_version": "v0.107.1",
+ "powers": {
+  "AccelerantPower": {
+   "key": "ACCELERANT_POWER",
+   "name": "Accelerant",
+   "name_zh": "触媒",
+   "stacktype": "Counter",
+   "text": "[gold]Poison[/gold] is triggered an additional time.",
+   "text_zh": "[gold]中毒[/gold]会多触发一次。",
+   "type": "Buff"
+  },
+  "AccuracyPower": {
+   "key": "ACCURACY_POWER",
+   "name": "Accuracy",
+   "name_zh": "精准",
+   "stacktype": "Counter",
+   "text": "[gold]Shivs[/gold] deal additional damage.",
+   "text_zh": "[gold]小刀[/gold]造成额外伤害。",
+   "type": "Buff"
+  },
+  "AdaptablePower": {
+   "key": "ADAPTABLE_POWER",
+   "name": "Adaptable",
+   "name_zh": "适者生存",
+   "stacktype": "Single",
+   "text": "When this creature would be defeated, it instead revives even stronger.",
+   "text_zh": "当这个怪物将要被击败时，它会复活变得更加强大。",
+   "type": "Buff"
+  },
+  "AfterimagePower": {
+   "key": "AFTERIMAGE_POWER",
+   "name": "Afterimage",
+   "name_zh": "余像",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, gain [blue]1[/blue] [gold]Block[/gold].",
+   "text_zh": "你每打出一张牌，都获得[blue]1[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "AggressionPower": {
+   "key": "AGGRESSION_POWER",
+   "name": "Aggression",
+   "name_zh": "好勇斗狠",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, put a random Attack from your [gold]Discard Pile[/gold] into your [gold]Hand[/gold] and [gold]Upgrade[/gold] it for the rest of combat.",
+   "text_zh": "在你的回合开始时，将你[gold]弃牌堆[/gold]的一张随机攻击牌放入你的[gold]手牌[/gold]并将其在本场战斗中[gold]升级[/gold]。",
+   "type": "Buff"
+  },
+  "ArsenalPower": {
+   "key": "ARSENAL_POWER",
+   "name": "Arsenal",
+   "name_zh": "武器库",
+   "stacktype": "Counter",
+   "text": "Whenever you create a card, gain [blue]1[/blue] [gold]Strength[/gold].",
+   "text_zh": "每当你生成一张牌，就获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "ArtifactPower": {
+   "key": "ARTIFACT_POWER",
+   "name": "Artifact",
+   "name_zh": "人工制品",
+   "stacktype": "Counter",
+   "text": "[gold]Negates[/gold] debuffs.",
+   "text_zh": "[gold]免疫[/gold]负面效果。",
+   "type": "Buff"
+  },
+  "AsleepPower": {
+   "key": "ASLEEP_POWER",
+   "name": "Asleep",
+   "name_zh": "沉睡",
+   "stacktype": "Counter",
+   "text": "TODO",
+   "text_zh": "TODO",
+   "type": "Buff"
+  },
+  "AutomationPower": {
+   "key": "AUTOMATION_POWER",
+   "name": "Automation",
+   "name_zh": "自动化",
+   "stacktype": "Counter",
+   "text": "Every [blue]10[/blue] cards you draw, gain [gold]Energy[/gold].",
+   "text_zh": "你每抽[blue]10[/blue]张牌时，获得[gold]能量[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "BaseCards": 10.0
+   }
+  },
+  "BackAttackLeftPower": {
+   "key": "BACK_ATTACK_LEFT_POWER",
+   "name": "Back Attack",
+   "name_zh": "后方攻击",
+   "stacktype": "Single",
+   "text": "Deals [blue]50%[/blue] more damage when it is attacking you from behind.",
+   "text_zh": "从后方对你攻击时，造成的伤害增加[blue]50%[/blue]。",
+   "type": "Buff"
+  },
+  "BackAttackRightPower": {
+   "key": "BACK_ATTACK_RIGHT_POWER",
+   "name": "Back Attack",
+   "name_zh": "后方攻击",
+   "stacktype": "Single",
+   "text": "Deals [blue]50%[/blue] more damage when it is attacking you from behind.",
+   "text_zh": "从后方对你攻击时，造成的伤害增加[blue]50%[/blue]。",
+   "type": "Buff"
+  },
+  "BarricadePower": {
+   "key": "BARRICADE_POWER",
+   "name": "Barricade",
+   "name_zh": "壁垒",
+   "stacktype": "Single",
+   "text": "[gold]Block[/gold] is not removed at the start of this creature's turn.",
+   "text_zh": "[gold]格挡[/gold]不会在你的回合开始时被移除。",
+   "type": "Buff"
+  },
+  "BattlewornDummyTimeLimitPower": {
+   "key": "BATTLEWORN_DUMMY_TIME_LIMIT_POWER",
+   "name": "Time Limit",
+   "name_zh": "时间限制",
+   "stacktype": "Counter",
+   "text": "You have [blue]3[/blue] more turns to defeat the Battleworn Dummy.",
+   "text_zh": "你还有[blue]3[/blue]个回合来击败战斗好伙伴。",
+   "type": "Buff"
+  },
+  "BeaconOfHopePower": {
+   "key": "BEACON_OF_HOPE_POWER",
+   "name": "Beacon of Hope",
+   "name_zh": "希望灯塔",
+   "stacktype": "Single",
+   "text": "Whenever you gain [gold]Block[/gold] on your turn, other players gain half that much [gold]Block[/gold].",
+   "text_zh": "每当你在你的回合获得[gold]格挡[/gold]时，其他玩家获得相应一半的[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "BiasedCognitionPower": {
+   "key": "BIASED_COGNITION_POWER",
+   "name": "Biased Cognition",
+   "name_zh": "偏差认知",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, lose [blue]1[/blue] [gold]Focus[/gold].",
+   "text_zh": "在你的回合开始时，失去[blue]1[/blue]点[gold]集中[/gold]。",
+   "type": "Debuff"
+  },
+  "BlackHolePower": {
+   "key": "BLACK_HOLE_POWER",
+   "name": "Black Hole",
+   "name_zh": "黑洞",
+   "stacktype": "Counter",
+   "text": "Whenever you spend or gain {singleStarIcon}, deal [blue]3[/blue] damage to ALL enemies.",
+   "text_zh": "每当你花费或获得{singleStarIcon}时，对所有敌人造成[blue]3[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "BlockNextTurnPower": {
+   "key": "BLOCK_NEXT_TURN_POWER",
+   "name": "Block Next Turn",
+   "name_zh": "下回合格挡",
+   "stacktype": "Counter",
+   "text": "At the start of your next turn, gain [blue]4[/blue] [gold]Block[/gold].",
+   "text_zh": "在你的下个回合开始时，获得[blue]4[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "BlurPower": {
+   "key": "BLUR_POWER",
+   "name": "Blur",
+   "name_zh": "残影",
+   "stacktype": "Counter",
+   "text": "[gold]Block[/gold] is not removed at the start of your next turn.",
+   "text_zh": "你的下一回合开始时[gold]格挡[/gold]不会消失。",
+   "type": "Buff"
+  },
+  "BorrowedTimePower": {
+   "key": "BORROWED_TIME_POWER",
+   "name": "Borrowed Time",
+   "name_zh": "预借时间",
+   "stacktype": "Counter",
+   "text": "Cards cost an additional Energy this turn.",
+   "text_zh": "卡牌在本回合耗能增加一。",
+   "type": "Debuff"
+  },
+  "BufferPower": {
+   "key": "BUFFER_POWER",
+   "name": "Buffer",
+   "name_zh": "缓冲",
+   "stacktype": "Counter",
+   "text": "Prevent the next time you would lose HP.",
+   "text_zh": "阻止下一次你受到的生命值损伤。",
+   "type": "Buff"
+  },
+  "BurrowedPower": {
+   "key": "BURROWED_POWER",
+   "name": "Burrowed",
+   "name_zh": "埋地",
+   "stacktype": "Single",
+   "text": "[gold]Block[/gold] is not removed at the start of this creature's turn. [gold]Stunned[/gold] if all [gold]Block[/gold] is removed.",
+   "text_zh": "[gold]格挡[/gold]不会在其回合开始时移除。如果所有[gold]格挡[/gold]被移除，则将其[gold]击晕[/gold]。",
+   "type": "Buff"
+  },
+  "BurstPower": {
+   "key": "BURST_POWER",
+   "name": "Burst",
+   "name_zh": "爆发",
+   "stacktype": "Counter",
+   "text": "This turn, your next Skill is played an extra time.",
+   "text_zh": "本回合，你的下一张技能牌会多打出一次。",
+   "type": "Buff"
+  },
+  "CalamityPower": {
+   "key": "CALAMITY_POWER",
+   "name": "Calamity",
+   "name_zh": "劫难",
+   "stacktype": "Counter",
+   "text": "Whenever you play an Attack, add a random Attack into your [gold]Hand[/gold].",
+   "text_zh": "每当你打出一张攻击牌时，将一张随机攻击牌添加到你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "CalcifyPower": {
+   "key": "CALCIFY_POWER",
+   "name": "Calcify",
+   "name_zh": "钙化",
+   "stacktype": "Counter",
+   "text": "[gold]Osty's[/gold] attacks deal additional damage.",
+   "text_zh": "[gold]奥斯提[/gold]的攻击造成额外伤害。",
+   "type": "Buff"
+  },
+  "CallOfTheVoidPower": {
+   "key": "CALL_OF_THE_VOID_POWER",
+   "name": "Call of the Void",
+   "name_zh": "虚空之唤",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add [blue]1[/blue] random card into your [gold]Hand[/gold] and apply [gold]Ethereal[/gold] to it.",
+   "text_zh": "在你的回合开始时，将[blue]1[/blue]张随机牌添加到你的[gold]手牌[/gold]并给予其[gold]虚无[/gold]。",
+   "type": "Buff"
+  },
+  "ChainsOfBindingPower": {
+   "key": "CHAINS_OF_BINDING_POWER",
+   "name": "Chains of Binding",
+   "name_zh": "魂缚锁链",
+   "stacktype": "Counter",
+   "text": "The first [blue]3[/blue] cards drawn each turn are Afflicted with [gold]Bound[/gold].",
+   "text_zh": "每回合抽到的前[blue]3[/blue]张牌将会被侵蚀为[gold]魂缚[/gold]。",
+   "type": "Debuff"
+  },
+  "ChildOfTheStarsPower": {
+   "key": "CHILD_OF_THE_STARS_POWER",
+   "name": "Child of the Stars",
+   "name_zh": "群星之子",
+   "stacktype": "Counter",
+   "text": "Gain [blue]1[/blue] [gold]Block[/gold] for each {singleStarIcon} spent.",
+   "text_zh": "每花费一点{singleStarIcon}，获得[blue]1[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "ClarityPower": {
+   "key": "CLARITY_POWER",
+   "name": "Clarity",
+   "name_zh": "明晰",
+   "stacktype": "Counter",
+   "text": "At the start of your next turn, draw [blue]1[/blue] additional card.",
+   "text_zh": "在你的下一个回合开始时，额外抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "ColossusPower": {
+   "key": "COLOSSUS_POWER",
+   "name": "Colossus",
+   "name_zh": "巨像",
+   "stacktype": "Counter",
+   "text": "You receive [blue]50%[/blue] less damage from [gold]Vulnerable[/gold] enemies this turn.",
+   "text_zh": "本回合，你从[gold]易伤[/gold]敌人处受到的伤害减少[blue]50%[/blue]。",
+   "type": "Buff",
+   "vars": {
+    "DamageDecrease": 0.5
+   }
+  },
+  "ConfusedPower": {
+   "key": "CONFUSED_POWER",
+   "name": "Confused",
+   "name_zh": "混乱",
+   "stacktype": "Single",
+   "text": "The costs of your cards are randomized on draw, from [blue]0[/blue] to [blue]3[/blue].",
+   "text_zh": "你的卡牌耗能会在抽取时变化，范围为[blue]0[/blue]到[blue]3[/blue]。",
+   "type": "Debuff"
+  },
+  "ConquerorPower": {
+   "key": "CONQUEROR_POWER",
+   "name": "Conqueror",
+   "name_zh": "征服者",
+   "stacktype": "Counter",
+   "text": "[gold]Sovereign Blade[/gold] deals double damage to the enemy this turn.",
+   "text_zh": "[gold]君王之剑[/gold]在本回合对该敌人造成双倍伤害。",
+   "type": "Debuff"
+  },
+  "ConstrictPower": {
+   "key": "CONSTRICT_POWER",
+   "name": "Constrict",
+   "name_zh": "紧缠",
+   "stacktype": "Counter",
+   "text": "While the Slithering Strangler is alive, at the end of your turn, take [blue]1[/blue] damage.",
+   "text_zh": "蛇行扼杀者存活时，在你的回合结束时受到[blue]1[/blue]点伤害。",
+   "type": "Debuff"
+  },
+  "ConsumingShadowPower": {
+   "key": "CONSUMING_SHADOW_POWER",
+   "name": "Consuming Shadow",
+   "name_zh": "吞噬暗影",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, [gold]Evoke[/gold] your leftmost Orb.",
+   "text_zh": "在你的回合结束时，[gold]激发[/gold]你最左侧的充能球。",
+   "type": "Buff"
+  },
+  "CoolantPower": {
+   "key": "COOLANT_POWER",
+   "name": "Coolant",
+   "name_zh": "冷却剂",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, gain [blue]3[/blue] [gold]Block[/gold] for each unique Orb you have.",
+   "text_zh": "在你的回合开始时，每有一种不同的充能球获得[blue]3[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "CorrosiveWavePower": {
+   "key": "CORROSIVE_WAVE_POWER",
+   "name": "Corrosive Wave",
+   "name_zh": "腐蚀波",
+   "stacktype": "Counter",
+   "text": "Whenever you draw a card this turn, apply [blue]2[/blue] [gold]Poison[/gold] to ALL enemies.",
+   "text_zh": "你在本回合每抽到一张牌，就给予所有敌人[blue]2[/blue]点[gold]中毒[/gold]。",
+   "type": "Buff"
+  },
+  "CorruptionPower": {
+   "key": "CORRUPTION_POWER",
+   "name": "Corruption",
+   "name_zh": "腐化",
+   "stacktype": "Single",
+   "text": "Skills cost [blue]0[/blue].\nWhenever you play a Skill, [gold]Exhaust[/gold] it.",
+   "text_zh": "所有技能牌耗能变为[blue]0[/blue]。\n所有技能牌在打出时被[gold]消耗[/gold]。",
+   "type": "Buff"
+  },
+  "CountdownPower": {
+   "key": "COUNTDOWN_POWER",
+   "name": "Countdown",
+   "name_zh": "倒数计时",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, apply [blue]6[/blue] [gold]Doom[/gold] to a random enemy.",
+   "text_zh": "在你的回合开始时，给予随机敌人[blue]6[/blue]层[gold]灾厄[/gold]。",
+   "type": "Buff"
+  },
+  "CoveredPower": {
+   "key": "COVERED_POWER",
+   "name": "Covered",
+   "name_zh": "掩护",
+   "stacktype": "Single",
+   "text": "An ally is covering you. All attacks that would be directed to you are redirected to them instead.",
+   "text_zh": "有盟友在掩护你。所有朝向你的攻击会被改为瞄准对方。",
+   "type": "Buff"
+  },
+  "CrabRagePower": {
+   "key": "CRAB_RAGE_POWER",
+   "name": "Crab Rage",
+   "name_zh": "蟹之怒",
+   "stacktype": "Single",
+   "text": "When an ally dies, this creature gains [blue]5[/blue] [gold]Strength[/gold] and [blue]99[/blue] [gold]Block[/gold].",
+   "text_zh": "当有盟友死亡时，这个生物获得[blue]5[/blue]点[gold]力量[/gold]和[blue]99[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "Block": 99.0,
+    "StrengthPower": 6.0
+   }
+  },
+  "CreativeAiPower": {
+   "key": "CREATIVE_AI_POWER",
+   "name": "Creative AI",
+   "name_zh": "创造性AI",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add a random Power into your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，将一张随机能力牌添加到你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "CrimsonMantlePower": {
+   "key": "CRIMSON_MANTLE_POWER",
+   "name": "Crimson Mantle",
+   "name_zh": "绯红披风",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, lose HP and gain [gold]Block[/gold].",
+   "text_zh": "在你的回合开始时，失去生命并获得[gold]格挡[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "SelfDamage": 0.0
+   }
+  },
+  "CrueltyPower": {
+   "key": "CRUELTY_POWER",
+   "name": "Cruelty",
+   "name_zh": "残酷",
+   "stacktype": "Counter",
+   "text": "Vulnerable enemies take additional damage.",
+   "text_zh": "以上敌人受到额外伤害。",
+   "type": "Buff"
+  },
+  "CuriousPower": {
+   "key": "CURIOUS_POWER",
+   "name": "Curious",
+   "name_zh": "好奇",
+   "stacktype": "Counter",
+   "text": "Powers cost [blue]1[/blue] {energyPrefix:energyIcons(1)} less.",
+   "text_zh": "能力牌的耗能减少[blue]1[/blue]{energyPrefix:energyIcons(1)}。",
+   "type": "Buff"
+  },
+  "CurlUpPower": {
+   "key": "CURL_UP_POWER",
+   "name": "Curl Up",
+   "name_zh": "蜷身",
+   "stacktype": "Counter",
+   "text": "When damaged, rolls up and gains block. (Once per combat)",
+   "text_zh": "受到伤害时，蜷起身子并获得格挡。（每场战斗一次）",
+   "type": "Buff"
+  },
+  "DampenPower": {
+   "key": "DAMPEN_POWER",
+   "name": "Dampen",
+   "name_zh": "抑制",
+   "stacktype": "None",
+   "text": "While Magi Knight is alive, ALL your cards are [gold]Downgraded[/gold].",
+   "text_zh": "魔法骑士存活时，你的所有卡牌被[gold]降级[/gold]。",
+   "type": "Debuff"
+  },
+  "DanseMacabrePower": {
+   "key": "DANSE_MACABRE_POWER",
+   "name": "Danse Macabre",
+   "name_zh": "死亡之舞",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card that costs [blue]2[/blue] Energy or more, gain [blue]7[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你打出一张耗能为[blue]2[/blue]或更高的牌时，获得[blue]7[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "Energy": 2.0
+   }
+  },
+  "DarkEmbracePower": {
+   "key": "DARK_EMBRACE_POWER",
+   "name": "Dark Embrace",
+   "name_zh": "黑暗之拥",
+   "stacktype": "Counter",
+   "text": "Whenever a card is [gold]Exhausted[/gold], draw [blue]1[/blue] card.",
+   "text_zh": "每当有一张牌被[gold]消耗[/gold]时，抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "DebilitatePower": {
+   "key": "DEBILITATE_POWER",
+   "name": "Debilitate",
+   "name_zh": "摧残",
+   "stacktype": "Counter",
+   "text": "[gold]Vulnerable[/gold] and [gold]Weak[/gold] are twice as effective for the next [blue]2[/blue] turns.",
+   "text_zh": "[blue]2[/blue]回合内，[gold]易伤[/gold]和[gold]虚弱[/gold]的效果变为两倍。",
+   "type": "Debuff"
+  },
+  "DemesnePower": {
+   "key": "DEMESNE_POWER",
+   "name": "Demesne",
+   "name_zh": "领域",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, gain [blue]1[/blue] [gold]Energy[/gold] and draw [blue]1[/blue] additional card.",
+   "text_zh": "在你的回合开始时，获得[blue]1[/blue]点[gold]能量[/gold]并额外抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "DemisePower": {
+   "key": "DEMISE_POWER",
+   "name": "Demise",
+   "name_zh": "消亡",
+   "stacktype": "Counter",
+   "text": "At the end of its turn, this creature X loses HP.",
+   "text_zh": "这个生物在其回合结束时失去生命。",
+   "type": "Debuff"
+  },
+  "DemonFormPower": {
+   "key": "DEMON_FORM_POWER",
+   "name": "Demon Form",
+   "name_zh": "恶魔形态",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, gain [blue]2[/blue] [gold]Strength[/gold].",
+   "text_zh": "在你的回合开始时，获得[blue]2[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "DevourLifePower": {
+   "key": "DEVOUR_LIFE_POWER",
+   "name": "Devour Life",
+   "name_zh": "吞噬生命",
+   "stacktype": "Counter",
+   "text": "Whenever you play a [gold]Soul[/gold], [gold]Summon[/gold] [blue]1[/blue].",
+   "text_zh": "每当你打出一张[gold]灵魂[/gold]时，[gold]召唤[/gold][blue]1[/blue]。",
+   "type": "Buff"
+  },
+  "DexterityPower": {
+   "key": "DEXTERITY_POWER",
+   "name": "Dexterity",
+   "name_zh": "敏捷",
+   "stacktype": "Counter",
+   "text": "Dexterity improves [gold]Block[/gold] gained from cards.",
+   "text_zh": "敏捷会增加从卡牌中获得的[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "DiamondDiademPower": {
+   "key": "DIAMOND_DIADEM_POWER",
+   "name": "Diamond Diadem",
+   "name_zh": "钻石头冠",
+   "stacktype": "Single",
+   "text": "Enemies deal [blue]50%[/blue] less damage this turn.",
+   "text_zh": "敌人在本回合造成的伤害减少[blue]50%[/blue]。",
+   "type": "Buff"
+  },
+  "DieForYouPower": {
+   "key": "DIE_FOR_YOU_POWER",
+   "name": "Die for You",
+   "name_zh": "为你而死",
+   "stacktype": "Single",
+   "text": "[gold]Osty[/gold] absorbs all unblocked attack damage.",
+   "text_zh": "[gold]奥斯提[/gold]会吸收所有未被格挡的攻击伤害。",
+   "type": "Buff"
+  },
+  "DisintegrationPower": {
+   "key": "DISINTEGRATION_POWER",
+   "name": "Disintegration",
+   "name_zh": "瓦解",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, take [blue]5[/blue] damage.",
+   "text_zh": "在你的回合结束时，受到[blue]5[/blue]点伤害。",
+   "type": "Debuff"
+  },
+  "DoomPower": {
+   "key": "DOOM_POWER",
+   "name": "Doom",
+   "name_zh": "灾厄",
+   "stacktype": "Counter",
+   "text": "At the end of the enemy turn, if it has at least as much Doom as HP, it dies.",
+   "text_zh": "在敌人的回合结束时，如果其灾厄值等于或大于其生命，则其直接死亡。",
+   "type": "Debuff"
+  },
+  "DoubleDamagePower": {
+   "key": "DOUBLE_DAMAGE_POWER",
+   "name": "Double Damage",
+   "name_zh": "双倍伤害",
+   "stacktype": "Counter",
+   "text": "This turn, Attacks deal double damage.",
+   "text_zh": "本回合，攻击造成双倍伤害。",
+   "type": "Buff"
+  },
+  "DrawCardsNextTurnPower": {
+   "key": "DRAW_CARDS_NEXT_TURN_POWER",
+   "name": "Draw Cards Next Turn",
+   "name_zh": "下回合抽牌",
+   "stacktype": "Counter",
+   "text": "At the start of your next turn, draw [blue]1[/blue] additional card.",
+   "text_zh": "在你的下回合开始时，额外抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "DuplicationPower": {
+   "key": "DUPLICATION_POWER",
+   "name": "Duplication",
+   "name_zh": "复制",
+   "stacktype": "Counter",
+   "text": "Your next card is played an extra time.",
+   "text_zh": "你下一张打出的牌会多打出一次。",
+   "type": "Buff"
+  },
+  "EchoFormPower": {
+   "key": "ECHO_FORM_POWER",
+   "name": "Echo Form",
+   "name_zh": "回响形态",
+   "stacktype": "Counter",
+   "text": "The first card you play each turn is played an extra time.",
+   "text_zh": "你每回合打出的第一张牌会多打出一次。",
+   "type": "Buff"
+  },
+  "EnergyNextTurnPower": {
+   "key": "ENERGY_NEXT_TURN_POWER",
+   "name": "Energy Next Turn",
+   "name_zh": "下回合能量",
+   "stacktype": "Counter",
+   "text": "Gain additional [gold]Energy[/gold] next turn.",
+   "text_zh": "在下回合额外获得[gold]能量[/gold]。",
+   "type": "Buff"
+  },
+  "EnragePower": {
+   "key": "ENRAGE_POWER",
+   "name": "Enrage",
+   "name_zh": "激怒",
+   "stacktype": "Counter",
+   "text": "Whenever you play a Skill, gains [blue]2[/blue] [gold]Strength[/gold].",
+   "text_zh": "每当你打出一张技能牌时，获得[blue]2[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "EntropyPower": {
+   "key": "ENTROPY_POWER",
+   "name": "Entropy",
+   "name_zh": "熵",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, [gold]Transform[/gold] [blue]1[/blue] card in your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，[gold]变化[/gold]你[gold]手牌[/gold]中的[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "EnvenomPower": {
+   "key": "ENVENOM_POWER",
+   "name": "Envenom",
+   "name_zh": "涂毒",
+   "stacktype": "Counter",
+   "text": "Whenever you deal unblocked attack damage, apply [blue]1[/blue] [gold]Poison[/gold].",
+   "text_zh": "每当你造成未被格挡的伤害时，给予[blue]1[/blue]层[gold]中毒[/gold]。",
+   "type": "Buff"
+  },
+  "EscapeArtistPower": {
+   "key": "ESCAPE_ARTIST_POWER",
+   "name": "Escape Artist",
+   "name_zh": "逃脱大师",
+   "stacktype": "Counter",
+   "text": "Exits the combat after 4 turns.",
+   "text_zh": "在4回合后离开战斗。",
+   "type": "Buff"
+  },
+  "FanOfKnivesPower": {
+   "key": "FAN_OF_KNIVES_POWER",
+   "name": "Fan of Knives",
+   "name_zh": "刀扇",
+   "stacktype": "Single",
+   "text": "[gold]Shivs[/gold] hit ALL enemies.",
+   "text_zh": "[gold]小刀[/gold]会命中所有敌人。",
+   "type": "Buff"
+  },
+  "FeelNoPainPower": {
+   "key": "FEEL_NO_PAIN_POWER",
+   "name": "Feel No Pain",
+   "name_zh": "无惧疼痛",
+   "stacktype": "Counter",
+   "text": "Whenever a card is Exhausted, gain [blue]3[/blue] [gold]Block[/gold].",
+   "text_zh": "每当有一张牌被消耗时，获得[blue]3[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "FeralPower": {
+   "key": "FERAL_POWER",
+   "name": "Feral",
+   "name_zh": "野性",
+   "stacktype": "Counter",
+   "text": "The first time you play a 0{energyPrefix:energyIcons(1)} Attack each turn, return it to your [gold]Hand[/gold].",
+   "text_zh": "每回合你第一次打出0{energyPrefix:energyIcons(1)}攻击牌时，将其放回你的[gold]手牌[/gold]中。",
+   "type": "Buff"
+  },
+  "FlameBarrierPower": {
+   "key": "FLAME_BARRIER_POWER",
+   "name": "Flame Barrier",
+   "name_zh": "火焰屏障",
+   "stacktype": "Counter",
+   "text": "Whenever you are attacked this turn, deal [blue]4[/blue] damage back.",
+   "text_zh": "本回合你每次受到攻击时，反击造成[blue]4[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "FlankingPower": {
+   "key": "FLANKING_POWER",
+   "name": "Flanking",
+   "name_zh": "夹击",
+   "stacktype": "Counter",
+   "text": "Other allies deal [blue]2x[/blue] the attack damage to this enemy this turn.",
+   "text_zh": "其他盟友在本回合对这名敌人造成[blue]2倍[/blue]攻击伤害。",
+   "type": "Debuff"
+  },
+  "FlutterPower": {
+   "key": "FLUTTER_POWER",
+   "name": "Flutter",
+   "name_zh": "振翅",
+   "stacktype": "Counter",
+   "text": "Receives [gold]50%[/gold] less damage from Attacks.",
+   "text_zh": "从攻击牌中受到的伤害减少[gold]50%[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "DamageDecrease": 50.0
+   }
+  },
+  "FocusPower": {
+   "key": "FOCUS_POWER",
+   "name": "Focus",
+   "name_zh": "集中",
+   "stacktype": "Counter",
+   "text": "Increases the effectiveness of Orbs.",
+   "text_zh": "提升充能球的效力。",
+   "type": "Buff"
+  },
+  "ForbiddenGrimoirePower": {
+   "key": "FORBIDDEN_GRIMOIRE_POWER",
+   "name": "Forbidden Grimoire",
+   "name_zh": "禁忌魔典",
+   "stacktype": "Counter",
+   "text": "At the end of combat, remove a card from your [gold]Deck[/gold].",
+   "text_zh": "在战斗结束时，从你的[gold]牌组[/gold]中移除一张牌。",
+   "type": "Buff"
+  },
+  "ForegoneConclusionPower": {
+   "key": "FOREGONE_CONCLUSION_POWER",
+   "name": "Foregone Conclusion",
+   "name_zh": "既定事项",
+   "stacktype": "Counter",
+   "text": "Next turn, put [blue]3[/blue] cards from your [gold]Draw Pile[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "下回合，将你[gold]抽牌堆[/gold]中的[blue]3[/blue]张牌放入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "FrailPower": {
+   "key": "FRAIL_POWER",
+   "name": "Frail",
+   "name_zh": "脆弱",
+   "stacktype": "Counter",
+   "text": "While Frail, gain [blue]25%[/blue] less [gold]Block[/gold] from cards.",
+   "text_zh": "脆弱时，从卡牌中获得的[gold]格挡[/gold]值减少[blue]25%[/blue]。",
+   "type": "Debuff"
+  },
+  "FreeAttackPower": {
+   "key": "FREE_ATTACK_POWER",
+   "name": "Free Attack",
+   "name_zh": "免费攻击",
+   "stacktype": "Counter",
+   "text": "Your next Attack costs [blue]0[/blue] {energyPrefix:energyIcons(1)}.",
+   "text_zh": "你的下一张攻击牌耗能为[blue]0[/blue]{energyPrefix:energyIcons(1)}。",
+   "type": "Buff"
+  },
+  "FreePowerPower": {
+   "key": "FREE_POWER_POWER",
+   "name": "Free Power",
+   "name_zh": "免费能力",
+   "stacktype": "Counter",
+   "text": "The next Power you play costs [blue]0[/blue] {energyPrefix:energyIcons(1)}.",
+   "text_zh": "你的下一张能力牌耗能为[blue]0[/blue] {energyPrefix:energyIcons(1)}。",
+   "type": "Buff"
+  },
+  "FreeSkillPower": {
+   "key": "FREE_SKILL_POWER",
+   "name": "Free Skill",
+   "name_zh": "免费技能",
+   "stacktype": "Counter",
+   "text": "The next Skill you play costs [blue]0[/blue] {energyPrefix:energyIcons(1)}.",
+   "text_zh": "你的下一张技能牌耗能为[blue]0[/blue]{energyPrefix:energyIcons(1)}。",
+   "type": "Buff"
+  },
+  "FriendshipPower": {
+   "key": "FRIENDSHIP_POWER",
+   "name": "Friendship",
+   "name_zh": "友谊",
+   "stacktype": "Counter",
+   "text": "Gain [blue]1[/blue] [gold]Energy[/gold] at the start of each turn.",
+   "text_zh": "每回合开始时获得[blue]1[/blue]点[gold]能量[/gold]。",
+   "type": "Buff"
+  },
+  "FurnacePower": {
+   "key": "FURNACE_POWER",
+   "name": "Furnace",
+   "name_zh": "熔炉",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, [gold]Forge[/gold] [blue]5[/blue].",
+   "text_zh": "在你的回合开始时，[gold]铸造[/gold][blue]5[/blue]。",
+   "type": "Buff"
+  },
+  "GalvanicPower": {
+   "key": "GALVANIC_POWER",
+   "name": "Galvanic",
+   "name_zh": "流电",
+   "stacktype": "Counter",
+   "text": "Powers are afflicted with [gold]Galvanized[/gold].",
+   "text_zh": "能力牌被侵蚀为[gold]流电[/gold]。",
+   "type": "Buff"
+  },
+  "GenesisPower": {
+   "key": "GENESIS_POWER",
+   "name": "Genesis",
+   "name_zh": "创世纪",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, gain {singleStarIcon}.",
+   "text_zh": "在你的回合开始时，获得{singleStarIcon}。",
+   "type": "Buff"
+  },
+  "GigantificationPower": {
+   "key": "GIGANTIFICATION_POWER",
+   "name": "Gigantification",
+   "name_zh": "超巨化",
+   "stacktype": "Counter",
+   "text": "The next Attack you play deals triple damage.",
+   "text_zh": "你打出的下一张攻击牌造成三倍伤害。",
+   "type": "Buff"
+  },
+  "GravityPower": {
+   "key": "GRAVITY_POWER",
+   "name": "Gravity",
+   "name_zh": "引力",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card this turn, deal [blue]2[/blue] damage to ALL enemies.",
+   "text_zh": "本回合，你每打出一张牌，对所有敌人造成[blue]2[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "GuardedPower": {
+   "key": "GUARDED_POWER",
+   "name": "Guarded",
+   "name_zh": "护卫",
+   "stacktype": "Single",
+   "text": "Take half damage from enemies.",
+   "text_zh": "从敌人处受到的伤害减半。",
+   "type": "Buff"
+  },
+  "HailstormPower": {
+   "key": "HAILSTORM_POWER",
+   "name": "Hailstorm",
+   "name_zh": "冰雹风暴",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, if you have [gold]Frost[/gold], deal [blue]6[/blue] damage to ALL enemies.",
+   "text_zh": "在你的回合结束时，如果你有[gold]冰霜[/gold]充能球，则对所有敌人造成[blue]6[/blue]点伤害。",
+   "type": "Buff",
+   "vars": {
+    "FrostOrbs": 1.0
+   }
+  },
+  "HammerTimePower": {
+   "key": "HAMMER_TIME_POWER",
+   "name": "Hammer Time",
+   "name_zh": "锤子时间",
+   "stacktype": "Single",
+   "text": "Whenever you [gold]Forge[/gold], all allies [gold]Forge[/gold] as well.",
+   "text_zh": "每当你[gold]铸造[/gold]时，所有盟友也[gold]铸造[/gold]相同数值。",
+   "type": "Buff"
+  },
+  "HangPower": {
+   "key": "HANG_POWER",
+   "name": "Hang",
+   "name_zh": "吊杀",
+   "stacktype": "Counter",
+   "text": "All [gold]Hangs[/gold] deal [blue]2[/blue] times more damage to this enemy.",
+   "text_zh": "所有[gold]吊杀[/gold]牌对这名敌人造成[blue]2[/blue]倍伤害。",
+   "type": "Debuff"
+  },
+  "HardToKillPower": {
+   "key": "HARD_TO_KILL_POWER",
+   "name": "Hard to Kill",
+   "name_zh": "难以杀灭",
+   "stacktype": "Counter",
+   "text": "Reduce all damage taken and HP lost by [gold]Exoskeleton[/gold] to [blue]9[/blue].",
+   "text_zh": "[gold]外骨骼虫[/gold]受到的所有伤害和生命减少效果不会超过[blue]9[/blue]点。",
+   "type": "Buff"
+  },
+  "HardenedShellPower": {
+   "key": "HARDENED_SHELL_POWER",
+   "name": "Hardened Shell",
+   "name_zh": "硬化外壳",
+   "stacktype": "Counter",
+   "text": "This creature cannot lose more than [blue]20[/blue] HP each turn.",
+   "text_zh": "这个生物每回合失去的生命值不会超过[blue]20[/blue]点。",
+   "type": "Buff"
+  },
+  "HatchPower": {
+   "key": "HATCH_POWER",
+   "name": "Hatch",
+   "name_zh": "孵化",
+   "stacktype": "Counter",
+   "text": "Hatches after X turns.",
+   "text_zh": "X回合后孵化。",
+   "type": "Buff"
+  },
+  "HauntPower": {
+   "key": "HAUNT_POWER",
+   "name": "Haunt",
+   "name_zh": "纠缠",
+   "stacktype": "Counter",
+   "text": "Whenever you play a [gold]Soul[/gold], a random enemy loses [blue]3[/blue] HP.",
+   "text_zh": "每当你打出一张[gold]灵魂[/gold]时，一个随机敌人失去[blue]3[/blue]点生命。",
+   "type": "Buff"
+  },
+  "HeistPower": {
+   "key": "HEIST_POWER",
+   "name": "Heist",
+   "name_zh": "盗窃",
+   "stacktype": "Counter",
+   "text": "When killed, returns all the stolen [gold]Gold[/gold].",
+   "text_zh": "被击杀时，返还所有偷走的[gold]金币[/gold]。",
+   "type": "Buff"
+  },
+  "HelloWorldPower": {
+   "key": "HELLO_WORLD_POWER",
+   "name": "Hello World",
+   "name_zh": "你好世界",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add [blue]1[/blue] random Common card into your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，将[blue]1[/blue]张随机普通牌加入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "HellraiserPower": {
+   "key": "HELLRAISER_POWER",
+   "name": "Hellraiser",
+   "name_zh": "地狱狂徒",
+   "stacktype": "Single",
+   "text": "Whenever you draw a card containing \"Strike\", it is played against a random enemy.",
+   "text_zh": "每当你抽到名字中有“打击”的牌时，对一名随机敌人打出这张牌。",
+   "type": "Buff"
+  },
+  "HexPower": {
+   "key": "HEX_POWER",
+   "name": "Hex",
+   "name_zh": "恶咒",
+   "stacktype": "Single",
+   "text": "While Spectral Knight is alive, ALL your cards are [gold]Ethereal[/gold].",
+   "text_zh": "幽灵骑士存活时，你的所有卡牌都拥有[gold]虚无[/gold]。",
+   "type": "Debuff"
+  },
+  "HighVoltagePower": {
+   "key": "HIGH_VOLTAGE_POWER",
+   "name": "High Voltage",
+   "name_zh": "高电压",
+   "stacktype": "Counter",
+   "text": "At the end of this creature's turn, it gains [blue]2[/blue] [gold]Strength[/gold].",
+   "text_zh": "这个生物的回合结束时，会获得[blue]2[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "IllusionPower": {
+   "key": "ILLUSION_POWER",
+   "name": "Illusion",
+   "name_zh": "幻象",
+   "stacktype": "Single",
+   "text": "When this dies, it revives next turn at full HP.",
+   "text_zh": "死亡时，下回合会以完整生命值复活。",
+   "type": "Buff"
+  },
+  "ImbalancedPower": {
+   "key": "IMBALANCED_POWER",
+   "name": "Imbalanced",
+   "name_zh": "失衡",
+   "stacktype": "Single",
+   "text": "If this creature's attacks are fully blocked by any player, it becomes [gold]Stunned[/gold].",
+   "text_zh": "如果这个生物的攻击被任意玩家完全格挡，则它将被[gold]击晕[/gold]。",
+   "type": "Debuff"
+  },
+  "ImprovementPower": {
+   "key": "IMPROVEMENT_POWER",
+   "name": "Improvement",
+   "name_zh": "改善",
+   "stacktype": "Counter",
+   "text": "At the end of combat, [gold]Upgrade[/gold] a random card.",
+   "text_zh": "在战斗结束时，随机[gold]升级[/gold]一张牌。",
+   "type": "Buff"
+  },
+  "InfernoPower": {
+   "key": "INFERNO_POWER",
+   "name": "Inferno",
+   "name_zh": "狱火",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, lose [blue]1[/blue] HP. Whenever you lose HP on your turn, deal [blue]4[/blue] damage to ALL enemies.",
+   "text_zh": "在你的回合开始时，失去[blue]1[/blue]点生命。每当你在自己的回合中失去生命时，对所有敌人造成[blue]4[/blue]点伤害。",
+   "type": "Buff",
+   "vars": {
+    "SelfDamage": 0.0
+   }
+  },
+  "InfestedPower": {
+   "key": "INFESTED_POWER",
+   "name": "Infested",
+   "name_zh": "寄生物",
+   "stacktype": "Single",
+   "text": "Upon dying, summons... something.",
+   "text_zh": "死亡时，召唤……某种东西。",
+   "type": "Buff"
+  },
+  "InfiniteBladesPower": {
+   "key": "INFINITE_BLADES_POWER",
+   "name": "Infinite Blades",
+   "name_zh": "无尽刀刃",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add a [gold]Shiv[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，在你的[gold]手牌[/gold]中加入一张[gold]小刀[/gold]。",
+   "type": "Buff"
+  },
+  "IntangiblePower": {
+   "key": "INTANGIBLE_POWER",
+   "name": "Intangible",
+   "name_zh": "无实体",
+   "stacktype": "Counter",
+   "text": "Reduce all damage taken and HP loss to [blue]1[/blue] this turn.",
+   "text_zh": "将本回合受到的所有伤害和生命减少效果降低为[blue]1[/blue]。",
+   "type": "Buff"
+  },
+  "InterceptPower": {
+   "key": "INTERCEPT_POWER",
+   "name": "Intercept",
+   "name_zh": "拦截",
+   "stacktype": "Single",
+   "text": "You are covering another player. All attacks that would be directed towards them are redirected towards you.",
+   "text_zh": "你正在掩护另一名玩家。本回合所有对其发起的攻击都会转移到你的身上。",
+   "type": "Buff"
+  },
+  "IterationPower": {
+   "key": "ITERATION_POWER",
+   "name": "Iteration",
+   "name_zh": "迭代",
+   "stacktype": "Counter",
+   "text": "The first time you draw a Status each turn, draw more cards.",
+   "text_zh": "每回合你第一次抽到状态牌时，抽更多牌。",
+   "type": "Buff"
+  },
+  "JuggernautPower": {
+   "key": "JUGGERNAUT_POWER",
+   "name": "Juggernaut",
+   "name_zh": "势不可当",
+   "stacktype": "Counter",
+   "text": "Whenever you gain [gold]Block[/gold], deal [blue]6[/blue] damage to a random enemy.",
+   "text_zh": "每当你获得[gold]格挡[/gold]时，对随机敌人造成[blue]6[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "JugglingPower": {
+   "key": "JUGGLING_POWER",
+   "name": "Juggling",
+   "name_zh": "杂耍",
+   "stacktype": "Counter",
+   "text": "Add a copy of the third Attack you play each turn into your [gold]Hand[/gold].",
+   "text_zh": "将你在每回合打出的第三张攻击牌的复制品加入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "KnockdownPower": {
+   "key": "KNOCKDOWN_POWER",
+   "name": "Knockdown",
+   "name_zh": "击倒",
+   "stacktype": "Counter",
+   "text": "This creature takes [blue]{Amount}[/blue] times the damage from other players this turn.",
+   "text_zh": "该敌人在本回合受到的来自其他玩家的伤害变为[blue]{Amount}[/blue]倍。",
+   "type": "Debuff"
+  },
+  "LeadershipPower": {
+   "key": "LEADERSHIP_POWER",
+   "name": "Leadership",
+   "name_zh": "领袖气质",
+   "stacktype": "Counter",
+   "text": "All other allies deal [blue]1[/blue] additional damage.",
+   "text_zh": "所有其他盟友造成[blue]1[/blue]点额外伤害。",
+   "type": "Buff"
+  },
+  "LethalityPower": {
+   "key": "LETHALITY_POWER",
+   "name": "Lethality",
+   "name_zh": "致死性",
+   "stacktype": "Counter",
+   "text": "The first Attack each turn deals 50% additional damage.",
+   "text_zh": "每回合的第一张攻击牌会造成50%额外伤害。",
+   "type": "Buff"
+  },
+  "LightningRodPower": {
+   "key": "LIGHTNING_ROD_POWER",
+   "name": "Lightning Rod",
+   "name_zh": "引雷针",
+   "stacktype": "Counter",
+   "text": "At the start of the next [blue]2[/blue] turns, [gold]Channel[/gold] [blue]1[/blue] [gold]Lightning[/gold].",
+   "text_zh": "在下[blue]2[/blue]个回合开始时，[gold]生成[/gold][blue]1[/blue]个[gold]闪电[/gold]充能球。",
+   "type": "Buff"
+  },
+  "LoopPower": {
+   "key": "LOOP_POWER",
+   "name": "Loop",
+   "name_zh": "循环",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, trigger the passive ability of your next Orb.",
+   "text_zh": "在你的回合开始时，触发你最右侧充能球的被动能力。",
+   "type": "Buff"
+  },
+  "MachineLearningPower": {
+   "key": "MACHINE_LEARNING_POWER",
+   "name": "Machine Learning",
+   "name_zh": "机器学习",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, draw [blue]1[/blue] additional card.",
+   "text_zh": "在你的回合开始时，额外抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "MagicBombPower": {
+   "key": "MAGIC_BOMB_POWER",
+   "name": "Magic Bomb",
+   "name_zh": "魔法炸弹",
+   "stacktype": "Counter",
+   "text": "Take [blue]20[/blue] damage at the end of your turn. Is cleared if the Magi Knight dies.",
+   "text_zh": "在你的回合结束时受到[blue]20[/blue]点伤害。如果魔法骑士死亡，消除这一效果。",
+   "type": "Debuff"
+  },
+  "MasterPlannerPower": {
+   "key": "MASTER_PLANNER_POWER",
+   "name": "Master Planner",
+   "name_zh": "谋划专家",
+   "stacktype": "Single",
+   "text": "When you play a Skill, it gains [gold]Sly[/gold].",
+   "text_zh": "当你打出技能牌时，该牌获得[gold]奇巧[/gold]。",
+   "type": "Buff"
+  },
+  "MayhemPower": {
+   "key": "MAYHEM_POWER",
+   "name": "Mayhem",
+   "name_zh": "乱战",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, play the top card of your [gold]Draw Pile[/gold].",
+   "text_zh": "在你的回合开始时，打出你[gold]抽牌堆[/gold]顶部的牌。",
+   "type": "Buff"
+  },
+  "MindRotPower": {
+   "key": "MIND_ROT_POWER",
+   "name": "Mind Rot",
+   "name_zh": "心灵腐化",
+   "stacktype": "Counter",
+   "text": "Draw [blue]1[/blue] fewer card each turn.",
+   "text_zh": "每回合少抽[blue]1[/blue]张牌。",
+   "type": "Debuff"
+  },
+  "MinionPower": {
+   "key": "MINION_POWER",
+   "name": "Minion",
+   "name_zh": "爪牙",
+   "stacktype": "Single",
+   "text": "Minions abandon combat without their leader.",
+   "text_zh": "爪牙会在他们的领导者死亡时放弃战斗。",
+   "type": "Buff"
+  },
+  "MonarchsGazePower": {
+   "key": "MONARCHS_GAZE_POWER",
+   "name": "Monarch's Gaze",
+   "name_zh": "王之凝视",
+   "stacktype": "Counter",
+   "text": "Whenever you attack an enemy, it loses [blue]1[/blue] [gold]Strength[/gold] this turn.",
+   "text_zh": "每当你攻击敌人时，这名敌人在本回合失去[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "MonologuePower": {
+   "key": "MONOLOGUE_POWER",
+   "name": "Monologue",
+   "name_zh": "独白",
+   "text": "Whenever you play a card this turn, gain [blue]1[/blue] [gold]Strength[/gold] this turn.",
+   "text_zh": "每当你在本回合打出卡牌时，在本回合获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "StrengthApplied": 0.0,
+    "StrengthPower": 1.0
+   }
+  },
+  "NecroMasteryPower": {
+   "key": "NECRO_MASTERY_POWER",
+   "name": "Necro Mastery",
+   "name_zh": "亡灵精通",
+   "stacktype": "Counter",
+   "text": "Whenever [gold]Osty[/gold] loses HP, ALL enemies lose that much HP as well.",
+   "text_zh": "每当[gold]奥斯提[/gold]失去生命值时，所有敌人失去等量生命值。",
+   "type": "Buff"
+  },
+  "NemesisPower": {
+   "key": "NEMESIS_POWER",
+   "name": "Nemesis",
+   "name_zh": "天罚",
+   "stacktype": "Single",
+   "text": "At the end of every other turn, gains [gold]Intangible[/gold] [blue]1[/blue].",
+   "text_zh": "每两个回合结束时，获得[blue]1[/blue]层[gold]无实体[/gold]。",
+   "type": "Buff"
+  },
+  "NeurosurgePower": {
+   "key": "NEUROSURGE_POWER",
+   "name": "Neurosurge",
+   "name_zh": "精神过载",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, apply [blue]3[/blue] [gold]Doom[/gold] to yourself.",
+   "text_zh": "在你的回合开始时，给予自身[blue]3[/blue]层[gold]灾厄[/gold]。",
+   "type": "Debuff"
+  },
+  "NightmarePower": {
+   "key": "NIGHTMARE_POWER",
+   "name": "Nightmare",
+   "name_zh": "夜魇",
+   "stacktype": "Counter",
+   "text": "Add [blue]3[/blue] of a chosen card into your [gold]Hand[/gold] next turn.",
+   "text_zh": "在下个回合，将所选牌的[blue]3[/blue]张复制品加入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "NoBlockPower": {
+   "key": "NO_BLOCK_POWER",
+   "name": "No Block",
+   "name_zh": "不可格挡",
+   "stacktype": "Counter",
+   "text": "You cannot gain [gold]Block[/gold] from cards.",
+   "text_zh": "你无法从卡牌中获得[gold]格挡[/gold]。",
+   "type": "Debuff"
+  },
+  "NoDrawPower": {
+   "key": "NO_DRAW_POWER",
+   "name": "No Draw",
+   "name_zh": "不可抽牌",
+   "stacktype": "Single",
+   "text": "You may not draw any more cards this turn.",
+   "text_zh": "你在本回合无法再抽更多牌。",
+   "type": "Debuff"
+  },
+  "NoEnergyGainPower": {
+   "key": "NO_ENERGY_GAIN_POWER",
+   "name": "No Energy Gain",
+   "name_zh": "无法获得能量",
+   "stacktype": "Single",
+   "text": "You cannot gain additional {energyPrefix:energyIcons(1)} this turn.",
+   "text_zh": "你在本回合无法再获得更多{energyPrefix:energyIcons(1)}。",
+   "type": "Debuff"
+  },
+  "NostalgiaPower": {
+   "key": "NOSTALGIA_POWER",
+   "name": "Nostalgia",
+   "name_zh": "怀旧",
+   "stacktype": "Counter",
+   "text": "The first Attack or Skill you play each turn is placed on top of your [gold]Draw Pile[/gold].",
+   "text_zh": "每回合被打出第一张攻击或技能牌，将其放置于你的[gold]抽牌堆[/gold]顶端。",
+   "type": "Buff"
+  },
+  "NoxiousFumesPower": {
+   "key": "NOXIOUS_FUMES_POWER",
+   "name": "Noxious Fumes",
+   "name_zh": "毒雾",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, apply [blue]2[/blue] [gold]Poison[/gold] to ALL enemies.",
+   "text_zh": "在你的回合开始时，给予所有敌人[blue]2[/blue]层[gold]中毒[/gold]。",
+   "type": "Buff"
+  },
+  "OblivionPower": {
+   "key": "OBLIVION_POWER",
+   "name": "Oblivion",
+   "name_zh": "湮灭",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, this enemy gains [blue]1[/blue] [gold]Doom[/gold].",
+   "text_zh": "你在本回合内每打出一张牌，就给予该敌人[blue]1[/blue]层[gold]灾厄[/gold]。",
+   "type": "Debuff"
+  },
+  "OneTwoPunchPower": {
+   "key": "ONE_TWO_PUNCH_POWER",
+   "name": "One-Two Punch",
+   "name_zh": "连环拳",
+   "stacktype": "Counter",
+   "text": "Your next Attack is played an extra time this turn.",
+   "text_zh": "本回合，你的下一张攻击牌会多打出一次。",
+   "type": "Buff"
+  },
+  "OrbitPower": {
+   "key": "ORBIT_POWER",
+   "name": "Orbit",
+   "name_zh": "环绕轨道",
+   "stacktype": "Counter",
+   "text": "Every [blue]4[/blue] Energy you spend, gain an Energy.",
+   "text_zh": "你每花费[blue]4[/blue]点能量，就获得[blue]1[/blue]点能量。",
+   "type": "Buff",
+   "vars": {
+    "Energy": 4.0
+   }
+  },
+  "OutbreakPower": {
+   "key": "OUTBREAK_POWER",
+   "name": "Outbreak",
+   "name_zh": "毒性爆发",
+   "stacktype": "Counter",
+   "text": "Every [blue]10[/blue] times you apply [gold]Poison[/gold], deal damage to ALL enemies.",
+   "text_zh": "你每给予[gold]中毒[/gold][blue]10[/blue]次时，对所有敌人造成伤害。",
+   "type": "Buff",
+   "vars": {
+    "Repeat": 3.0
+   }
+  },
+  "PagestormPower": {
+   "key": "PAGESTORM_POWER",
+   "name": "Pagestorm",
+   "name_zh": "书页风暴",
+   "stacktype": "Counter",
+   "text": "Whenever you draw an [gold]Ethereal[/gold] card, draw [blue]1[/blue] card.",
+   "text_zh": "每当你抽到一张[gold]虚无[/gold]牌时，抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "PainfulStabsPower": {
+   "key": "PAINFUL_STABS_POWER",
+   "name": "Painful Stabs",
+   "name_zh": "疼痛戳刺",
+   "stacktype": "Counter",
+   "text": "Shuffle [blue]1[/blue] [gold]Wound[/gold] into your [gold]Discard Pile[/gold] each time you receive unblocked attack damage.",
+   "text_zh": "每次你受到未被格挡的伤害时，将[blue]1[/blue]张[gold]伤口[/gold]洗入你的[gold]弃牌堆[/gold]。",
+   "type": "Buff"
+  },
+  "PaleBlueDotPower": {
+   "key": "PALE_BLUE_DOT_POWER",
+   "name": "Pale Blue Dot",
+   "name_zh": "暗淡蓝点",
+   "stacktype": "Counter",
+   "text": "If you play enough cards in a turn, draw additional cards at the start of your next turn.",
+   "text_zh": "当你在一回合内打出足够数量的牌时，就在下一回合开始时额外抽牌。",
+   "type": "Buff",
+   "vars": {
+    "CardPlay": 5.0
+   }
+  },
+  "PanachePower": {
+   "key": "PANACHE_POWER",
+   "name": "Panache",
+   "name_zh": "神气制胜",
+   "stacktype": "Counter",
+   "text": "If you play [blue]5[/blue] cards this turn, deal damage to ALL enemies.",
+   "text_zh": "如果你在本回合内打出[blue]5[/blue]张牌，则对所有敌人造成伤害。",
+   "type": "Buff",
+   "vars": {
+    "CardsLeft": 5.0
+   }
+  },
+  "PaperCutsPower": {
+   "key": "PAPER_CUTS_POWER",
+   "name": "Paper Cuts",
+   "name_zh": "纸伤难愈",
+   "stacktype": "Counter",
+   "text": "Whenever this creature deals unblocked attack damage to you, you lose [blue]1[/blue] [gold]Max HP[/gold].",
+   "text_zh": "每当这个生物对你造成未被格挡的伤害时，你失去[blue]1[/blue]点[gold]最大生命[/gold]。",
+   "type": "Buff"
+  },
+  "PersonalHivePower": {
+   "key": "PERSONAL_HIVE_POWER",
+   "name": "Personal Hive",
+   "name_zh": "人体蜂房",
+   "stacktype": "Counter",
+   "text": "Whenever this enemy is hit by an Attack, add [gold]Dazed[/gold] into your [gold]Draw Pile[/gold].",
+   "text_zh": "每当这个敌人被攻击命中时，在你的[gold]抽牌堆[/gold]中加入[gold]晕眩[/gold]。",
+   "type": "Buff"
+  },
+  "PhantomBladesPower": {
+   "key": "PHANTOM_BLADES_POWER",
+   "name": "Phantom Blades",
+   "name_zh": "幻影之刃",
+   "stacktype": "Counter",
+   "text": "[gold]Shivs[/gold] gain [gold]Retain[/gold].\nThe first [gold]Shiv[/gold] you play each turn deals [blue]9[/blue] additional damage.",
+   "text_zh": "[gold]小刀[/gold]获得[gold]保留[/gold]。\n你每回合打出的第一张[gold]小刀[/gold]伤害增加[blue]9[/blue]。",
+   "type": "Buff"
+  },
+  "PillarOfCreationPower": {
+   "key": "PILLAR_OF_CREATION_POWER",
+   "name": "Pillar of Creation",
+   "name_zh": "创世之柱",
+   "stacktype": "Counter",
+   "text": "Whenever you create a card, gain [blue]5[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你创造一张牌时，获得[blue]5[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "PlatingPower": {
+   "key": "PLATING_POWER",
+   "name": "Plating",
+   "name_zh": "覆甲",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, gain [gold]Block[/gold]. [gold]Plating[/gold] is reduced by [blue]1[/blue] at the start of your turn.",
+   "text_zh": "在你的回合结束时获得[gold]格挡[/gold]。[gold]覆甲[/gold]会在你的回合开始时减少[blue]1[/blue]层。",
+   "type": "Buff",
+   "vars": {
+    "Decrement": 1.0
+   }
+  },
+  "PlowPower": {
+   "key": "PLOW_POWER",
+   "name": "Plow",
+   "name_zh": "横冲直撞",
+   "stacktype": "Counter",
+   "text": "The first time this creature's HP reaches [blue]150[/blue] or below, it becomes [gold]Stunned[/gold].",
+   "text_zh": "这个生物的生命值第一次下降到[blue]150[/blue]或更低时，将其[gold]击晕[/gold]。",
+   "type": "Debuff"
+  },
+  "PoisonPower": {
+   "key": "POISON_POWER",
+   "name": "Poison",
+   "name_zh": "中毒",
+   "stacktype": "Counter",
+   "text": "Poisoned creatures lose HP at the start of their turn. Each turn, Poison is reduced by [blue]1[/blue].",
+   "text_zh": "中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少[blue]1[/blue]。",
+   "type": "Debuff"
+  },
+  "PossessSpeedPower": {
+   "key": "POSSESS_SPEED_POWER",
+   "name": "Possess Speed",
+   "name_zh": "抢夺速度",
+   "stacktype": "Single",
+   "text": "When killed, return all stolen [gold]Dexterity[/gold] to the player.",
+   "text_zh": "被击杀时，将偷窃的所有[gold]敏捷[/gold]返还给玩家。",
+   "type": "Buff"
+  },
+  "PossessStrengthPower": {
+   "key": "POSSESS_STRENGTH_POWER",
+   "name": "Possess Strength",
+   "name_zh": "抢夺力量",
+   "stacktype": "Single",
+   "text": "When killed, return all stolen [gold]Strength[/gold] to the player.",
+   "text_zh": "被击杀时，将偷窃的所有[gold]力量[/gold]返还给玩家。",
+   "type": "Buff"
+  },
+  "PrepTimePower": {
+   "key": "PREP_TIME_POWER",
+   "name": "Prep Time",
+   "name_zh": "准备时间",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, gain [blue]4[/blue] [gold]Vigor[/gold].",
+   "text_zh": "在你的回合开始时，获得[blue]4[/blue]点[gold]活力[/gold]。",
+   "type": "Buff"
+  },
+  "PyrePower": {
+   "key": "PYRE_POWER",
+   "name": "Pyre",
+   "name_zh": "薪火之源",
+   "stacktype": "Counter",
+   "text": "Gain [blue]1[/blue] [gold]Energy[/gold] at the start of each turn.",
+   "text_zh": "在每回合开始时获得[blue]1[/blue]点[gold]能量[/gold]。",
+   "type": "Buff"
+  },
+  "RadiancePower": {
+   "key": "RADIANCE_POWER",
+   "name": "Radiance",
+   "name_zh": "明耀",
+   "stacktype": "Counter",
+   "text": "Gain an additional [gold]Energy[/gold] next turn.",
+   "text_zh": "在下回合额外获得1点[gold]能量[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "RagePower": {
+   "key": "RAGE_POWER",
+   "name": "Rage",
+   "name_zh": "狂怒",
+   "stacktype": "Counter",
+   "text": "Whenever you play an Attack this turn, gain [blue]3[/blue] [gold]Block[/gold].",
+   "text_zh": "本回合，你每打出一张攻击牌就获得[blue]3[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "RampartPower": {
+   "key": "RAMPART_POWER",
+   "name": "Rampart",
+   "name_zh": "盾墙",
+   "stacktype": "Counter",
+   "text": "At the start of the player's turn, Turret Operator gains [blue]25[/blue] [gold]Block[/gold].",
+   "text_zh": "在玩家回合开始时，高塔炮手获得[blue]25[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "RavenousPower": {
+   "key": "RAVENOUS_POWER",
+   "name": "Ravenous",
+   "name_zh": "饥饿",
+   "stacktype": "Counter",
+   "text": "When an enemy dies, Corpse Slug immediately eats it, becoming [gold]Stunned[/gold] and gaining [blue]1[/blue] [gold]Strength[/gold].",
+   "text_zh": "当有敌人死亡时，噬尸蛞蝓会立即吃下尸体，在本回合被[gold]击晕[/gold]然后获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "ReaperFormPower": {
+   "key": "REAPER_FORM_POWER",
+   "name": "Reaper Form",
+   "name_zh": "死神形态",
+   "stacktype": "Counter",
+   "text": "Whenever Attacks deal damage, apply that much [gold]Doom[/gold].",
+   "text_zh": "每当你的攻击造成伤害时，同时给予等量的[gold]灾厄[/gold]。",
+   "type": "Buff"
+  },
+  "ReattachPower": {
+   "key": "REATTACH_POWER",
+   "name": "Reattach",
+   "name_zh": "接续",
+   "stacktype": "Single",
+   "text": "If other segments are still alive, revives in [blue]2[/blue] turns with [blue]25[/blue] HP.",
+   "text_zh": "如果身体还有存活的其他部分，则在[blue]2[/blue]回合后以[blue]25[/blue]点生命复活。",
+   "type": "Buff"
+  },
+  "ReboundPower": {
+   "key": "REBOUND_POWER",
+   "name": "Rebound",
+   "name_zh": "弹回",
+   "stacktype": "Counter",
+   "text": "The next card you play this turn is placed on the top of your [gold]Draw Pile[/gold].",
+   "text_zh": "将你在本回合打出的下一张牌放置到你的[gold]抽牌堆[/gold]顶部。",
+   "type": "Buff"
+  },
+  "ReflectPower": {
+   "key": "REFLECT_POWER",
+   "name": "Reflect",
+   "name_zh": "倒映",
+   "stacktype": "Counter",
+   "text": "Blocked damage is reflected to your attacker.",
+   "text_zh": "被格挡的伤害会反弹到攻击者身上。",
+   "type": "Buff"
+  },
+  "RegenPower": {
+   "key": "REGEN_POWER",
+   "name": "Regen",
+   "name_zh": "再生",
+   "stacktype": "Counter",
+   "text": "[gold]Regen[/gold] heals HP at the end of your turn. Each turn, [gold]Regen[/gold] is reduced by [blue]1[/blue].",
+   "text_zh": "[gold]再生[/gold]会在你的回合结束时回复相应生命。每回合[gold]再生[/gold]的数值会减少[blue]1[/blue]。",
+   "type": "Buff"
+  },
+  "RetainHandPower": {
+   "key": "RETAIN_HAND_POWER",
+   "name": "Retain Hand",
+   "name_zh": "保留手牌",
+   "stacktype": "Counter",
+   "text": "[gold]Retain[/gold] your [gold]Hand[/gold] for the next [blue]2[/blue] turns.",
+   "text_zh": "在[blue]2[/blue]回合内[gold]保留[/gold]你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "RingingPower": {
+   "key": "RINGING_POWER",
+   "name": "Ringing",
+   "name_zh": "昏眩",
+   "stacktype": "Single",
+   "text": "You can only play [blue]1[/blue] card this turn.",
+   "text_zh": "本回合你只能打出[blue]1[/blue]张牌。",
+   "type": "Debuff"
+  },
+  "RitualPower": {
+   "key": "RITUAL_POWER",
+   "name": "Ritual",
+   "name_zh": "仪式",
+   "stacktype": "Counter",
+   "text": "Gain [gold]Strength[/gold] at the end of your turn.",
+   "text_zh": "在你的回合结束时获得[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "RollingBoulderPower": {
+   "key": "ROLLING_BOULDER_POWER",
+   "name": "Rolling Boulder",
+   "name_zh": "滚石",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, deal [blue]5[/blue] damage to ALL enemies and increase this damage by [blue]5[/blue].",
+   "text_zh": "在你的回合开始时，对所有敌人造成[blue]5[/blue]点伤害，然后将此伤害增加[blue]5[/blue]。",
+   "type": "Buff",
+   "vars": {
+    "Damage": 5.0
+   }
+  },
+  "RoyaltiesPower": {
+   "key": "ROYALTIES_POWER",
+   "name": "Royalties",
+   "name_zh": "王国资产",
+   "stacktype": "Counter",
+   "text": "At the end of combat, gain [blue]25[/blue] [gold]Gold[/gold].",
+   "text_zh": "在战斗结束时，获得[blue]25[/blue][gold]金币[/gold]。",
+   "type": "Buff"
+  },
+  "RupturePower": {
+   "key": "RUPTURE_POWER",
+   "name": "Rupture",
+   "name_zh": "撕裂",
+   "stacktype": "Counter",
+   "text": "Whenever you lose HP on your turn, gain [blue]1[/blue] [gold]Strength[/gold].",
+   "text_zh": "每当你在自身回合失去生命时，获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "SandpitPower": {
+   "key": "SANDPIT_POWER",
+   "name": "Sandpit",
+   "name_zh": "沙坑",
+   "stacktype": "Counter",
+   "text": "A power used by The Insatiable.",
+   "text_zh": "无厌沙虫的能力。",
+   "type": "Buff"
+  },
+  "SeekingEdgePower": {
+   "key": "SEEKING_EDGE_POWER",
+   "name": "Seeking Edge",
+   "name_zh": "追踪之刃",
+   "stacktype": "Single",
+   "text": "[gold]Sovereign Blade[/gold] now hits ALL enemies.",
+   "text_zh": "[gold]君王之剑[/gold]现在会对所有敌人造成伤害。",
+   "type": "Buff"
+  },
+  "SelfFormingClayPower": {
+   "key": "SELF_FORMING_CLAY_POWER",
+   "name": "Self-Forming Clay",
+   "name_zh": "自成型黏土",
+   "stacktype": "Counter",
+   "text": "Gain [blue]3[/blue] [gold]Block[/gold] next turn.",
+   "text_zh": "在下回合获得[blue]3[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "SentryModePower": {
+   "key": "SENTRY_MODE_POWER",
+   "name": "Sentry Mode",
+   "name_zh": "哨卫模式",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add [blue]1[/blue] [gold]Sweeping Gaze[/gold] into your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，将[blue]1[/blue]张[gold]扫荡凝视[/gold]加入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "SerpentFormPower": {
+   "key": "SERPENT_FORM_POWER",
+   "name": "Serpent Form",
+   "name_zh": "群蛇形态",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, deal [blue]4[/blue] damage to a random enemy.",
+   "text_zh": "你每打出一张牌，就对随机一名敌人造成[blue]4[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "ShadowStepPower": {
+   "key": "SHADOW_STEP_POWER",
+   "name": "Shadow Step",
+   "name_zh": "暗影步",
+   "stacktype": "Counter",
+   "text": "Next turn, Attacks deal double damage.",
+   "text_zh": "在下个回合，攻击造成双倍伤害。",
+   "type": "Buff"
+  },
+  "ShadowmeldPower": {
+   "key": "SHADOWMELD_POWER",
+   "name": "Shadowmeld",
+   "name_zh": "融入暗影",
+   "stacktype": "Counter",
+   "text": "Double your [gold]Block[/gold] gain this turn.",
+   "text_zh": "本回合你获得的[gold]格挡[/gold]值翻倍。",
+   "type": "Buff"
+  },
+  "ShriekPower": {
+   "key": "SHRIEK_POWER",
+   "name": "Shriek",
+   "name_zh": "尖叫",
+   "stacktype": "Counter",
+   "text": "The first time this creature's HP reaches [blue]50%[/blue] or below, it becomes [gold]Stunned[/gold].",
+   "text_zh": "这个生物的生命值第一次降到[blue]50%[/blue]或以下时，会被[gold]击晕[/gold]。",
+   "type": "Debuff"
+  },
+  "ShrinkPower": {
+   "key": "SHRINK_POWER",
+   "name": "Shrink",
+   "name_zh": "缩小",
+   "text": "This creature's Attacks deal [blue]30%[/blue] less damage for the next 3 turns.",
+   "text_zh": "这个生物的攻击伤害在3回合内减少[blue]30%[/blue]。",
+   "type": "Debuff",
+   "vars": {
+    "DamageDecrease": 30.0
+   }
+  },
+  "ShroudPower": {
+   "key": "SHROUD_POWER",
+   "name": "Shroud",
+   "name_zh": "厄运之衣",
+   "stacktype": "Counter",
+   "text": "Whenever you apply [gold]Doom[/gold], gain [blue]3[/blue] [gold]Block[/gold].",
+   "text_zh": "你每次给予[gold]灾厄[/gold]时，获得[blue]3[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "SicEmPower": {
+   "key": "SIC_EM_POWER",
+   "name": "Sic 'Em",
+   "name_zh": "紧追不放",
+   "stacktype": "Counter",
+   "text": "Whenever [gold]Osty[/gold] hits this enemy this turn, [gold]Summon[/gold] [blue]3[/blue].",
+   "text_zh": "本回合，每当[gold]奥斯提[/gold]命中这个敌人时，[gold]召唤[/gold][blue]3[/blue]。",
+   "type": "Debuff"
+  },
+  "SignalBoostPower": {
+   "key": "SIGNAL_BOOST_POWER",
+   "name": "Signal Boost",
+   "name_zh": "信号增强",
+   "stacktype": "Counter",
+   "text": "Your next Power is played an extra time.",
+   "text_zh": "你的下一张能力牌会额外打出一次。",
+   "type": "Buff"
+  },
+  "SkittishPower": {
+   "key": "SKITTISH_POWER",
+   "name": "Skittish",
+   "name_zh": "胆小",
+   "stacktype": "Counter",
+   "text": "The first time this creature is hit each turn, it gains [blue]1[/blue] [gold]Block[/gold].",
+   "text_zh": "这个生物每回合第一次被命中时，获得[blue]1[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "SleightOfFleshPower": {
+   "key": "SLEIGHT_OF_FLESH_POWER",
+   "name": "Sleight of Flesh",
+   "name_zh": "血肉戏法",
+   "stacktype": "Counter",
+   "text": "Whenever you apply a debuff to an enemy, they take [blue]13[/blue] damage.",
+   "text_zh": "每当你给予一个敌人负面状态时，使其受到[blue]13[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "SlipperyPower": {
+   "key": "SLIPPERY_POWER",
+   "name": "Slippery",
+   "name_zh": "滑溜",
+   "stacktype": "Counter",
+   "text": "The next time this creature loses HP, it only loses [blue]1[/blue] HP instead.",
+   "text_zh": "这个生物下一次要失去生命值时，只会失去[blue]1[/blue]点生命。",
+   "type": "Buff"
+  },
+  "SlothPower": {
+   "key": "SLOTH_POWER",
+   "name": "Sloth",
+   "name_zh": "懒惰",
+   "stacktype": "Counter",
+   "text": "You cannot play more than [blue]3[/blue] cards each turn.",
+   "text_zh": "你在每个回合不能打出超过[blue]3[/blue]张牌。",
+   "type": "Debuff"
+  },
+  "SlowPower": {
+   "key": "SLOW_POWER",
+   "name": "Slow",
+   "name_zh": "缓慢",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, this enemy receives [blue]10%[/blue] more damage from Attacks this turn.",
+   "text_zh": "你在本回合内每打出一张牌，该敌人本回合从攻击牌中受到的伤害增加[blue]10%[/blue]。",
+   "type": "Debuff",
+   "vars": {
+    "SlowAmount": 0.0
+   }
+  },
+  "SlumberPower": {
+   "key": "SLUMBER_POWER",
+   "name": "Slumber",
+   "name_zh": "熟睡",
+   "stacktype": "Counter",
+   "text": "Awakens upon taking turns or losing HP 3 times.",
+   "text_zh": "在一定回合经过后或失去生命3次后苏醒。",
+   "type": "Buff"
+  },
+  "SmoggyPower": {
+   "key": "SMOGGY_POWER",
+   "name": "Smoggy",
+   "name_zh": "烟雾弥漫",
+   "stacktype": "Single",
+   "text": "You can only play [blue]1[/blue] Skill per turn.",
+   "text_zh": "每回合你只能打出[blue]1[/blue]张技能牌。",
+   "type": "Debuff"
+  },
+  "SmokestackPower": {
+   "key": "SMOKESTACK_POWER",
+   "name": "Smokestack",
+   "name_zh": "烟囱",
+   "stacktype": "Counter",
+   "text": "Whenever you create a Status, deal damage to ALL enemies.",
+   "text_zh": "每当你生成一张状态牌时，对所有敌人造成伤害。",
+   "type": "Buff"
+  },
+  "SneakyPower": {
+   "key": "SNEAKY_POWER",
+   "name": "Sneaky",
+   "name_zh": "鬼祟",
+   "stacktype": "Counter",
+   "text": "Whenever another player attacks an enemy, gain [gold]Block[/gold].",
+   "text_zh": "每当另一名玩家攻击敌人时，获得[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "SoarPower": {
+   "key": "SOAR_POWER",
+   "name": "Soar",
+   "name_zh": "翱翔",
+   "stacktype": "Single",
+   "text": "Receives [gold]50%[/gold] less attack damage until it lands.",
+   "text_zh": "在落地之前受到的伤害减少[gold]50%[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "DamageDecrease": 50.0
+   }
+  },
+  "SpectrumShiftPower": {
+   "key": "SPECTRUM_SHIFT_POWER",
+   "name": "Spectrum Shift",
+   "name_zh": "光谱偏移",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, add [blue]1[/blue] random Colorless card into your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，将[blue]1[/blue]张随机无色牌添加到你的[gold]手牌[/gold]中。",
+   "type": "Buff"
+  },
+  "SpeedsterPower": {
+   "key": "SPEEDSTER_POWER",
+   "name": "Speedster",
+   "name_zh": "速行者",
+   "stacktype": "Counter",
+   "text": "Whenever you draw a card during your turn, deal [blue]1[/blue] damage to ALL enemies.",
+   "text_zh": "每当你在回合中抽到一张牌时，对所有敌人造成[blue]1[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "SpinnerPower": {
+   "key": "SPINNER_POWER",
+   "name": "Spinner",
+   "name_zh": "旋转工艺",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, [gold]Channel[/gold] [blue]1[/blue] [gold]Glass[/gold].",
+   "text_zh": "在你的回合开始时，[gold]生成[/gold][blue]1[/blue]个[gold]玻璃充能球[/gold]。",
+   "type": "Buff"
+  },
+  "SpiritOfAshPower": {
+   "key": "SPIRIT_OF_ASH_POWER",
+   "name": "Spirit of Ash",
+   "name_zh": "灰烬之灵",
+   "stacktype": "Counter",
+   "text": "Whenever you play an [gold]Ethereal[/gold] card, gain [blue]4[/blue] [gold]Block[/gold].",
+   "text_zh": "每当你打出一张[gold]虚无[/gold]牌时，获得[blue]4[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff"
+  },
+  "StampedePower": {
+   "key": "STAMPEDE_POWER",
+   "name": "Stampede",
+   "name_zh": "惊逃",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, [blue]1[/blue] random Attack in your [gold]Hand[/gold] is played against a random enemy.",
+   "text_zh": "在你的回合结束时，随机打出你[gold]手牌[/gold]中的[blue]1[/blue]张攻击牌攻击随机敌人。",
+   "type": "Buff"
+  },
+  "StarNextTurnPower": {
+   "key": "STAR_NEXT_TURN_POWER",
+   "name": "Star Next Turn",
+   "name_zh": "下回合辉星",
+   "stacktype": "Counter",
+   "text": "Gain 1 {singleStarIcon} next turn.",
+   "text_zh": "在下回合获得1{singleStarIcon}。",
+   "type": "Buff"
+  },
+  "SteamEruptionPower": {
+   "key": "STEAM_ERUPTION_POWER",
+   "name": "Steam Eruption",
+   "name_zh": "蒸汽喷发",
+   "stacktype": "Counter",
+   "text": "When killed, deals damage at the end of your next turn.",
+   "text_zh": "被击杀时，在你的下一回合结束时造成伤害。",
+   "type": "Buff"
+  },
+  "StockPower": {
+   "key": "STOCK_POWER",
+   "name": "Stock",
+   "name_zh": "库存",
+   "stacktype": "Counter",
+   "text": "When killed, a new Axebot is summoned in its place.",
+   "text_zh": "被击杀时，召唤一个全新的巨斧机器人。",
+   "type": "Buff"
+  },
+  "StormPower": {
+   "key": "STORM_POWER",
+   "name": "Storm",
+   "name_zh": "雷暴",
+   "stacktype": "Counter",
+   "text": "Whenever you play a Power, [gold]Channel[/gold] [blue]1[/blue] [gold]Lightning[/gold].",
+   "text_zh": "你每打出一张能力牌，就[gold]生成[/gold][blue]1[/blue]个[gold]闪电充能球[/gold]。",
+   "type": "Buff"
+  },
+  "StranglePower": {
+   "key": "STRANGLE_POWER",
+   "name": "Strangle",
+   "name_zh": "紧勒",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card this turn, this enemy loses [blue]2[/blue] HP.",
+   "text_zh": "本回合，你每次打出牌时，这名敌人失去[blue]2[/blue]点生命。",
+   "type": "Debuff"
+  },
+  "StratagemPower": {
+   "key": "STRATAGEM_POWER",
+   "name": "Stratagem",
+   "name_zh": "计策",
+   "stacktype": "Counter",
+   "text": "Whenever you shuffle your [gold]Draw Pile[/gold], choose [blue]1[/blue] card from it to put into your [gold]Hand[/gold].",
+   "text_zh": "你每次洗牌[gold]抽牌堆[/gold]时，从中选择[blue]1[/blue]张牌放入你的[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "StrengthPower": {
+   "key": "STRENGTH_POWER",
+   "name": "Strength",
+   "name_zh": "力量",
+   "stacktype": "Counter",
+   "text": "Strength adds additional damage to Attacks.",
+   "text_zh": "力量会增加攻击牌造成的伤害。",
+   "type": "Buff"
+  },
+  "SubroutinePower": {
+   "key": "SUBROUTINE_POWER",
+   "name": "Subroutine",
+   "name_zh": "子程序",
+   "stacktype": "Counter",
+   "text": "Whenever you play a Power, gain [blue]1[/blue] {energyPrefix:energyIcons(1)}.",
+   "text_zh": "你每次打出能力牌时，都获得[blue]1[/blue]{energyPrefix:energyIcons(1)}。",
+   "type": "Buff"
+  },
+  "SuckPower": {
+   "key": "SUCK_POWER",
+   "name": "Suck",
+   "name_zh": "吮吸",
+   "stacktype": "Counter",
+   "text": "Whenever this creature deals unblocked attack damage, it gains [blue]1[/blue] [gold]Strength[/gold].",
+   "text_zh": "这个生物每次造成未被格挡的伤害时，都会获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "SummonNextTurnPower": {
+   "key": "SUMMON_NEXT_TURN_POWER",
+   "name": "Summon Next Turn",
+   "name_zh": "下回合召唤",
+   "stacktype": "Counter",
+   "text": "At the start of your next turn, [gold]Summon[/gold] [blue]2[/blue].",
+   "text_zh": "在你的下回合开始时，[gold]召唤[/gold][blue]2[/blue]。",
+   "type": "Buff"
+  },
+  "SurprisePower": {
+   "key": "SURPRISE_POWER",
+   "name": "Surprise",
+   "name_zh": "意外",
+   "stacktype": "Single",
+   "text": "Something is off about this creature...",
+   "text_zh": "这个生物有点不太对劲……",
+   "type": "Buff"
+  },
+  "SurroundedPower": {
+   "key": "SURROUNDED_POWER",
+   "name": "Surrounded",
+   "name_zh": "遭到包围",
+   "stacktype": "Single",
+   "text": "Receive [blue]50%[/blue] more damage if attacked from behind. Use targeting cards or potions to change your orientation.",
+   "text_zh": "被从后方攻击时受到的伤害增加[blue]50%[/blue]。使用有目标的卡牌或药水来改变你的朝向。",
+   "type": "Debuff"
+  },
+  "SwipePower": {
+   "key": "SWIPE_POWER",
+   "name": "Swipe",
+   "name_zh": "顺走",
+   "stacktype": "Single",
+   "text": "Upon killing this enemy, the stolen card is returned.",
+   "text_zh": "击杀这名敌人时，会取回被偷走的卡牌。",
+   "type": "Buff"
+  },
+  "SwordSagePower": {
+   "key": "SWORD_SAGE_POWER",
+   "name": "Sword Sage",
+   "name_zh": "剑圣",
+   "stacktype": "Counter",
+   "text": "[gold]Sovereign Blade[/gold] gains [gold]Replay[/gold] [blue]1[/blue].",
+   "text_zh": "[gold]君王之剑[/gold]获得[gold]重放[/gold][blue]1[/blue]。",
+   "type": "Buff"
+  },
+  "TagTeamPower": {
+   "key": "TAG_TEAM_POWER",
+   "name": "Tag Team",
+   "name_zh": "多人组队",
+   "stacktype": "Counter",
+   "text": "The next Attack another player plays on the enemy is played {Amount:plural:an extra time|[blue]{}[/blue] extra times}.",
+   "text_zh": "另一名玩家对该敌人的下一张攻击牌会多打出[blue]{Amount}[/blue]次。",
+   "type": "Debuff"
+  },
+  "TaintedPower": {
+   "key": "TAINTED_POWER",
+   "name": "Tainted",
+   "name_zh": "污染",
+   "stacktype": "Counter",
+   "text": "Take additional damage from Attacks this turn.",
+   "text_zh": "在本回合受到额外的攻击伤害。",
+   "type": "Debuff"
+  },
+  "TangledPower": {
+   "key": "TANGLED_POWER",
+   "name": "Tangled",
+   "name_zh": "缠结",
+   "stacktype": "Counter",
+   "text": "Attacks cost [blue]1[/blue] additional [gold]Energy[/gold] this turn.",
+   "text_zh": "本回合，攻击牌的[gold]能量[/gold]费用增加[blue]1[/blue]。",
+   "type": "Debuff",
+   "vars": {
+    "Energy": 1.0
+   }
+  },
+  "TankPower": {
+   "key": "TANK_POWER",
+   "name": "Tank",
+   "name_zh": "肉盾",
+   "stacktype": "Single",
+   "text": "Take double damage from enemies. Allies take half damage from enemies.",
+   "text_zh": "自身受到敌人伤害加倍。盟友受到敌人伤害减半。",
+   "type": "Buff"
+  },
+  "TenderPower": {
+   "key": "TENDER_POWER",
+   "name": "Tender",
+   "name_zh": "柔嫩",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, lose [blue]1[/blue] [gold]Strength[/gold] and [blue]1[/blue] [gold]Dexterity[/gold] this turn.",
+   "text_zh": "本回合，你每打出一张牌，就失去[blue]1[/blue]点[gold]力量[/gold]和[blue]1[/blue]点[gold]敏捷[/gold]。",
+   "type": "Debuff"
+  },
+  "TerritorialPower": {
+   "key": "TERRITORIAL_POWER",
+   "name": "Territorial",
+   "name_zh": "领地意识",
+   "stacktype": "Counter",
+   "text": "At the end of this creature's turn, it gains [blue]1[/blue] [gold]Strength[/gold].",
+   "text_zh": "这个生物在自身回合结束时，会获得[blue]1[/blue]点[gold]力量[/gold]。",
+   "type": "Buff"
+  },
+  "TheBombPower": {
+   "key": "THE_BOMB_POWER",
+   "name": "The Bomb",
+   "name_zh": "炸弹",
+   "stacktype": "Counter",
+   "text": "At the end of [blue]3[/blue] turns, deal [blue]40[/blue] damage to ALL enemies.",
+   "text_zh": "在第[blue]3[/blue]回合结束时，对所有敌人造成[blue]40[/blue]点伤害。",
+   "type": "Buff",
+   "vars": {
+    "Damage": 40.0
+   }
+  },
+  "TheGambitPower": {
+   "key": "THE_GAMBIT_POWER",
+   "name": "The Gambit",
+   "name_zh": "孤注一掷",
+   "stacktype": "Single",
+   "text": "If you take unblocked attack damage this combat, die.",
+   "text_zh": "如果你在这场战斗中受到未被格挡的攻击伤害，则立即死亡。",
+   "type": "Debuff"
+  },
+  "TheHuntPower": {
+   "key": "THE_HUNT_POWER",
+   "name": "The Hunt",
+   "name_zh": "狩猎",
+   "stacktype": "Counter",
+   "text": "Gain [blue]1[/blue] additional card reward at the end of combat.",
+   "text_zh": "在战斗结束时额外获得[blue]1[/blue]份卡牌奖励。",
+   "type": "Buff"
+  },
+  "TheSealedThronePower": {
+   "key": "THE_SEALED_THRONE_POWER",
+   "name": "The Sealed Throne",
+   "name_zh": "封印王座",
+   "stacktype": "Counter",
+   "text": "Whenever you play a card, gain {singleStarIcon}.",
+   "text_zh": "你每打出一张牌，获得{singleStarIcon}。",
+   "type": "Buff"
+  },
+  "ThieveryPower": {
+   "key": "THIEVERY_POWER",
+   "name": "Thievery",
+   "name_zh": "偷窃",
+   "stacktype": "Counter",
+   "text": "Steals [gold]Gold[/gold] when Attacking.",
+   "text_zh": "攻击时偷走[gold]金币[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "Gold": 0.0
+   }
+  },
+  "ThornsPower": {
+   "key": "THORNS_POWER",
+   "name": "Thorns",
+   "name_zh": "荆棘",
+   "stacktype": "Counter",
+   "text": "When hit by an attack, deal damage back.",
+   "text_zh": "当被攻击命中时，反击造成伤害。",
+   "type": "Buff"
+  },
+  "ThunderPower": {
+   "key": "THUNDER_POWER",
+   "name": "Thunder",
+   "name_zh": "雷霆",
+   "stacktype": "Counter",
+   "text": "Whenever you [gold]Evoke Lightning[/gold], deal [blue]8[/blue] damage to each enemy hit.",
+   "text_zh": "每当你[gold]激发闪电充能球[/gold]时，对命中的敌人造成[blue]8[/blue]点伤害。",
+   "type": "Buff"
+  },
+  "ToolsOfTheTradePower": {
+   "key": "TOOLS_OF_THE_TRADE_POWER",
+   "name": "Tools of the Trade",
+   "name_zh": "必备工具",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, draw [blue]1[/blue] card and discard [blue]1[/blue] card.",
+   "text_zh": "在你的回合开始时，抽[blue]1[/blue]张牌并丢弃[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "ToricToughnessPower": {
+   "key": "TORIC_TOUGHNESS_POWER",
+   "name": "Toric Toughness",
+   "name_zh": "坚韧之环",
+   "stacktype": "Counter",
+   "text": "Gain [blue]5[/blue] [gold]Block[/gold] at the start of the next [blue]2[/blue] turns.",
+   "text_zh": "在下[blue]2[/blue]个回合开始时获得[blue]5[/blue]点[gold]格挡[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "Block": 0.0
+   }
+  },
+  "TrackingPower": {
+   "key": "TRACKING_POWER",
+   "name": "Tracking",
+   "name_zh": "跟踪",
+   "stacktype": "Counter",
+   "text": "[gold]Weak[/gold] enemies take [blue]2[/blue] times more damage from Attacks.",
+   "text_zh": "[gold]虚弱[/gold]的敌人从攻击牌中受到[blue]2[/blue]倍伤害。",
+   "type": "Buff"
+  },
+  "TrashToTreasurePower": {
+   "key": "TRASH_TO_TREASURE_POWER",
+   "name": "Trash to Treasure",
+   "name_zh": "化废为宝",
+   "stacktype": "Counter",
+   "text": "Whenever you create a Status, [gold]Channel[/gold] [blue]1[/blue] random Orb.",
+   "text_zh": "每当你生成状态牌的时候，随机[gold]生成[/gold][blue]1[/blue]个充能球。",
+   "type": "Buff"
+  },
+  "TyrannyPower": {
+   "key": "TYRANNY_POWER",
+   "name": "Tyranny",
+   "name_zh": "暴政",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, draw a card and [gold]Exhaust[/gold] a card from your [gold]Hand[/gold].",
+   "text_zh": "在你的回合开始时，抽一张牌然后[gold]消耗[/gold]你的一张[gold]手牌[/gold]。",
+   "type": "Buff"
+  },
+  "UnmovablePower": {
+   "key": "UNMOVABLE_POWER",
+   "name": "Unmovable",
+   "name_zh": "不动",
+   "stacktype": "Counter",
+   "text": "The first time you gain [gold]Block[/gold] from a card each turn, double the amount gained.",
+   "text_zh": "每个回合你第一次从卡牌中获得[gold]格挡[/gold]时，将数值翻倍。",
+   "type": "Buff"
+  },
+  "VeilpiercerPower": {
+   "key": "VEILPIERCER_POWER",
+   "name": "Veilpiercer",
+   "name_zh": "刺破帷幕",
+   "stacktype": "Counter",
+   "text": "The next [gold]Ethereal card[/gold] you play costs [blue]0[/blue].",
+   "text_zh": "你打出的下一张[gold]虚无[/gold]牌耗能为[blue]0[/blue]。",
+   "type": "Buff"
+  },
+  "ViciousPower": {
+   "key": "VICIOUS_POWER",
+   "name": "Vicious",
+   "name_zh": "凶恶",
+   "stacktype": "Counter",
+   "text": "Whenever you apply [gold]Vulnerable[/gold], draw [blue]1[/blue] card.",
+   "text_zh": "每当你给予[gold]易伤[/gold], 抽[blue]1[/blue]张牌。",
+   "type": "Buff"
+  },
+  "VigorPower": {
+   "key": "VIGOR_POWER",
+   "name": "Vigor",
+   "name_zh": "活力",
+   "stacktype": "Counter",
+   "text": "Your next Attack deals additional damage.",
+   "text_zh": "你的下一张攻击牌伤害增加。",
+   "type": "Buff"
+  },
+  "VitalSparkPower": {
+   "key": "VITAL_SPARK_POWER",
+   "name": "Vital Spark",
+   "name_zh": "活力火花",
+   "stacktype": "Counter",
+   "text": "ALL [gold]Skills[/gold] are [gold]Tainted[/gold] [blue]2[/blue].",
+   "text_zh": "所有[gold]技能[/gold]牌都拥有[gold]污染[/gold][blue]2[/blue]。",
+   "type": "Buff"
+  },
+  "VoidFormPower": {
+   "key": "VOID_FORM_POWER",
+   "name": "Void Form",
+   "name_zh": "虚空形态",
+   "stacktype": "Counter",
+   "text": "The first [blue]2[/blue] cards you play each turn are free to play.",
+   "text_zh": "每回合你打出的前[blue]2[/blue]张牌会免费打出。",
+   "type": "Buff"
+  },
+  "VulnerablePower": {
+   "key": "VULNERABLE_POWER",
+   "name": "Vulnerable",
+   "name_zh": "易伤",
+   "stacktype": "Counter",
+   "text": "Vulnerable creatures take [blue]50%[/blue] more damage from Attacks.",
+   "text_zh": "易伤的生物从攻击中受到的伤害增加[blue]50%[/blue]。",
+   "type": "Debuff",
+   "vars": {
+    "DamageIncrease": 1.5
+   }
+  },
+  "WasteAwayPower": {
+   "key": "WASTE_AWAY_POWER",
+   "name": "Waste Away",
+   "name_zh": "衰朽",
+   "stacktype": "Counter",
+   "text": "Gain [blue]1[/blue] less [gold]Energy[/gold] per turn.",
+   "text_zh": "每回合获得的[gold]能量[/gold]减少[blue]1[/blue]点。",
+   "type": "Debuff"
+  },
+  "WeakPower": {
+   "key": "WEAK_POWER",
+   "name": "Weak",
+   "name_zh": "虚弱",
+   "stacktype": "Counter",
+   "text": "Weakened creatures deal [blue]25%[/blue] less damage with Attacks.",
+   "text_zh": "虚弱的生物造成的攻击伤害减少[blue]25%[/blue]。",
+   "type": "Debuff",
+   "vars": {
+    "DamageDecrease": 0.75
+   }
+  },
+  "WellLaidPlansPower": {
+   "key": "WELL_LAID_PLANS_POWER",
+   "name": "Well-Laid Plans",
+   "name_zh": "计划妥当",
+   "stacktype": "Counter",
+   "text": "At the end of your turn, [gold]Retain[/gold] up to [blue]1[/blue] card.",
+   "text_zh": "在你的回合结束时，[gold]保留[/gold]最多[blue]1[/blue]张手牌。",
+   "type": "Buff"
+  },
+  "WitheringPresencePower": {
+   "key": "WITHERING_PRESENCE_POWER",
+   "name": "Withering Presence",
+   "name_zh": "凋萎存在",
+   "stacktype": "Counter",
+   "text": "Every [blue]6[/blue] cards you play, add a [gold]Wither[/gold] to your [gold]Hand[/gold].",
+   "text_zh": "你每打出[blue]6[/blue]张牌，将一张[gold]凋萎[/gold]加入你的[gold]手牌[/gold]。",
+   "type": "Buff",
+   "vars": {
+    "CardsLeft": 6.0
+   }
+  },
+  "WraithFormPower": {
+   "key": "WRAITH_FORM_POWER",
+   "name": "Wraith Form",
+   "name_zh": "幽魂形态",
+   "stacktype": "Counter",
+   "text": "At the start of your turn, lose [blue]1[/blue] [gold]Dexterity[/gold].",
+   "text_zh": "在你的回合开始时，失去[blue]1[/blue]点[gold]敏捷[/gold]。",
+   "type": "Debuff"
+  }
+ }
+}

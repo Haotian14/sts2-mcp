@@ -1,0 +1,11898 @@
+{
+ "archetypes": {
+  "defect": [
+   {
+    "cards": [
+     "TURBO",
+     "GUNK_UP",
+     "REFRACT"
+    ],
+    "name": "TURBO + Gunk Up",
+    "relics": [
+     "SWORD_OF_STONE",
+     "PRECARIOUS_SHEARS"
+    ],
+    "share": 15.9,
+    "win": 0.1
+   },
+   {
+    "cards": [
+     "BALL_LIGHTNING",
+     "LIGHTNING_ROD",
+     "TESLA_COIL"
+    ],
+    "name": "Ball Lightning + Lightning Rod",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "SWORD_OF_STONE"
+    ],
+    "share": 10.9,
+    "win": 0.6
+   },
+   {
+    "cards": [
+     "CLAW",
+     "FERAL",
+     "SCRAPE"
+    ],
+    "name": "Claw + Feral",
+    "relics": [
+     "SWORD_OF_STONE",
+     "SCROLL_BOXES"
+    ],
+    "share": 9.4,
+    "win": 0.2
+   },
+   {
+    "cards": [
+     "HAILSTORM",
+     "QUADCAST",
+     "SYNCHRONIZE"
+    ],
+    "name": "Hailstorm + Quadcast",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "YUMMY_COOKIE"
+    ],
+    "share": 9.3,
+    "win": 21.2
+   },
+   {
+    "cards": [
+     "SMOKESTACK",
+     "GUNK_UP",
+     "ROCKET_PUNCH"
+    ],
+    "name": "Smokestack + Gunk Up",
+    "relics": [
+     "MINIATURE_CANNON",
+     "FESTIVE_POPPER"
+    ],
+    "share": 7.9,
+    "win": 29.6
+   },
+   {
+    "cards": [
+     "THUNDER",
+     "VOLTAIC",
+     "STORM"
+    ],
+    "name": "Thunder + Voltaic",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "ARCHAIC_TOOTH"
+    ],
+    "share": 7.4,
+    "win": 47.9
+   },
+   {
+    "cards": [
+     "CLAW",
+     "SCRAPE",
+     "ALL_FOR_ONE"
+    ],
+    "name": "Claw + Scrape",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "YUMMY_COOKIE"
+    ],
+    "share": 7.2,
+    "win": 43.6
+   },
+   {
+    "cards": [
+     "ULTIMATE_STRIKE",
+     "MAD_SCIENCE",
+     "COMPILE_DRIVER"
+    ],
+    "name": "Ultimate Strike + Mad Science",
+    "relics": [
+     "BIIIG_HUG",
+     "ASTROLABE"
+    ],
+    "share": 7.1,
+    "win": 60.4
+   },
+   {
+    "cards": [
+     "TESLA_COIL",
+     "THUNDER",
+     "VOLTAIC"
+    ],
+    "name": "Tesla Coil + Thunder",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "LARGE_CAPSULE"
+    ],
+    "share": 2.3,
+    "win": 7.8
+   },
+   {
+    "cards": [
+     "METEOR_STRIKE",
+     "COOLANT",
+     "HYPERBEAM"
+    ],
+    "name": "Meteor Strike + Coolant",
+    "relics": [
+     "PANDORAS_BOX",
+     "MEAT_CLEAVER"
+    ],
+    "share": 2.2,
+    "win": 35.2
+   },
+   {
+    "cards": [
+     "HELIX_DRILL",
+     "METEOR_STRIKE",
+     "REBOOT"
+    ],
+    "name": "Helix Drill + Meteor Strike",
+    "relics": [
+     "MEAT_CLEAVER",
+     "EMOTION_CHIP"
+    ],
+    "share": 1.9,
+    "win": 72.1
+   },
+   {
+    "cards": [
+     "VOLTAIC",
+     "ULTIMATE_STRIKE",
+     "MAD_SCIENCE"
+    ],
+    "name": "Voltaic + Ultimate Strike",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "FRAGRANT_MUSHROOM"
+    ],
+    "share": 1.8,
+    "win": 54.8
+   },
+   {
+    "cards": [
+     "MAUL",
+     "MAD_SCIENCE",
+     "BULK_UP"
+    ],
+    "name": "Maul + Mad Science",
+    "relics": [
+     "CLAWS",
+     "FRAGRANT_MUSHROOM"
+    ],
+    "share": 0.6,
+    "win": 46.6
+   }
+  ],
+  "ironclad": [
+   {
+    "cards": [
+     "BLOODLETTING",
+     "BREAKTHROUGH",
+     "INFERNO"
+    ],
+    "name": "Bloodletting + Breakthrough",
+    "relics": [
+     "CURSED_PEARL",
+     "SWORD_OF_STONE"
+    ],
+    "share": 10.0,
+    "win": 0.8
+   },
+   {
+    "cards": [
+     "FEEL_NO_PAIN",
+     "MAD_SCIENCE",
+     "STOKE"
+    ],
+    "name": "Feel No Pain + Mad Science",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "PAELS_BLOOD"
+    ],
+    "share": 9.6,
+    "win": 53.1
+   },
+   {
+    "cards": [
+     "IRON_WAVE",
+     "SHRUG_IT_OFF",
+     "ARMAMENTS"
+    ],
+    "name": "Iron Wave + Shrug It Off",
+    "relics": [
+     "FRESNEL_LENS",
+     "SWORD_OF_STONE"
+    ],
+    "share": 9.3,
+    "win": 2.9
+   },
+   {
+    "cards": [
+     "DOMINATE",
+     "MAD_SCIENCE",
+     "BULLY"
+    ],
+    "name": "Dominate + Mad Science",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "NUTRITIOUS_SOUP"
+    ],
+    "share": 8.2,
+    "win": 48.3
+   },
+   {
+    "cards": [
+     "MOLTEN_FIST",
+     "TREMBLE",
+     "BULLY"
+    ],
+    "name": "Molten Fist + Tremble",
+    "relics": [
+     "SWORD_OF_STONE",
+     "SCROLL_BOXES"
+    ],
+    "share": 7.1,
+    "win": 0.6
+   },
+   {
+    "cards": [
+     "PERFECTED_STRIKE",
+     "HELLRAISER",
+     "SETUP_STRIKE"
+    ],
+    "name": "Perfected Strike + Hellraiser",
+    "relics": [
+     "SWORD_OF_STONE",
+     "LARGE_CAPSULE"
+    ],
+    "share": 6.6,
+    "win": 0.3
+   },
+   {
+    "cards": [
+     "PERFECTED_STRIKE",
+     "HELLRAISER",
+     "TWIN_STRIKE"
+    ],
+    "name": "Perfected Strike + Hellraiser",
+    "relics": [
+     "FAKE_STRIKE_DUMMY",
+     "NUTRITIOUS_SOUP"
+    ],
+    "share": 6.5,
+    "win": 38.3
+   },
+   {
+    "cards": [
+     "BREAK",
+     "BULLY",
+     "DOMINATE"
+    ],
+    "name": "Break + Bully",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "MERCURY_HOURGLASS"
+    ],
+    "share": 4.6,
+    "win": 30.9
+   },
+   {
+    "cards": [
+     "MAUL",
+     "MAD_SCIENCE",
+     "DARK_EMBRACE"
+    ],
+    "name": "Maul + Mad Science",
+    "relics": [
+     "CLAWS",
+     "MEAT_CLEAVER"
+    ],
+    "share": 3.9,
+    "win": 73.7
+   },
+   {
+    "cards": [
+     "CRIMSON_MANTLE",
+     "HEMOKINESIS",
+     "INFERNO"
+    ],
+    "name": "Crimson Mantle + Hemokinesis",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "PEAR"
+    ],
+    "share": 3.1,
+    "win": 21.3
+   },
+   {
+    "cards": [
+     "BYRD_SWOOP",
+     "PYRE",
+     "DISMANTLE"
+    ],
+    "name": "Byrd Swoop + Pyre",
+    "relics": [
+     "BYRDPIP",
+     "ORNAMENTAL_FAN"
+    ],
+    "share": 2.1,
+    "win": 26.8
+   },
+   {
+    "cards": [
+     "FORGOTTEN_RITUAL",
+     "HAVOC",
+     "PRIMAL_FORCE"
+    ],
+    "name": "Forgotten Ritual + Havoc",
+    "relics": [
+     "PANDORAS_BOX",
+     "REPTILE_TRINKET"
+    ],
+    "share": 1.7,
+    "win": 23.4
+   }
+  ],
+  "necrobinder": [
+   {
+    "cards": [
+     "SOW",
+     "REAP",
+     "PULL_AGGRO"
+    ],
+    "name": "Sow + Reap",
+    "relics": [
+     "SWORD_OF_STONE",
+     "PRECARIOUS_SHEARS"
+    ],
+    "share": 13.2,
+    "win": 0.2
+   },
+   {
+    "cards": [
+     "DEFY",
+     "SCULPTING_STRIKE",
+     "VEILPIERCER"
+    ],
+    "name": "Defy + Sculpting Strike",
+    "relics": [
+     "HEFTY_TABLET",
+     "SILVER_CRUCIBLE"
+    ],
+    "share": 9.7,
+    "win": 0.6
+   },
+   {
+    "cards": [
+     "SQUEEZE",
+     "RATTLE",
+     "FLATTEN"
+    ],
+    "name": "Squeeze + Rattle",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "BONE_FLUTE"
+    ],
+    "share": 8.3,
+    "win": 29.7
+   },
+   {
+    "cards": [
+     "BANSHEES_CRY",
+     "PULL_FROM_BELOW",
+     "MAD_SCIENCE"
+    ],
+    "name": "Banshee's Cry + Pull from Below",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "FAKE_HAPPY_FLOWER"
+    ],
+    "share": 8.2,
+    "win": 61.8
+   },
+   {
+    "cards": [
+     "NEGATIVE_PULSE",
+     "BLIGHT_STRIKE",
+     "SOW"
+    ],
+    "name": "Negative Pulse + Blight Strike",
+    "relics": [
+     "SWORD_OF_STONE",
+     "SCROLL_BOXES"
+    ],
+    "share": 7.9,
+    "win": 0.1
+   },
+   {
+    "cards": [
+     "BLIGHT_STRIKE",
+     "SCOURGE",
+     "TIMES_UP"
+    ],
+    "name": "Blight Strike + Scourge",
+    "relics": [
+     "YUMMY_COOKIE",
+     "PAELS_FLESH"
+    ],
+    "share": 7.0,
+    "win": 13.2
+   },
+   {
+    "cards": [
+     "HAUNT",
+     "SOUL_STORM",
+     "DEATH_MARCH"
+    ],
+    "name": "Haunt + Soul Storm",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "YUMMY_COOKIE"
+    ],
+    "share": 6.1,
+    "win": 20.2
+   },
+   {
+    "cards": [
+     "SLEIGHT_OF_FLESH",
+     "DEATHBRINGER",
+     "DEATHS_DOOR"
+    ],
+    "name": "Sleight of Flesh + Deathbringer",
+    "relics": [
+     "FRAGRANT_MUSHROOM",
+     "BOOK_REPAIR_KNIFE"
+    ],
+    "share": 5.8,
+    "win": 44.1
+   },
+   {
+    "cards": [
+     "NECRO_MASTERY",
+     "SENTRY_MODE",
+     "SQUEEZE"
+    ],
+    "name": "Necro Mastery + Sentry Mode",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "BONE_FLUTE"
+    ],
+    "share": 4.2,
+    "win": 35.0
+   },
+   {
+    "cards": [
+     "FORBIDDEN_GRIMOIRE",
+     "EIDOLON",
+     "SPIRIT_OF_ASH"
+    ],
+    "name": "Forbidden Grimoire + Eidolon",
+    "relics": [
+     "PANDORAS_BOX",
+     "DUSTY_TOME"
+    ],
+    "share": 3.6,
+    "win": 48.7
+   },
+   {
+    "cards": [
+     "SHROUD",
+     "TIMES_UP",
+     "DEATHS_DOOR"
+    ],
+    "name": "Shroud + Time's Up",
+    "relics": [
+     "PRESERVED_FOG",
+     "MEAT_CLEAVER"
+    ],
+    "share": 3.2,
+    "win": 64.0
+   },
+   {
+    "cards": [
+     "REAP",
+     "SOW",
+     "DEFILE"
+    ],
+    "name": "Reap + Sow",
+    "relics": [
+     "CURSED_PEARL",
+     "NEOWS_BONES"
+    ],
+    "share": 3.1,
+    "win": 1.2
+   }
+  ],
+  "regent": [
+   {
+    "cards": [
+     "BEGONE",
+     "PATTER",
+     "CELESTIAL_MIGHT"
+    ],
+    "name": "BEGONE! + Patter",
+    "relics": [
+     "SILKEN_TRESS",
+     "SWORD_OF_STONE"
+    ],
+    "share": 17.4,
+    "win": 0.0
+   },
+   {
+    "cards": [
+     "KNOCKOUT_BLOW",
+     "SOLAR_STRIKE",
+     "CRESCENT_SPEAR"
+    ],
+    "name": "Knockout Blow + Solar Strike",
+    "relics": [
+     "SWORD_OF_STONE",
+     "PRECARIOUS_SHEARS"
+    ],
+    "share": 11.8,
+    "win": 0.1
+   },
+   {
+    "cards": [
+     "REFINE_BLADE",
+     "WROUGHT_IN_WAR",
+     "SPOILS_OF_BATTLE"
+    ],
+    "name": "Refine Blade + Wrought in War",
+    "relics": [
+     "SWORD_OF_STONE",
+     "SCROLL_BOXES"
+    ],
+    "share": 8.2,
+    "win": 0.4
+   },
+   {
+    "cards": [
+     "GLOW",
+     "CHILD_OF_THE_STARS",
+     "PATTER"
+    ],
+    "name": "Glow + Child of the Stars",
+    "relics": [
+     "YUMMY_COOKIE",
+     "VERY_HOT_COCOA"
+    ],
+    "share": 8.0,
+    "win": 15.2
+   },
+   {
+    "cards": [
+     "CRESCENT_SPEAR",
+     "BLACK_HOLE",
+     "DEVASTATE"
+    ],
+    "name": "Crescent Spear + Black Hole",
+    "relics": [
+     "NUTRITIOUS_SOUP",
+     "DUSTY_TOME"
+    ],
+    "share": 7.4,
+    "win": 25.7
+   },
+   {
+    "cards": [
+     "SWORD_SAGE",
+     "PARRY",
+     "SUMMON_FORTH"
+    ],
+    "name": "Sword Sage + Parry",
+    "relics": [
+     "FENCING_MANUAL",
+     "FAKE_HAPPY_FLOWER"
+    ],
+    "share": 7.2,
+    "win": 43.7
+   },
+   {
+    "cards": [
+     "PILLAR_OF_CREATION",
+     "SUPERMASSIVE",
+     "ARSENAL"
+    ],
+    "name": "Pillar of Creation + Supermassive",
+    "relics": [
+     "REGALITE",
+     "FRAGRANT_MUSHROOM"
+    ],
+    "share": 6.4,
+    "win": 44.1
+   },
+   {
+    "cards": [
+     "THE_SEALED_THRONE",
+     "MAD_SCIENCE",
+     "BIG_BANG"
+    ],
+    "name": "The Sealed Throne + Mad Science",
+    "relics": [
+     "SIGNET_RING",
+     "SWORD_OF_JADE"
+    ],
+    "share": 4.7,
+    "win": 78.9
+   },
+   {
+    "cards": [
+     "MAUL",
+     "ULTIMATE_STRIKE",
+     "MAD_SCIENCE"
+    ],
+    "name": "Maul + Ultimate Strike",
+    "relics": [
+     "BIIIG_HUG",
+     "ASTROLABE"
+    ],
+    "share": 4.6,
+    "win": 47.7
+   },
+   {
+    "cards": [
+     "SEVEN_STARS",
+     "COMET",
+     "NEUTRON_AEGIS"
+    ],
+    "name": "Seven Stars + Comet",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "STONE_CRACKER"
+    ],
+    "share": 3.2,
+    "win": 28.2
+   },
+   {
+    "cards": [
+     "ARSENAL",
+     "MONARCHS_GAZE",
+     "HEIRLOOM_HAMMER"
+    ],
+    "name": "Arsenal + Monarch's Gaze",
+    "relics": [
+     "PANDORAS_BOX",
+     "MEAT_CLEAVER"
+    ],
+    "share": 2.9,
+    "win": 41.0
+   },
+   {
+    "cards": [
+     "METEOR_SHOWER",
+     "FURNACE",
+     "PARRY"
+    ],
+    "name": "Meteor Shower + Furnace",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "LASTING_CANDY"
+    ],
+    "share": 2.7,
+    "win": 8.8
+   },
+   {
+    "cards": [
+     "METEOR_SHOWER",
+     "MAD_SCIENCE",
+     "BIG_BANG"
+    ],
+    "name": "Meteor Shower + Mad Science",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "FRAGRANT_MUSHROOM"
+    ],
+    "share": 2.3,
+    "win": 59.8
+   }
+  ],
+  "silent": [
+   {
+    "cards": [
+     "PREPARED",
+     "RICOCHET",
+     "FLICK_FLACK"
+    ],
+    "name": "Prepared + Ricochet",
+    "relics": [
+     "SWORD_OF_STONE",
+     "SILVER_CRUCIBLE"
+    ],
+    "share": 11.7,
+    "win": 0.3
+   },
+   {
+    "cards": [
+     "LEADING_STRIKE",
+     "BLADE_DANCE",
+     "CLOAK_AND_DAGGER"
+    ],
+    "name": "Leading Strike + Blade Dance",
+    "relics": [
+     "SWORD_OF_STONE",
+     "HEFTY_TABLET"
+    ],
+    "share": 11.2,
+    "win": 0.2
+   },
+   {
+    "cards": [
+     "DEADLY_POISON",
+     "POISONED_STAB",
+     "OUTBREAK"
+    ],
+    "name": "Deadly Poison + Poisoned Stab",
+    "relics": [
+     "SCROLL_BOXES",
+     "SWORD_OF_STONE"
+    ],
+    "share": 7.9,
+    "win": 1.7
+   },
+   {
+    "cards": [
+     "PHANTOM_BLADES",
+     "BLADE_OF_INK",
+     "ACCURACY"
+    ],
+    "name": "Phantom Blades + Blade of Ink",
+    "relics": [
+     "TOUCH_OF_OROBAS",
+     "JOSS_PAPER"
+    ],
+    "share": 7.0,
+    "win": 54.7
+   },
+   {
+    "cards": [
+     "KNIFE_TRAP",
+     "INFINITE_BLADES",
+     "BLADE_DANCE"
+    ],
+    "name": "Knife Trap + Infinite Blades",
+    "relics": [
+     "NUTRITIOUS_SOUP",
+     "YUMMY_COOKIE"
+    ],
+    "share": 6.9,
+    "win": 29.4
+   },
+   {
+    "cards": [
+     "DAGGER_THROW",
+     "RICOCHET",
+     "MEMENTO_MORI"
+    ],
+    "name": "Dagger Throw + Ricochet",
+    "relics": [
+     "NUTRITIOUS_SOUP",
+     "TOUCH_OF_OROBAS"
+    ],
+    "share": 6.2,
+    "win": 27.9
+   },
+   {
+    "cards": [
+     "ACCELERANT",
+     "BUBBLE_BUBBLE",
+     "MIRAGE"
+    ],
+    "name": "Accelerant + Bubble Bubble",
+    "relics": [
+     "SNECKO_SKULL",
+     "TWISTED_FUNNEL"
+    ],
+    "share": 6.1,
+    "win": 52.3
+   },
+   {
+    "cards": [
+     "APPARITION",
+     "REFLEX",
+     "ACROBATICS"
+    ],
+    "name": "Apparition + Reflex",
+    "relics": [
+     "PRESERVED_FOG",
+     "FRAGRANT_MUSHROOM"
+    ],
+    "share": 4.5,
+    "win": 72.1
+   },
+   {
+    "cards": [
+     "SUPPRESS",
+     "TRACKING",
+     "BLADE_OF_INK"
+    ],
+    "name": "Suppress + Tracking",
+    "relics": [
+     "ARCHAIC_TOOTH",
+     "KUSARIGAMA"
+    ],
+    "share": 3.3,
+    "win": 31.7
+   },
+   {
+    "cards": [
+     "MAUL",
+     "ULTIMATE_STRIKE",
+     "KNIFE_TRAP"
+    ],
+    "name": "Maul + Ultimate Strike",
+    "relics": [
+     "CLAWS",
+     "PRESERVED_FOG"
+    ],
+    "share": 3.0,
+    "win": 68.9
+   },
+   {
+    "cards": [
+     "NIGHTMARE",
+     "SKEWER",
+     "GRAND_FINALE"
+    ],
+    "name": "Nightmare + Skewer",
+    "relics": [
+     "PANDORAS_BOX",
+     "JOSS_PAPER"
+    ],
+    "share": 1.9,
+    "win": 33.3
+   },
+   {
+    "cards": [
+     "NIGHTMARE",
+     "AFTERIMAGE",
+     "ADRENALINE"
+    ],
+    "name": "Nightmare + Afterimage",
+    "relics": [
+     "THE_COURIER",
+     "NINJA_SCROLL"
+    ],
+    "share": 1.4,
+    "win": 78.7
+   }
+  ]
+ },
+ "cards": {
+  "baseline_win": 42.7,
+  "rows": {
+   "ABRASIVE": {
+    "elo": 1725.0,
+    "n": 57785,
+    "n_up": 25591,
+    "pick": 40.3,
+    "pick_by_act": [
+     43.3,
+     36.9,
+     38.9
+    ],
+    "win": 52.7,
+    "win_up": 63.9
+   },
+   "ACCELERANT": {
+    "elo": 1658.3,
+    "n": 38924,
+    "n_up": 44660,
+    "pick": 32.5,
+    "pick_by_act": [
+     35.9,
+     30.5,
+     27.4
+    ],
+    "win": 39.1,
+    "win_up": 64.9
+   },
+   "ACCURACY": {
+    "elo": 1681.4,
+    "n": 108963,
+    "n_up": 106484,
+    "pick": 41.1,
+    "pick_by_act": [
+     42.5,
+     40.7,
+     39.2
+    ],
+    "win": 42.5,
+    "win_up": 62.8
+   },
+   "ACROBATICS": {
+    "elo": 1696.1,
+    "n": 127917,
+    "n_up": 75851,
+    "pick": 44.4,
+    "pick_by_act": [
+     45.7,
+     44.5,
+     41.3
+    ],
+    "win": 43.9,
+    "win_up": 67.9
+   },
+   "ADAPTIVE_STRIKE": {
+    "elo": 1560.7,
+    "n": 27052,
+    "n_up": 14095,
+    "pick": 20.9,
+    "pick_by_act": [
+     25.2,
+     17.2,
+     13.7
+    ],
+    "win": 40.1,
+    "win_up": 55.6
+   },
+   "ADRENALINE": {
+    "elo": 1903.7,
+    "n": 69698,
+    "n_up": 59914,
+    "pick": 64.2,
+    "pick_by_act": [
+     61.0,
+     66.5,
+     69.9
+    ],
+    "win": 52.6,
+    "win_up": 70.4
+   },
+   "AFTERIMAGE": {
+    "elo": 1838.6,
+    "n": 51584,
+    "n_up": 60585,
+    "pick": 55.3,
+    "pick_by_act": [
+     55.8,
+     55.0,
+     54.4
+    ],
+    "win": 51.8,
+    "win_up": 70.1
+   },
+   "AFTERLIFE": {
+    "elo": 1452.4,
+    "n": 79500,
+    "n_up": 37554,
+    "pick": 17.3,
+    "pick_by_act": [
+     20.6,
+     15.4,
+     12.7
+    ],
+    "win": 37.8,
+    "win_up": 57.5
+   },
+   "AGGRESSION": {
+    "elo": 1621.5,
+    "n": 35721,
+    "n_up": 23587,
+    "pick": 28.7,
+    "pick_by_act": [
+     30.9,
+     27.1,
+     24.0
+    ],
+    "win": 48.6,
+    "win_up": 64.1
+   },
+   "ALCHEMIZE": {
+    "elo": 1232.2,
+    "n": 13804,
+    "n_up": 9095,
+    "pick": 4.0,
+    "pick_by_act": [
+     2.1,
+     4.7,
+     5.8
+    ],
+    "win": 57.9,
+    "win_up": 66.7
+   },
+   "ALIGNMENT": {
+    "elo": 1584.3,
+    "n": 58889,
+    "n_up": 38332,
+    "pick": 32.0,
+    "pick_by_act": [
+     30.0,
+     34.1,
+     33.3
+    ],
+    "win": 41.4,
+    "win_up": 64.8
+   },
+   "ALL_FOR_ONE": {
+    "elo": 1660.0,
+    "n": 47537,
+    "n_up": 10053,
+    "pick": 31.7,
+    "pick_by_act": [
+     33.4,
+     31.0,
+     26.4
+    ],
+    "win": 52.0,
+    "win_up": 68.3
+   },
+   "ANGER": {
+    "elo": 1438.6,
+    "n": 102181,
+    "n_up": 50475,
+    "pick": 16.4,
+    "pick_by_act": [
+     20.9,
+     13.3,
+     10.3
+    ],
+    "win": 33.8,
+    "win_up": 47.9
+   },
+   "ANOINTED": {
+    "elo": 1081.2,
+    "n": 7276,
+    "n_up": 2093,
+    "pick": 1.6,
+    "pick_by_act": [
+     0.3,
+     1.2,
+     4.3
+    ],
+    "win": 67.2,
+    "win_up": 78.7
+   },
+   "ANTICIPATE": {
+    "elo": 1388.0,
+    "n": 91635,
+    "n_up": 35411,
+    "pick": 11.9,
+    "pick_by_act": [
+     12.6,
+     11.9,
+     10.3
+    ],
+    "win": 38.2,
+    "win_up": 57.6
+   },
+   "ARMAMENTS": {
+    "elo": 1502.2,
+    "n": 85515,
+    "n_up": 150957,
+    "pick": 21.6,
+    "pick_by_act": [
+     27.9,
+     18.2,
+     12.5
+    ],
+    "win": 28.4,
+    "win_up": 47.7
+   },
+   "ARSENAL": {
+    "elo": 1653.7,
+    "n": 20283,
+    "n_up": 22625,
+    "pick": 31.1,
+    "pick_by_act": [
+     32.2,
+     30.8,
+     26.8
+    ],
+    "win": 43.8,
+    "win_up": 69.3
+   },
+   "ASHEN_STRIKE": {
+    "elo": 1493.9,
+    "n": 50499,
+    "n_up": 28731,
+    "pick": 20.6,
+    "pick_by_act": [
+     21.7,
+     20.2,
+     18.7
+    ],
+    "win": 40.1,
+    "win_up": 60.0
+   },
+   "ASSASSINATE": {
+    "elo": 1664.4,
+    "n": 53041,
+    "n_up": 29202,
+    "pick": 32.5,
+    "pick_by_act": [
+     34.4,
+     31.0,
+     29.7
+    ],
+    "win": 52.1,
+    "win_up": 63.7
+   },
+   "ASTRAL_PULSE": {
+    "elo": 1395.9,
+    "n": 92300,
+    "n_up": 34566,
+    "pick": 14.1,
+    "pick_by_act": [
+     20.9,
+     9.8,
+     5.1
+    ],
+    "win": 32.7,
+    "win_up": 48.6
+   },
+   "AUTOMATION": {
+    "elo": 1422.5,
+    "n": 30279,
+    "n_up": 22747,
+    "pick": 13.9,
+    "pick_by_act": [
+     10.7,
+     14.7,
+     18.3
+    ],
+    "win": 50.6,
+    "win_up": 64.8
+   },
+   "BACKFLIP": {
+    "elo": 1590.8,
+    "n": 198479,
+    "n_up": 80456,
+    "pick": 30.0,
+    "pick_by_act": [
+     33.0,
+     29.5,
+     24.1
+    ],
+    "win": 43.5,
+    "win_up": 62.5
+   },
+   "BACKSTAB": {
+    "elo": 1570.8,
+    "n": 85100,
+    "n_up": 32047,
+    "pick": 27.4,
+    "pick_by_act": [
+     33.5,
+     24.2,
+     19.8
+    ],
+    "win": 40.6,
+    "win_up": 55.9
+   },
+   "BALL_LIGHTNING": {
+    "elo": 1487.7,
+    "n": 115668,
+    "n_up": 34142,
+    "pick": 20.0,
+    "pick_by_act": [
+     28.2,
+     14.1,
+     9.1
+    ],
+    "win": 31.0,
+    "win_up": 47.5
+   },
+   "BANSHEES_CRY": {
+    "elo": 1560.6,
+    "n": 19630,
+    "n_up": 9984,
+    "pick": 22.3,
+    "pick_by_act": [
+     24.5,
+     20.6,
+     18.2
+    ],
+    "win": 53.7,
+    "win_up": 65.2
+   },
+   "BARRAGE": {
+    "elo": 1367.1,
+    "n": 48600,
+    "n_up": 25292,
+    "pick": 11.2,
+    "pick_by_act": [
+     13.3,
+     9.9,
+     8.2
+    ],
+    "win": 31.2,
+    "win_up": 49.8
+   },
+   "BARRICADE": {
+    "elo": 1693.1,
+    "n": 29431,
+    "n_up": 45496,
+    "pick": 36.7,
+    "pick_by_act": [
+     37.2,
+     36.9,
+     32.9
+    ],
+    "win": 40.7,
+    "win_up": 65.1
+   },
+   "BATTLE_TRANCE": {
+    "elo": 1654.4,
+    "n": 102584,
+    "n_up": 58509,
+    "pick": 40.4,
+    "pick_by_act": [
+     42.4,
+     41.1,
+     34.5
+    ],
+    "win": 42.2,
+    "win_up": 64.8
+   },
+   "BEACON_OF_HOPE": {
+    "elo": 1477.8,
+    "n": 20332,
+    "n_up": 28342,
+    "pick": 17.0,
+    "pick_by_act": [
+     9.7,
+     19.2,
+     23.1
+    ],
+    "win": 63.8,
+    "win_up": 82.1
+   },
+   "BEAM_CELL": {
+    "elo": 1507.7,
+    "n": 105810,
+    "n_up": 56709,
+    "pick": 20.8,
+    "pick_by_act": [
+     25.4,
+     18.0,
+     13.9
+    ],
+    "win": 34.8,
+    "win_up": 54.0
+   },
+   "BEAT_DOWN": {
+    "elo": 1089.6,
+    "n": 7564,
+    "n_up": 3491,
+    "pick": 1.8,
+    "pick_by_act": [
+     0.5,
+     1.6,
+     4.2
+    ],
+    "win": 58.4,
+    "win_up": 70.6
+   },
+   "BEAT_INTO_SHAPE": {
+    "elo": 1593.3,
+    "n": 30187,
+    "n_up": 19073,
+    "pick": 26.0,
+    "pick_by_act": [
+     28.5,
+     23.9,
+     21.1
+    ],
+    "win": 44.8,
+    "win_up": 59.2
+   },
+   "BEGONE": {
+    "elo": 1458.5,
+    "n": 89751,
+    "n_up": 29814,
+    "pick": 18.4,
+    "pick_by_act": [
+     23.3,
+     15.3,
+     12.1
+    ],
+    "win": 41.4,
+    "win_up": 57.4
+   },
+   "BELIEVE_IN_YOU": {
+    "elo": 1535.5,
+    "n": 52084,
+    "n_up": 24002,
+    "pick": 24.3,
+    "pick_by_act": [
+     17.8,
+     30.2,
+     28.3
+    ],
+    "win": 51.0,
+    "win_up": 68.6
+   },
+   "BIG_BANG": {
+    "elo": 1909.1,
+    "n": 60172,
+    "n_up": 53448,
+    "pick": 67.4,
+    "pick_by_act": [
+     67.2,
+     67.2,
+     69.3
+    ],
+    "win": 52.4,
+    "win_up": 67.6
+   },
+   "BLACK_HOLE": {
+    "elo": 1573.0,
+    "n": 83898,
+    "n_up": 41462,
+    "pick": 29.8,
+    "pick_by_act": [
+     34.4,
+     28.5,
+     23.1
+    ],
+    "win": 41.5,
+    "win_up": 57.2
+   },
+   "BLADE_DANCE": {
+    "elo": 1631.3,
+    "n": 197368,
+    "n_up": 95294,
+    "pick": 35.7,
+    "pick_by_act": [
+     40.1,
+     33.3,
+     29.6
+    ],
+    "win": 41.6,
+    "win_up": 59.8
+   },
+   "BLADE_OF_INK": {
+    "elo": 1736.7,
+    "n": 40512,
+    "n_up": 26362,
+    "pick": 41.3,
+    "pick_by_act": [
+     45.4,
+     37.9,
+     35.4
+    ],
+    "win": 53.1,
+    "win_up": 69.9
+   },
+   "BLADE_SYMPHONY": {
+    "elo": 1642.8,
+    "n": 6184,
+    "n_up": 11160,
+    "pick": 35.4,
+    "pick_by_act": [
+     41.0,
+     33.1,
+     29.4
+    ],
+    "win": 53.7,
+    "win_up": 71.9
+   },
+   "BLAZE": {
+    "elo": 1516.3,
+    "n": 5705,
+    "n_up": 6669,
+    "pick": 22.7,
+    "pick_by_act": [
+     25.7,
+     21.0,
+     19.7
+    ],
+    "win": 53.2,
+    "win_up": 67.7
+   },
+   "BLIGHT_STRIKE": {
+    "elo": 1410.4,
+    "n": 76405,
+    "n_up": 32367,
+    "pick": 14.1,
+    "pick_by_act": [
+     18.3,
+     11.4,
+     8.1
+    ],
+    "win": 33.6,
+    "win_up": 50.3
+   },
+   "BLOODLETTING": {
+    "elo": 1602.3,
+    "n": 197030,
+    "n_up": 110117,
+    "pick": 33.2,
+    "pick_by_act": [
+     36.5,
+     31.1,
+     29.4
+    ],
+    "win": 37.3,
+    "win_up": 60.5
+   },
+   "BLOOD_WALL": {
+    "elo": 1469.7,
+    "n": 109328,
+    "n_up": 42796,
+    "pick": 18.9,
+    "pick_by_act": [
+     21.6,
+     17.8,
+     14.4
+    ],
+    "win": 37.3,
+    "win_up": 56.0
+   },
+   "BLUDGEON": {
+    "elo": 1473.5,
+    "n": 42246,
+    "n_up": 34948,
+    "pick": 19.3,
+    "pick_by_act": [
+     24.0,
+     16.0,
+     13.2
+    ],
+    "win": 34.2,
+    "win_up": 49.3
+   },
+   "BLUR": {
+    "elo": 1632.1,
+    "n": 91886,
+    "n_up": 41009,
+    "pick": 35.0,
+    "pick_by_act": [
+     35.2,
+     35.9,
+     33.3
+    ],
+    "win": 44.7,
+    "win_up": 62.5
+   },
+   "BODY_SLAM": {
+    "elo": 1426.6,
+    "n": 57505,
+    "n_up": 77539,
+    "pick": 15.3,
+    "pick_by_act": [
+     14.7,
+     15.3,
+     16.8
+    ],
+    "win": 35.8,
+    "win_up": 56.3
+   },
+   "BOLAS": {
+    "elo": 1152.9,
+    "n": 14599,
+    "n_up": 3231,
+    "pick": 2.8,
+    "pick_by_act": [
+     1.3,
+     2.9,
+     5.0
+    ],
+    "win": 58.2,
+    "win_up": 69.0
+   },
+   "BOMBARDMENT": {
+    "elo": 1628.7,
+    "n": 30921,
+    "n_up": 24027,
+    "pick": 29.5,
+    "pick_by_act": [
+     32.5,
+     27.0,
+     24.2
+    ],
+    "win": 47.0,
+    "win_up": 62.6
+   },
+   "BONE_SHARDS": {
+    "elo": 1423.2,
+    "n": 33431,
+    "n_up": 19812,
+    "pick": 15.4,
+    "pick_by_act": [
+     21.9,
+     11.6,
+     6.9
+    ],
+    "win": 35.6,
+    "win_up": 48.3
+   },
+   "BOOST_AWAY": {
+    "elo": 1498.4,
+    "n": 120297,
+    "n_up": 40449,
+    "pick": 19.9,
+    "pick_by_act": [
+     21.6,
+     19.8,
+     16.1
+    ],
+    "win": 38.0,
+    "win_up": 58.1
+   },
+   "BOOT_SEQUENCE": {
+    "elo": 1649.8,
+    "n": 86095,
+    "n_up": 25882,
+    "pick": 37.7,
+    "pick_by_act": [
+     40.8,
+     37.3,
+     30.9
+    ],
+    "win": 39.6,
+    "win_up": 58.6
+   },
+   "BORROWED_TIME": {
+    "elo": 1613.4,
+    "n": 46833,
+    "n_up": 58772,
+    "pick": 33.9,
+    "pick_by_act": [
+     33.1,
+     35.2,
+     33.4
+    ],
+    "win": 37.5,
+    "win_up": 65.1
+   },
+   "BOUNCING_FLASK": {
+    "elo": 1509.7,
+    "n": 47288,
+    "n_up": 36976,
+    "pick": 22.0,
+    "pick_by_act": [
+     27.5,
+     18.8,
+     15.0
+    ],
+    "win": 37.2,
+    "win_up": 54.3
+   },
+   "BRAND": {
+    "elo": 1647.2,
+    "n": 43312,
+    "n_up": 28379,
+    "pick": 32.3,
+    "pick_by_act": [
+     36.0,
+     29.4,
+     25.7
+    ],
+    "win": 46.5,
+    "win_up": 60.5
+   },
+   "BREAKTHROUGH": {
+    "elo": 1392.8,
+    "n": 98033,
+    "n_up": 36297,
+    "pick": 13.6,
+    "pick_by_act": [
+     19.8,
+     9.3,
+     5.4
+    ],
+    "win": 32.2,
+    "win_up": 47.5
+   },
+   "BUBBLE_BUBBLE": {
+    "elo": 1547.4,
+    "n": 54856,
+    "n_up": 35383,
+    "pick": 25.3,
+    "pick_by_act": [
+     26.8,
+     25.8,
+     21.4
+    ],
+    "win": 39.9,
+    "win_up": 57.8
+   },
+   "BUFFER": {
+    "elo": 1655.6,
+    "n": 28301,
+    "n_up": 24634,
+    "pick": 30.9,
+    "pick_by_act": [
+     29.8,
+     31.4,
+     34.2
+    ],
+    "win": 44.5,
+    "win_up": 64.6
+   },
+   "BULK_UP": {
+    "elo": 1505.3,
+    "n": 39643,
+    "n_up": 39920,
+    "pick": 20.4,
+    "pick_by_act": [
+     22.2,
+     19.4,
+     18.4
+    ],
+    "win": 37.0,
+    "win_up": 55.9
+   },
+   "BULLET_TIME": {
+    "elo": 1629.7,
+    "n": 37854,
+    "n_up": 25161,
+    "pick": 26.9,
+    "pick_by_act": [
+     26.7,
+     27.6,
+     25.4
+    ],
+    "win": 44.4,
+    "win_up": 64.3
+   },
+   "BULLY": {
+    "elo": 1596.6,
+    "n": 69545,
+    "n_up": 45105,
+    "pick": 32.6,
+    "pick_by_act": [
+     35.6,
+     31.2,
+     28.1
+    ],
+    "win": 41.5,
+    "win_up": 61.1
+   },
+   "BULWARK": {
+    "elo": 1690.2,
+    "n": 68893,
+    "n_up": 61064,
+    "pick": 45.5,
+    "pick_by_act": [
+     52.7,
+     42.6,
+     34.0
+    ],
+    "win": 40.3,
+    "win_up": 56.7
+   },
+   "BUNDLE_OF_JOY": {
+    "elo": 1537.9,
+    "n": 27480,
+    "n_up": 11877,
+    "pick": 19.9,
+    "pick_by_act": [
+     21.1,
+     18.9,
+     17.6
+    ],
+    "win": 50.2,
+    "win_up": 66.8
+   },
+   "BURNING_PACT": {
+    "elo": 1569.7,
+    "n": 69417,
+    "n_up": 44018,
+    "pick": 29.2,
+    "pick_by_act": [
+     29.5,
+     29.6,
+     28.0
+    ],
+    "win": 40.4,
+    "win_up": 66.5
+   },
+   "BURST": {
+    "elo": 1698.7,
+    "n": 43666,
+    "n_up": 36778,
+    "pick": 35.9,
+    "pick_by_act": [
+     35.7,
+     36.6,
+     34.1
+    ],
+    "win": 46.0,
+    "win_up": 66.8
+   },
+   "BURY": {
+    "elo": 1345.3,
+    "n": 20811,
+    "n_up": 15991,
+    "pick": 10.2,
+    "pick_by_act": [
+     9.5,
+     10.7,
+     10.8
+    ],
+    "win": 38.7,
+    "win_up": 58.6
+   },
+   "CACOPHONY": {
+    "elo": 1757.3,
+    "n": 4213,
+    "n_up": 5983,
+    "pick": 44.7,
+    "pick_by_act": [
+     47.5,
+     42.7,
+     40.4
+    ],
+    "win": 56.5,
+    "win_up": 74.9
+   },
+   "CALAMITY": {
+    "elo": 1144.3,
+    "n": 6967,
+    "n_up": 5078,
+    "pick": 2.2,
+    "pick_by_act": [
+     1.0,
+     2.2,
+     4.3
+    ],
+    "win": 57.2,
+    "win_up": 68.2
+   },
+   "CALCIFY": {
+    "elo": 1475.7,
+    "n": 38042,
+    "n_up": 26913,
+    "pick": 19.2,
+    "pick_by_act": [
+     23.0,
+     17.1,
+     14.8
+    ],
+    "win": 38.4,
+    "win_up": 54.5
+   },
+   "CALCULATED_GAMBLE": {
+    "elo": 1659.5,
+    "n": 90885,
+    "n_up": 54544,
+    "pick": 38.6,
+    "pick_by_act": [
+     35.7,
+     41.1,
+     41.1
+    ],
+    "win": 46.9,
+    "win_up": 67.3
+   },
+   "CALL_OF_THE_VOID": {
+    "elo": 1686.4,
+    "n": 31956,
+    "n_up": 31991,
+    "pick": 36.0,
+    "pick_by_act": [
+     38.5,
+     34.2,
+     30.3
+    ],
+    "win": 47.2,
+    "win_up": 67.0
+   },
+   "CAPACITOR": {
+    "elo": 1684.8,
+    "n": 100641,
+    "n_up": 57491,
+    "pick": 42.3,
+    "pick_by_act": [
+     43.7,
+     42.4,
+     39.4
+    ],
+    "win": 36.0,
+    "win_up": 57.2
+   },
+   "CAPTURE_SPIRIT": {
+    "elo": 1617.8,
+    "n": 62631,
+    "n_up": 44072,
+    "pick": 34.7,
+    "pick_by_act": [
+     38.0,
+     33.9,
+     28.5
+    ],
+    "win": 39.9,
+    "win_up": 63.2
+   },
+   "CASCADE": {
+    "elo": 1613.4,
+    "n": 29601,
+    "n_up": 31399,
+    "pick": 27.7,
+    "pick_by_act": [
+     28.1,
+     27.3,
+     27.2
+    ],
+    "win": 46.0,
+    "win_up": 66.0
+   },
+   "CATASTROPHE": {
+    "elo": 1232.6,
+    "n": 11631,
+    "n_up": 10713,
+    "pick": 5.2,
+    "pick_by_act": [
+     4.2,
+     5.2,
+     7.2
+    ],
+    "win": 45.8,
+    "win_up": 61.9
+   },
+   "CELESTIAL_MIGHT": {
+    "elo": 1241.6,
+    "n": 32492,
+    "n_up": 24051,
+    "pick": 6.0,
+    "pick_by_act": [
+     8.4,
+     4.1,
+     3.6
+    ],
+    "win": 32.7,
+    "win_up": 47.0
+   },
+   "CHAOS": {
+    "elo": 1481.6,
+    "n": 29950,
+    "n_up": 28560,
+    "pick": 19.4,
+    "pick_by_act": [
+     22.1,
+     17.9,
+     15.3
+    ],
+    "win": 31.6,
+    "win_up": 49.7
+   },
+   "CHARGE": {
+    "elo": 1576.2,
+    "n": 64035,
+    "n_up": 28708,
+    "pick": 30.9,
+    "pick_by_act": [
+     36.7,
+     28.3,
+     21.5
+    ],
+    "win": 44.4,
+    "win_up": 57.6
+   },
+   "CHARGE_BATTERY": {
+    "elo": 1615.9,
+    "n": 186712,
+    "n_up": 69673,
+    "pick": 33.0,
+    "pick_by_act": [
+     40.2,
+     29.5,
+     21.2
+    ],
+    "win": 35.1,
+    "win_up": 52.7
+   },
+   "CHILD_OF_THE_STARS": {
+    "elo": 1606.1,
+    "n": 85590,
+    "n_up": 57825,
+    "pick": 33.9,
+    "pick_by_act": [
+     36.3,
+     33.6,
+     29.8
+    ],
+    "win": 42.0,
+    "win_up": 62.2
+   },
+   "CHILL": {
+    "elo": 1601.9,
+    "n": 55825,
+    "n_up": 39800,
+    "pick": 32.2,
+    "pick_by_act": [
+     38.2,
+     30.4,
+     20.3
+    ],
+    "win": 38.5,
+    "win_up": 54.0
+   },
+   "CINDER": {
+    "elo": 1200.3,
+    "n": 30918,
+    "n_up": 13392,
+    "pick": 4.8,
+    "pick_by_act": [
+     7.2,
+     2.7,
+     2.2
+    ],
+    "win": 29.7,
+    "win_up": 42.1
+   },
+   "CLAW": {
+    "elo": 1593.5,
+    "n": 110187,
+    "n_up": 69244,
+    "pick": 30.2,
+    "pick_by_act": [
+     35.7,
+     26.2,
+     23.0
+    ],
+    "win": 32.3,
+    "win_up": 50.2
+   },
+   "CLEANSE": {
+    "elo": 1490.1,
+    "n": 44516,
+    "n_up": 22628,
+    "pick": 20.9,
+    "pick_by_act": [
+     23.3,
+     19.9,
+     16.9
+    ],
+    "win": 44.2,
+    "win_up": 62.6
+   },
+   "CLOAK_AND_DAGGER": {
+    "elo": 1596.7,
+    "n": 164442,
+    "n_up": 108741,
+    "pick": 30.9,
+    "pick_by_act": [
+     36.3,
+     28.7,
+     22.5
+    ],
+    "win": 38.8,
+    "win_up": 58.2
+   },
+   "CLOAK_OF_STARS": {
+    "elo": 1491.4,
+    "n": 128671,
+    "n_up": 48759,
+    "pick": 21.7,
+    "pick_by_act": [
+     24.4,
+     21.2,
+     16.2
+    ],
+    "win": 38.7,
+    "win_up": 58.2
+   },
+   "COLD_SNAP": {
+    "elo": 1456.3,
+    "n": 104864,
+    "n_up": 27980,
+    "pick": 17.0,
+    "pick_by_act": [
+     24.9,
+     11.2,
+     6.8
+    ],
+    "win": 33.8,
+    "win_up": 51.5
+   },
+   "COLLISION_COURSE": {
+    "elo": 1335.6,
+    "n": 62027,
+    "n_up": 20681,
+    "pick": 9.7,
+    "pick_by_act": [
+     13.2,
+     7.4,
+     5.3
+    ],
+    "win": 37.9,
+    "win_up": 53.5
+   },
+   "COLOSSUS": {
+    "elo": 1690.3,
+    "n": 107244,
+    "n_up": 41421,
+    "pick": 44.3,
+    "pick_by_act": [
+     46.1,
+     43.9,
+     40.7
+    ],
+    "win": 44.5,
+    "win_up": 59.6
+   },
+   "COMET": {
+    "elo": 1631.7,
+    "n": 39025,
+    "n_up": 17671,
+    "pick": 30.8,
+    "pick_by_act": [
+     34.8,
+     26.9,
+     24.5
+    ],
+    "win": 50.4,
+    "win_up": 65.6
+   },
+   "COMPACT": {
+    "elo": 1625.0,
+    "n": 65520,
+    "n_up": 33488,
+    "pick": 33.9,
+    "pick_by_act": [
+     36.6,
+     33.0,
+     28.7
+    ],
+    "win": 38.3,
+    "win_up": 60.7
+   },
+   "COMPILE_DRIVER": {
+    "elo": 1343.2,
+    "n": 59717,
+    "n_up": 20709,
+    "pick": 9.8,
+    "pick_by_act": [
+     10.4,
+     9.4,
+     8.9
+    ],
+    "win": 40.7,
+    "win_up": 59.3
+   },
+   "CONCOCT": {
+    "elo": 1631.4,
+    "n": 10443,
+    "n_up": 6134,
+    "pick": 33.5,
+    "pick_by_act": [
+     37.5,
+     31.2,
+     29.7
+    ],
+    "win": 56.7,
+    "win_up": 70.2
+   },
+   "CONFLAGRATION": {
+    "elo": 1626.2,
+    "n": 42066,
+    "n_up": 26290,
+    "pick": 29.9,
+    "pick_by_act": [
+     34.3,
+     27.0,
+     20.6
+    ],
+    "win": 44.1,
+    "win_up": 59.6
+   },
+   "CONQUEROR": {
+    "elo": 1586.5,
+    "n": 66365,
+    "n_up": 25456,
+    "pick": 31.6,
+    "pick_by_act": [
+     33.2,
+     31.3,
+     28.4
+    ],
+    "win": 42.9,
+    "win_up": 60.2
+   },
+   "CONSTELLATION": {
+    "elo": 1541.2,
+    "n": 7923,
+    "n_up": 2849,
+    "pick": 26.2,
+    "pick_by_act": [
+     27.8,
+     26.5,
+     23.2
+    ],
+    "win": 55.6,
+    "win_up": 69.4
+   },
+   "CONSUMING_SHADOW": {
+    "elo": 1517.3,
+    "n": 22596,
+    "n_up": 8717,
+    "pick": 17.4,
+    "pick_by_act": [
+     20.4,
+     14.2,
+     14.6
+    ],
+    "win": 41.6,
+    "win_up": 52.3
+   },
+   "CONVERGENCE": {
+    "elo": 1643.0,
+    "n": 74306,
+    "n_up": 41337,
+    "pick": 39.1,
+    "pick_by_act": [
+     42.2,
+     38.1,
+     33.9
+    ],
+    "win": 43.0,
+    "win_up": 62.5
+   },
+   "COOLANT": {
+    "elo": 1574.5,
+    "n": 28635,
+    "n_up": 10972,
+    "pick": 22.6,
+    "pick_by_act": [
+     23.6,
+     21.4,
+     22.2
+    ],
+    "win": 46.5,
+    "win_up": 62.9
+   },
+   "COOLHEADED": {
+    "elo": 1549.4,
+    "n": 127675,
+    "n_up": 79472,
+    "pick": 25.9,
+    "pick_by_act": [
+     30.7,
+     22.7,
+     19.5
+    ],
+    "win": 34.1,
+    "win_up": 59.1
+   },
+   "COORDINATE": {
+    "elo": 1239.1,
+    "n": 14185,
+    "n_up": 7001,
+    "pick": 5.5,
+    "pick_by_act": [
+     3.1,
+     7.3,
+     9.7
+    ],
+    "win": 48.0,
+    "win_up": 61.6
+   },
+   "CORROSIVE_WAVE": {
+    "elo": 1606.1,
+    "n": 39063,
+    "n_up": 18470,
+    "pick": 25.5,
+    "pick_by_act": [
+     28.0,
+     23.4,
+     21.7
+    ],
+    "win": 47.3,
+    "win_up": 70.3
+   },
+   "COSMIC_INDIFFERENCE": {
+    "elo": 1539.1,
+    "n": 142048,
+    "n_up": 59671,
+    "pick": 26.1,
+    "pick_by_act": [
+     27.7,
+     26.1,
+     22.4
+    ],
+    "win": 42.3,
+    "win_up": 61.3
+   },
+   "COUNTDOWN": {
+    "elo": 1592.4,
+    "n": 69336,
+    "n_up": 47861,
+    "pick": 31.0,
+    "pick_by_act": [
+     35.2,
+     29.3,
+     25.1
+    ],
+    "win": 38.8,
+    "win_up": 54.0
+   },
+   "CRASH_LANDING": {
+    "elo": 1483.2,
+    "n": 23308,
+    "n_up": 7315,
+    "pick": 15.2,
+    "pick_by_act": [
+     18.5,
+     12.4,
+     9.1
+    ],
+    "win": 47.2,
+    "win_up": 54.5
+   },
+   "CREATIVE_AI": {
+    "elo": 1770.5,
+    "n": 36798,
+    "n_up": 36998,
+    "pick": 45.4,
+    "pick_by_act": [
+     46.8,
+     44.5,
+     42.2
+    ],
+    "win": 42.5,
+    "win_up": 62.5
+   },
+   "CRESCENT_SPEAR": {
+    "elo": 1403.2,
+    "n": 70869,
+    "n_up": 37006,
+    "pick": 13.9,
+    "pick_by_act": [
+     16.3,
+     12.2,
+     11.0
+    ],
+    "win": 35.7,
+    "win_up": 52.4
+   },
+   "CRIMSON_MANTLE": {
+    "elo": 1712.1,
+    "n": 46338,
+    "n_up": 32951,
+    "pick": 40.6,
+    "pick_by_act": [
+     43.4,
+     38.0,
+     36.7
+    ],
+    "win": 50.4,
+    "win_up": 64.8
+   },
+   "CRUELTY": {
+    "elo": 1738.5,
+    "n": 48920,
+    "n_up": 58992,
+    "pick": 46.2,
+    "pick_by_act": [
+     48.6,
+     45.6,
+     39.8
+    ],
+    "win": 39.0,
+    "win_up": 62.6
+   },
+   "CRUSH_UNDER": {
+    "elo": 1415.6,
+    "n": 77882,
+    "n_up": 48102,
+    "pick": 14.8,
+    "pick_by_act": [
+     21.6,
+     10.0,
+     6.5
+    ],
+    "win": 32.8,
+    "win_up": 51.0
+   },
+   "DAGGER_SPRAY": {
+    "elo": 1357.7,
+    "n": 81832,
+    "n_up": 32620,
+    "pick": 10.4,
+    "pick_by_act": [
+     16.6,
+     6.1,
+     3.4
+    ],
+    "win": 32.3,
+    "win_up": 46.8
+   },
+   "DAGGER_THROW": {
+    "elo": 1483.7,
+    "n": 145738,
+    "n_up": 46544,
+    "pick": 19.0,
+    "pick_by_act": [
+     25.4,
+     15.2,
+     10.9
+    ],
+    "win": 38.5,
+    "win_up": 57.2
+   },
+   "DANSE_MACABRE": {
+    "elo": 1412.0,
+    "n": 36580,
+    "n_up": 22801,
+    "pick": 13.4,
+    "pick_by_act": [
+     12.0,
+     14.4,
+     14.7
+    ],
+    "win": 44.1,
+    "win_up": 63.6
+   },
+   "DARKNESS": {
+    "elo": 1523.3,
+    "n": 35709,
+    "n_up": 31165,
+    "pick": 23.6,
+    "pick_by_act": [
+     29.7,
+     19.7,
+     15.4
+    ],
+    "win": 30.7,
+    "win_up": 49.6
+   },
+   "DARK_EMBRACE": {
+    "elo": 1549.9,
+    "n": 20960,
+    "n_up": 23397,
+    "pick": 20.4,
+    "pick_by_act": [
+     19.3,
+     21.4,
+     22.2
+    ],
+    "win": 45.4,
+    "win_up": 68.8
+   },
+   "DARK_SHACKLES": {
+    "elo": 1439.1,
+    "n": 40996,
+    "n_up": 12811,
+    "pick": 14.6,
+    "pick_by_act": [
+     12.3,
+     16.0,
+     17.1
+    ],
+    "win": 55.1,
+    "win_up": 67.3
+   },
+   "DASH": {
+    "elo": 1444.2,
+    "n": 48194,
+    "n_up": 23006,
+    "pick": 15.6,
+    "pick_by_act": [
+     21.6,
+     12.2,
+     8.2
+    ],
+    "win": 37.6,
+    "win_up": 50.9
+   },
+   "DEADLY_POISON": {
+    "elo": 1469.4,
+    "n": 109646,
+    "n_up": 53013,
+    "pick": 18.2,
+    "pick_by_act": [
+     23.8,
+     14.7,
+     10.9
+    ],
+    "win": 35.7,
+    "win_up": 51.9
+   },
+   "DEATHBRINGER": {
+    "elo": 1637.7,
+    "n": 73795,
+    "n_up": 40016,
+    "pick": 37.4,
+    "pick_by_act": [
+     46.8,
+     33.2,
+     23.0
+    ],
+    "win": 40.5,
+    "win_up": 54.7
+   },
+   "DEATHS_DOOR": {
+    "elo": 1547.0,
+    "n": 57152,
+    "n_up": 23643,
+    "pick": 26.0,
+    "pick_by_act": [
+     27.0,
+     26.7,
+     22.7
+    ],
+    "win": 41.5,
+    "win_up": 60.2
+   },
+   "DEATH_MARCH": {
+    "elo": 1387.0,
+    "n": 26118,
+    "n_up": 17842,
+    "pick": 12.5,
+    "pick_by_act": [
+     13.5,
+     11.7,
+     11.7
+    ],
+    "win": 38.9,
+    "win_up": 60.2
+   },
+   "DEBILITATE": {
+    "elo": 1625.3,
+    "n": 60638,
+    "n_up": 54078,
+    "pick": 34.7,
+    "pick_by_act": [
+     37.5,
+     33.6,
+     30.4
+    ],
+    "win": 47.7,
+    "win_up": 71.1
+   },
+   "DECISIONS_DECISIONS": {
+    "elo": 1714.7,
+    "n": 47007,
+    "n_up": 25789,
+    "pick": 40.9,
+    "pick_by_act": [
+     40.5,
+     41.8,
+     40.2
+    ],
+    "win": 51.6,
+    "win_up": 71.9
+   },
+   "DEFILE": {
+    "elo": 1331.5,
+    "n": 57434,
+    "n_up": 22263,
+    "pick": 9.4,
+    "pick_by_act": [
+     13.4,
+     6.6,
+     4.3
+    ],
+    "win": 34.4,
+    "win_up": 50.2
+   },
+   "DEFLECT": {
+    "elo": 1488.0,
+    "n": 131256,
+    "n_up": 55069,
+    "pick": 18.8,
+    "pick_by_act": [
+     19.5,
+     19.3,
+     16.4
+    ],
+    "win": 40.2,
+    "win_up": 59.2
+   },
+   "DEFRAGMENT": {
+    "elo": 1808.0,
+    "n": 38258,
+    "n_up": 43220,
+    "pick": 52.8,
+    "pick_by_act": [
+     56.3,
+     48.9,
+     50.0
+    ],
+    "win": 41.2,
+    "win_up": 62.8
+   },
+   "DEFY": {
+    "elo": 1582.8,
+    "n": 166578,
+    "n_up": 78483,
+    "pick": 30.3,
+    "pick_by_act": [
+     37.1,
+     27.1,
+     19.5
+    ],
+    "win": 40.7,
+    "win_up": 59.8
+   },
+   "DELAY": {
+    "elo": 1577.3,
+    "n": 46631,
+    "n_up": 46682,
+    "pick": 29.4,
+    "pick_by_act": [
+     33.1,
+     28.2,
+     22.9
+    ],
+    "win": 36.9,
+    "win_up": 58.7
+   },
+   "DEMESNE": {
+    "elo": 1834.8,
+    "n": 34567,
+    "n_up": 59061,
+    "pick": 57.0,
+    "pick_by_act": [
+     57.7,
+     57.3,
+     52.4
+    ],
+    "win": 44.9,
+    "win_up": 68.3
+   },
+   "DEMONIC_SHIELD": {
+    "elo": 1506.1,
+    "n": 31080,
+    "n_up": 29138,
+    "pick": 22.6,
+    "pick_by_act": [
+     20.9,
+     24.2,
+     23.5
+    ],
+    "win": 47.5,
+    "win_up": 66.1
+   },
+   "DEMON_FORM": {
+    "elo": 1696.2,
+    "n": 43577,
+    "n_up": 38304,
+    "pick": 38.4,
+    "pick_by_act": [
+     41.5,
+     34.9,
+     33.6
+    ],
+    "win": 41.7,
+    "win_up": 62.0
+   },
+   "DEVASTATE": {
+    "elo": 1409.6,
+    "n": 33789,
+    "n_up": 18898,
+    "pick": 14.8,
+    "pick_by_act": [
+     17.8,
+     13.5,
+     10.3
+    ],
+    "win": 36.4,
+    "win_up": 53.7
+   },
+   "DEVOUR_LIFE": {
+    "elo": 1638.9,
+    "n": 28875,
+    "n_up": 25721,
+    "pick": 31.2,
+    "pick_by_act": [
+     33.5,
+     28.8,
+     29.1
+    ],
+    "win": 42.2,
+    "win_up": 64.9
+   },
+   "DIRGE": {
+    "elo": 1624.3,
+    "n": 49326,
+    "n_up": 61189,
+    "pick": 36.1,
+    "pick_by_act": [
+     39.3,
+     34.7,
+     31.2
+    ],
+    "win": 38.0,
+    "win_up": 61.4
+   },
+   "DISCOVERY": {
+    "elo": 1420.4,
+    "n": 24436,
+    "n_up": 28282,
+    "pick": 13.5,
+    "pick_by_act": [
+     13.0,
+     14.1,
+     13.7
+    ],
+    "win": 45.0,
+    "win_up": 57.9
+   },
+   "DISMANTLE": {
+    "elo": 1528.0,
+    "n": 68245,
+    "n_up": 31469,
+    "pick": 26.2,
+    "pick_by_act": [
+     34.8,
+     20.3,
+     14.6
+    ],
+    "win": 38.7,
+    "win_up": 53.8
+   },
+   "DODGE_AND_ROLL": {
+    "elo": 1397.1,
+    "n": 81401,
+    "n_up": 44680,
+    "pick": 12.2,
+    "pick_by_act": [
+     13.3,
+     12.2,
+     9.9
+    ],
+    "win": 39.1,
+    "win_up": 56.5
+   },
+   "DOMINATE": {
+    "elo": 1733.6,
+    "n": 87443,
+    "n_up": 69870,
+    "pick": 50.3,
+    "pick_by_act": [
+     53.1,
+     48.7,
+     46.2
+    ],
+    "win": 44.3,
+    "win_up": 59.3
+   },
+   "DOUBLE_ENERGY": {
+    "elo": 1611.7,
+    "n": 49681,
+    "n_up": 43692,
+    "pick": 32.3,
+    "pick_by_act": [
+     29.4,
+     34.3,
+     35.9
+    ],
+    "win": 35.4,
+    "win_up": 57.4
+   },
+   "DRAIN_POWER": {
+    "elo": 1406.6,
+    "n": 71036,
+    "n_up": 44276,
+    "pick": 13.8,
+    "pick_by_act": [
+     18.8,
+     10.3,
+     7.1
+    ],
+    "win": 32.9,
+    "win_up": 49.7
+   },
+   "DRAMATIC_ENTRANCE": {
+    "elo": 1347.4,
+    "n": 32980,
+    "n_up": 11223,
+    "pick": 10.0,
+    "pick_by_act": [
+     10.9,
+     9.8,
+     8.8
+    ],
+    "win": 42.4,
+    "win_up": 50.7
+   },
+   "DREDGE": {
+    "elo": 1504.2,
+    "n": 38242,
+    "n_up": 30654,
+    "pick": 21.6,
+    "pick_by_act": [
+     18.6,
+     23.6,
+     25.2
+    ],
+    "win": 45.7,
+    "win_up": 70.2
+   },
+   "DRUM_OF_BATTLE": {
+    "elo": 1411.2,
+    "n": 36525,
+    "n_up": 14096,
+    "pick": 13.9,
+    "pick_by_act": [
+     12.9,
+     14.4,
+     15.4
+    ],
+    "win": 45.4,
+    "win_up": 63.0
+   },
+   "DYING_STAR": {
+    "elo": 1683.9,
+    "n": 44403,
+    "n_up": 21898,
+    "pick": 37.0,
+    "pick_by_act": [
+     40.8,
+     33.9,
+     29.8
+    ],
+    "win": 50.8,
+    "win_up": 66.5
+   },
+   "ECHOING_SLASH": {
+    "elo": 1476.9,
+    "n": 36335,
+    "n_up": 11531,
+    "pick": 15.4,
+    "pick_by_act": [
+     22.2,
+     10.7,
+     5.0
+    ],
+    "win": 39.6,
+    "win_up": 50.0
+   },
+   "ECHO_FORM": {
+    "elo": 1913.5,
+    "n": 62257,
+    "n_up": 38831,
+    "pick": 65.4,
+    "pick_by_act": [
+     67.0,
+     64.9,
+     59.2
+    ],
+    "win": 49.4,
+    "win_up": 63.9
+   },
+   "EIDOLON": {
+    "elo": 1296.4,
+    "n": 10191,
+    "n_up": 4626,
+    "pick": 5.7,
+    "pick_by_act": [
+     5.1,
+     5.9,
+     8.1
+    ],
+    "win": 42.4,
+    "win_up": 70.0
+   },
+   "END_OF_DAYS": {
+    "elo": 1674.0,
+    "n": 36132,
+    "n_up": 28997,
+    "pick": 35.5,
+    "pick_by_act": [
+     42.1,
+     29.9,
+     24.4
+    ],
+    "win": 43.5,
+    "win_up": 55.2
+   },
+   "ENERGY_SURGE": {
+    "elo": 1790.2,
+    "n": 59648,
+    "n_up": 44044,
+    "pick": 56.9,
+    "pick_by_act": [
+     57.1,
+     57.3,
+     55.9
+    ],
+    "win": 46.1,
+    "win_up": 68.2
+   },
+   "ENFEEBLING_TOUCH": {
+    "elo": 1723.3,
+    "n": 84814,
+    "n_up": 60085,
+    "pick": 48.5,
+    "pick_by_act": [
+     50.7,
+     48.3,
+     43.8
+    ],
+    "win": 46.1,
+    "win_up": 66.1
+   },
+   "ENTROPY": {
+    "elo": 1196.6,
+    "n": 12560,
+    "n_up": 7675,
+    "pick": 3.3,
+    "pick_by_act": [
+     1.7,
+     3.4,
+     5.7
+    ],
+    "win": 55.7,
+    "win_up": 68.8
+   },
+   "ENVENOM": {
+    "elo": 1704.9,
+    "n": 42375,
+    "n_up": 37196,
+    "pick": 37.6,
+    "pick_by_act": [
+     41.8,
+     33.8,
+     31.7
+    ],
+    "win": 43.4,
+    "win_up": 64.5
+   },
+   "EQUILIBRIUM": {
+    "elo": 1273.1,
+    "n": 23231,
+    "n_up": 5335,
+    "pick": 6.4,
+    "pick_by_act": [
+     5.5,
+     6.7,
+     7.8
+    ],
+    "win": 50.2,
+    "win_up": 61.9
+   },
+   "ERADICATE": {
+    "elo": 1565.0,
+    "n": 24377,
+    "n_up": 21047,
+    "pick": 22.2,
+    "pick_by_act": [
+     23.9,
+     21.1,
+     18.4
+    ],
+    "win": 47.5,
+    "win_up": 67.5
+   },
+   "ESCAPE_PLAN": {
+    "elo": 1658.2,
+    "n": 106285,
+    "n_up": 35896,
+    "pick": 38.9,
+    "pick_by_act": [
+     38.4,
+     40.6,
+     37.4
+    ],
+    "win": 47.9,
+    "win_up": 66.3
+   },
+   "ETERNAL_ARMOR": {
+    "elo": 1184.0,
+    "n": 11645,
+    "n_up": 7630,
+    "pick": 3.0,
+    "pick_by_act": [
+     1.1,
+     3.1,
+     5.8
+    ],
+    "win": 58.7,
+    "win_up": 69.0
+   },
+   "EVIL_EYE": {
+    "elo": 1514.5,
+    "n": 61497,
+    "n_up": 28951,
+    "pick": 22.1,
+    "pick_by_act": [
+     21.8,
+     23.5,
+     20.6
+    ],
+    "win": 40.7,
+    "win_up": 58.7
+   },
+   "EXPECT_A_FIGHT": {
+    "elo": 1499.7,
+    "n": 38153,
+    "n_up": 48325,
+    "pick": 21.9,
+    "pick_by_act": [
+     21.4,
+     22.6,
+     21.8
+    ],
+    "win": 35.5,
+    "win_up": 53.9
+   },
+   "EXPERTISE": {
+    "elo": 1410.1,
+    "n": 37018,
+    "n_up": 18225,
+    "pick": 13.2,
+    "pick_by_act": [
+     12.4,
+     14.3,
+     13.3
+    ],
+    "win": 46.0,
+    "win_up": 68.5
+   },
+   "EXPOSE": {
+    "elo": 1701.7,
+    "n": 124945,
+    "n_up": 42546,
+    "pick": 44.8,
+    "pick_by_act": [
+     47.4,
+     45.5,
+     38.1
+    ],
+    "win": 48.3,
+    "win_up": 66.4
+   },
+   "FADE": {
+    "elo": 1490.8,
+    "n": 7643,
+    "n_up": 2729,
+    "pick": 19.2,
+    "pick_by_act": [
+     21.5,
+     19.2,
+     15.2
+    ],
+    "win": 53.6,
+    "win_up": 65.8
+   },
+   "FAN_OF_KNIVES": {
+    "elo": 1754.5,
+    "n": 67847,
+    "n_up": 27124,
+    "pick": 44.6,
+    "pick_by_act": [
+     52.8,
+     38.1,
+     30.6
+    ],
+    "win": 52.4,
+    "win_up": 63.3
+   },
+   "FASTEN": {
+    "elo": 1455.5,
+    "n": 36756,
+    "n_up": 28050,
+    "pick": 16.5,
+    "pick_by_act": [
+     17.5,
+     16.7,
+     14.6
+    ],
+    "win": 42.1,
+    "win_up": 52.0
+   },
+   "FEAR": {
+    "elo": 1422.9,
+    "n": 73224,
+    "n_up": 51473,
+    "pick": 14.9,
+    "pick_by_act": [
+     19.5,
+     11.9,
+     8.6
+    ],
+    "win": 37.3,
+    "win_up": 55.1
+   },
+   "FEED": {
+    "elo": 1539.9,
+    "n": 35462,
+    "n_up": 15590,
+    "pick": 20.9,
+    "pick_by_act": [
+     27.7,
+     16.4,
+     7.5
+    ],
+    "win": 40.8,
+    "win_up": 50.2
+   },
+   "FEEL_NO_PAIN": {
+    "elo": 1480.8,
+    "n": 64309,
+    "n_up": 36013,
+    "pick": 18.9,
+    "pick_by_act": [
+     17.8,
+     19.8,
+     19.7
+    ],
+    "win": 45.0,
+    "win_up": 65.7
+   },
+   "FERAL": {
+    "elo": 1557.3,
+    "n": 49453,
+    "n_up": 48781,
+    "pick": 25.7,
+    "pick_by_act": [
+     26.3,
+     25.3,
+     25.1
+    ],
+    "win": 37.0,
+    "win_up": 55.3
+   },
+   "FETCH": {
+    "elo": 1565.2,
+    "n": 71744,
+    "n_up": 23608,
+    "pick": 28.9,
+    "pick_by_act": [
+     33.7,
+     26.8,
+     21.7
+    ],
+    "win": 43.7,
+    "win_up": 61.6
+   },
+   "FIEND_FIRE": {
+    "elo": 1505.9,
+    "n": 28680,
+    "n_up": 15860,
+    "pick": 17.7,
+    "pick_by_act": [
+     19.9,
+     15.8,
+     15.5
+    ],
+    "win": 48.6,
+    "win_up": 60.1
+   },
+   "FIGHT_ME": {
+    "elo": 1431.3,
+    "n": 32545,
+    "n_up": 30644,
+    "pick": 16.1,
+    "pick_by_act": [
+     20.5,
+     13.2,
+     10.5
+    ],
+    "win": 32.1,
+    "win_up": 47.3
+   },
+   "FIGHT_THROUGH": {
+    "elo": 1527.6,
+    "n": 49622,
+    "n_up": 18385,
+    "pick": 22.8,
+    "pick_by_act": [
+     24.2,
+     22.5,
+     19.6
+    ],
+    "win": 40.5,
+    "win_up": 58.2
+   },
+   "FINESSE": {
+    "elo": 1481.8,
+    "n": 55445,
+    "n_up": 15870,
+    "pick": 18.6,
+    "pick_by_act": [
+     15.7,
+     21.1,
+     20.2
+    ],
+    "win": 53.0,
+    "win_up": 63.7
+   },
+   "FINISHER": {
+    "elo": 1502.2,
+    "n": 57730,
+    "n_up": 34237,
+    "pick": 20.7,
+    "pick_by_act": [
+     22.7,
+     19.8,
+     17.8
+    ],
+    "win": 42.9,
+    "win_up": 60.9
+   },
+   "FISTICUFFS": {
+    "elo": 1308.9,
+    "n": 24645,
+    "n_up": 9538,
+    "pick": 7.8,
+    "pick_by_act": [
+     8.2,
+     7.6,
+     7.3
+    ],
+    "win": 47.6,
+    "win_up": 54.2
+   },
+   "FLAK_CANNON": {
+    "elo": 1647.0,
+    "n": 30599,
+    "n_up": 15411,
+    "pick": 29.7,
+    "pick_by_act": [
+     32.8,
+     27.4,
+     23.1
+    ],
+    "win": 46.3,
+    "win_up": 65.8
+   },
+   "FLAME_BARRIER": {
+    "elo": 1601.5,
+    "n": 81990,
+    "n_up": 50564,
+    "pick": 33.5,
+    "pick_by_act": [
+     39.5,
+     31.5,
+     22.9
+    ],
+    "win": 37.3,
+    "win_up": 53.1
+   },
+   "FLANKING": {
+    "elo": 1648.2,
+    "n": 29861,
+    "n_up": 55695,
+    "pick": 36.9,
+    "pick_by_act": [
+     36.1,
+     37.4,
+     37.8
+    ],
+    "win": 48.0,
+    "win_up": 69.7
+   },
+   "FLASH_OF_STEEL": {
+    "elo": 1424.4,
+    "n": 47681,
+    "n_up": 9006,
+    "pick": 14.3,
+    "pick_by_act": [
+     12.3,
+     15.3,
+     16.3
+    ],
+    "win": 51.7,
+    "win_up": 65.0
+   },
+   "FLATTEN": {
+    "elo": 1466.3,
+    "n": 101591,
+    "n_up": 39555,
+    "pick": 18.9,
+    "pick_by_act": [
+     23.7,
+     16.2,
+     11.9
+    ],
+    "win": 35.6,
+    "win_up": 53.2
+   },
+   "FLECHETTES": {
+    "elo": 1356.4,
+    "n": 31727,
+    "n_up": 18274,
+    "pick": 10.5,
+    "pick_by_act": [
+     13.0,
+     9.1,
+     7.4
+    ],
+    "win": 40.0,
+    "win_up": 55.8
+   },
+   "FLICK_FLACK": {
+    "elo": 1407.7,
+    "n": 109275,
+    "n_up": 33792,
+    "pick": 13.5,
+    "pick_by_act": [
+     19.1,
+     10.1,
+     6.3
+    ],
+    "win": 35.3,
+    "win_up": 54.0
+   },
+   "FOCUSED_STRIKE": {
+    "elo": 1398.4,
+    "n": 65061,
+    "n_up": 37633,
+    "pick": 13.1,
+    "pick_by_act": [
+     16.2,
+     11.0,
+     8.9
+    ],
+    "win": 29.0,
+    "win_up": 47.7
+   },
+   "FOOTWORK": {
+    "elo": 1654.4,
+    "n": 113283,
+    "n_up": 93626,
+    "pick": 37.6,
+    "pick_by_act": [
+     41.1,
+     37.3,
+     31.8
+    ],
+    "win": 42.3,
+    "win_up": 58.7
+   },
+   "FOREGONE_CONCLUSION": {
+    "elo": 1531.7,
+    "n": 28657,
+    "n_up": 10263,
+    "pick": 19.6,
+    "pick_by_act": [
+     19.1,
+     20.2,
+     19.8
+    ],
+    "win": 50.4,
+    "win_up": 71.2
+   },
+   "FORGOTTEN_RITUAL": {
+    "elo": 1502.3,
+    "n": 58513,
+    "n_up": 24946,
+    "pick": 21.2,
+    "pick_by_act": [
+     19.2,
+     22.8,
+     23.1
+    ],
+    "win": 44.1,
+    "win_up": 65.1
+   },
+   "FRIENDSHIP": {
+    "elo": 1651.8,
+    "n": 94441,
+    "n_up": 56473,
+    "pick": 38.7,
+    "pick_by_act": [
+     40.0,
+     38.5,
+     36.4
+    ],
+    "win": 47.7,
+    "win_up": 61.8
+   },
+   "FTL": {
+    "elo": 1549.7,
+    "n": 69519,
+    "n_up": 22899,
+    "pick": 25.2,
+    "pick_by_act": [
+     29.7,
+     23.7,
+     17.7
+    ],
+    "win": 39.3,
+    "win_up": 59.2
+   },
+   "FURNACE": {
+    "elo": 1599.3,
+    "n": 68559,
+    "n_up": 55622,
+    "pick": 32.0,
+    "pick_by_act": [
+     35.6,
+     30.8,
+     26.9
+    ],
+    "win": 39.5,
+    "win_up": 56.1
+   },
+   "FUSION": {
+    "elo": 1516.0,
+    "n": 36881,
+    "n_up": 29494,
+    "pick": 21.8,
+    "pick_by_act": [
+     24.5,
+     21.0,
+     16.5
+    ],
+    "win": 33.9,
+    "win_up": 51.3
+   },
+   "GAMMA_BLAST": {
+    "elo": 1520.5,
+    "n": 62876,
+    "n_up": 23086,
+    "pick": 24.5,
+    "pick_by_act": [
+     30.9,
+     21.1,
+     15.6
+    ],
+    "win": 45.0,
+    "win_up": 59.6
+   },
+   "GANG_UP": {
+    "elo": 1387.6,
+    "n": 22719,
+    "n_up": 20355,
+    "pick": 12.0,
+    "pick_by_act": [
+     8.0,
+     15.4,
+     16.2
+    ],
+    "win": 49.8,
+    "win_up": 69.5
+   },
+   "GATHER_LIGHT": {
+    "elo": 1620.7,
+    "n": 192786,
+    "n_up": 77136,
+    "pick": 36.2,
+    "pick_by_act": [
+     44.7,
+     32.5,
+     22.8
+    ],
+    "win": 39.0,
+    "win_up": 56.9
+   },
+   "GENESIS": {
+    "elo": 1751.5,
+    "n": 41632,
+    "n_up": 32935,
+    "pick": 45.6,
+    "pick_by_act": [
+     49.9,
+     41.8,
+     38.0
+    ],
+    "win": 44.7,
+    "win_up": 66.3
+   },
+   "GENETIC_ALGORITHM": {
+    "elo": 1612.3,
+    "n": 36207,
+    "n_up": 14001,
+    "pick": 26.2,
+    "pick_by_act": [
+     35.2,
+     19.7,
+     6.5
+    ],
+    "win": 41.8,
+    "win_up": 55.1
+   },
+   "GLACIER": {
+    "elo": 1640.0,
+    "n": 77776,
+    "n_up": 29370,
+    "pick": 37.0,
+    "pick_by_act": [
+     45.2,
+     32.6,
+     24.1
+    ],
+    "win": 40.5,
+    "win_up": 55.7
+   },
+   "GLASSWORK": {
+    "elo": 1521.0,
+    "n": 49732,
+    "n_up": 17743,
+    "pick": 23.2,
+    "pick_by_act": [
+     31.7,
+     18.4,
+     10.9
+    ],
+    "win": 34.7,
+    "win_up": 50.7
+   },
+   "GLIMMER": {
+    "elo": 1453.6,
+    "n": 36619,
+    "n_up": 19504,
+    "pick": 18.0,
+    "pick_by_act": [
+     17.1,
+     19.0,
+     18.4
+    ],
+    "win": 45.4,
+    "win_up": 68.7
+   },
+   "GLIMPSE_BEYOND": {
+    "elo": 1739.2,
+    "n": 34733,
+    "n_up": 19491,
+    "pick": 43.8,
+    "pick_by_act": [
+     44.1,
+     43.9,
+     42.2
+    ],
+    "win": 60.3,
+    "win_up": 77.7
+   },
+   "GLITTERSTREAM": {
+    "elo": 1430.5,
+    "n": 83680,
+    "n_up": 48937,
+    "pick": 15.9,
+    "pick_by_act": [
+     19.0,
+     14.3,
+     11.3
+    ],
+    "win": 36.9,
+    "win_up": 54.0
+   },
+   "GLOW": {
+    "elo": 1581.0,
+    "n": 136300,
+    "n_up": 104536,
+    "pick": 31.7,
+    "pick_by_act": [
+     35.9,
+     29.5,
+     25.5
+    ],
+    "win": 38.3,
+    "win_up": 59.2
+   },
+   "GOLD_AXE": {
+    "elo": 1359.7,
+    "n": 23991,
+    "n_up": 14096,
+    "pick": 7.3,
+    "pick_by_act": [
+     3.4,
+     8.1,
+     12.3
+    ],
+    "win": 60.2,
+    "win_up": 73.2
+   },
+   "GO_FOR_THE_EYES": {
+    "elo": 1516.8,
+    "n": 114935,
+    "n_up": 58331,
+    "pick": 22.2,
+    "pick_by_act": [
+     27.3,
+     19.3,
+     14.2
+    ],
+    "win": 35.5,
+    "win_up": 54.9
+   },
+   "GRAND_FINALE": {
+    "elo": 1335.9,
+    "n": 18094,
+    "n_up": 5325,
+    "pick": 7.1,
+    "pick_by_act": [
+     8.5,
+     5.7,
+     5.8
+    ],
+    "win": 41.5,
+    "win_up": 64.6
+   },
+   "GRAVEBLAST": {
+    "elo": 1447.9,
+    "n": 71149,
+    "n_up": 61098,
+    "pick": 16.7,
+    "pick_by_act": [
+     16.3,
+     17.1,
+     17.0
+    ],
+    "win": 39.8,
+    "win_up": 63.3
+   },
+   "GRAVE_WARDEN": {
+    "elo": 1617.4,
+    "n": 186523,
+    "n_up": 89575,
+    "pick": 34.8,
+    "pick_by_act": [
+     41.5,
+     32.2,
+     23.5
+    ],
+    "win": 39.2,
+    "win_up": 58.2
+   },
+   "GUARDS": {
+    "elo": 1586.2,
+    "n": 36151,
+    "n_up": 11604,
+    "pick": 24.7,
+    "pick_by_act": [
+     26.0,
+     24.2,
+     20.5
+    ],
+    "win": 51.9,
+    "win_up": 65.3
+   },
+   "GUIDING_STAR": {
+    "elo": 1343.7,
+    "n": 62488,
+    "n_up": 31139,
+    "pick": 10.6,
+    "pick_by_act": [
+     12.7,
+     9.4,
+     7.9
+    ],
+    "win": 37.5,
+    "win_up": 59.7
+   },
+   "GUNK_UP": {
+    "elo": 1377.4,
+    "n": 62785,
+    "n_up": 24274,
+    "pick": 11.3,
+    "pick_by_act": [
+     14.3,
+     9.2,
+     7.2
+    ],
+    "win": 34.5,
+    "win_up": 51.8
+   },
+   "HAILSTORM": {
+    "elo": 1493.2,
+    "n": 54615,
+    "n_up": 22540,
+    "pick": 20.0,
+    "pick_by_act": [
+     21.5,
+     19.7,
+     17.2
+    ],
+    "win": 39.8,
+    "win_up": 52.5
+   },
+   "HAMMER_TIME": {
+    "elo": 1634.0,
+    "n": 17157,
+    "n_up": 18976,
+    "pick": 30.3,
+    "pick_by_act": [
+     33.6,
+     27.4,
+     26.2
+    ],
+    "win": 49.1,
+    "win_up": 70.0
+   },
+   "HAND_OF_GREED": {
+    "elo": 999.6,
+    "n": 6909,
+    "n_up": 2508,
+    "pick": 1.2,
+    "pick_by_act": [
+     0.8,
+     0.8,
+     2.3
+    ],
+    "win": 48.1,
+    "win_up": 50.2
+   },
+   "HAND_TRICK": {
+    "elo": 1490.0,
+    "n": 47384,
+    "n_up": 17017,
+    "pick": 19.5,
+    "pick_by_act": [
+     22.6,
+     18.5,
+     14.5
+    ],
+    "win": 41.1,
+    "win_up": 58.7
+   },
+   "HANG": {
+    "elo": 1657.5,
+    "n": 36998,
+    "n_up": 21397,
+    "pick": 32.9,
+    "pick_by_act": [
+     37.0,
+     29.7,
+     25.4
+    ],
+    "win": 46.8,
+    "win_up": 63.8
+   },
+   "HAUNT": {
+    "elo": 1523.9,
+    "n": 59668,
+    "n_up": 35638,
+    "pick": 23.8,
+    "pick_by_act": [
+     24.7,
+     23.3,
+     22.5
+    ],
+    "win": 41.4,
+    "win_up": 60.6
+   },
+   "HAVOC": {
+    "elo": 1257.9,
+    "n": 35730,
+    "n_up": 34859,
+    "pick": 6.3,
+    "pick_by_act": [
+     6.3,
+     6.0,
+     6.7
+    ],
+    "win": 34.5,
+    "win_up": 55.6
+   },
+   "HAZE": {
+    "elo": 1563.5,
+    "n": 68111,
+    "n_up": 35776,
+    "pick": 27.6,
+    "pick_by_act": [
+     33.1,
+     25.3,
+     19.1
+    ],
+    "win": 39.4,
+    "win_up": 57.2
+   },
+   "HEADBUTT": {
+    "elo": 1423.7,
+    "n": 109108,
+    "n_up": 38110,
+    "pick": 15.5,
+    "pick_by_act": [
+     17.9,
+     14.3,
+     11.8
+    ],
+    "win": 39.6,
+    "win_up": 58.4
+   },
+   "HEAVENLY_DRILL": {
+    "elo": 1567.3,
+    "n": 16380,
+    "n_up": 14587,
+    "pick": 22.4,
+    "pick_by_act": [
+     24.6,
+     20.8,
+     18.5
+    ],
+    "win": 46.2,
+    "win_up": 65.6
+   },
+   "HEGEMONY": {
+    "elo": 1439.0,
+    "n": 33796,
+    "n_up": 24097,
+    "pick": 16.4,
+    "pick_by_act": [
+     19.8,
+     14.0,
+     12.7
+    ],
+    "win": 37.4,
+    "win_up": 55.6
+   },
+   "HEIRLOOM_HAMMER": {
+    "elo": 1483.2,
+    "n": 25476,
+    "n_up": 5869,
+    "pick": 15.6,
+    "pick_by_act": [
+     17.0,
+     14.2,
+     13.4
+    ],
+    "win": 49.3,
+    "win_up": 61.7
+   },
+   "HELIX_DRILL": {
+    "elo": 1554.0,
+    "n": 19139,
+    "n_up": 8677,
+    "pick": 20.1,
+    "pick_by_act": [
+     20.7,
+     19.5,
+     19.4
+    ],
+    "win": 48.7,
+    "win_up": 62.4
+   },
+   "HELLRAISER": {
+    "elo": 1661.2,
+    "n": 29111,
+    "n_up": 41336,
+    "pick": 34.1,
+    "pick_by_act": [
+     42.0,
+     27.2,
+     22.7
+    ],
+    "win": 36.8,
+    "win_up": 55.8
+   },
+   "HEMOKINESIS": {
+    "elo": 1364.4,
+    "n": 33000,
+    "n_up": 14745,
+    "pick": 11.8,
+    "pick_by_act": [
+     16.0,
+     8.8,
+     7.1
+    ],
+    "win": 35.3,
+    "win_up": 50.4
+   },
+   "HIBERNATE": {
+    "elo": 1689.3,
+    "n": 6916,
+    "n_up": 8582,
+    "pick": 42.2,
+    "pick_by_act": [
+     46.8,
+     40.0,
+     36.3
+    ],
+    "win": 52.9,
+    "win_up": 70.6
+   },
+   "HIDDEN_CACHE": {
+    "elo": 1583.3,
+    "n": 166140,
+    "n_up": 78341,
+    "pick": 31.3,
+    "pick_by_act": [
+     37.1,
+     28.2,
+     22.9
+    ],
+    "win": 38.4,
+    "win_up": 59.4
+   },
+   "HIDDEN_DAGGERS": {
+    "elo": 1705.1,
+    "n": 89178,
+    "n_up": 36463,
+    "pick": 45.0,
+    "pick_by_act": [
+     51.3,
+     42.6,
+     35.3
+    ],
+    "win": 46.8,
+    "win_up": 63.0
+   },
+   "HIDDEN_GEM": {
+    "elo": 1454.8,
+    "n": 34141,
+    "n_up": 45831,
+    "pick": 13.5,
+    "pick_by_act": [
+     7.2,
+     16.3,
+     19.7
+    ],
+    "win": 50.2,
+    "win_up": 68.2
+   },
+   "HIGH_FIVE": {
+    "elo": 1524.8,
+    "n": 50849,
+    "n_up": 31411,
+    "pick": 24.4,
+    "pick_by_act": [
+     32.2,
+     20.3,
+     13.4
+    ],
+    "win": 39.5,
+    "win_up": 55.3
+   },
+   "HOLOGRAM": {
+    "elo": 1583.4,
+    "n": 120416,
+    "n_up": 107284,
+    "pick": 29.4,
+    "pick_by_act": [
+     28.6,
+     30.5,
+     29.5
+    ],
+    "win": 35.4,
+    "win_up": 57.4
+   },
+   "HOTFIX": {
+    "elo": 1511.2,
+    "n": 106802,
+    "n_up": 71145,
+    "pick": 22.5,
+    "pick_by_act": [
+     23.1,
+     22.5,
+     20.8
+    ],
+    "win": 33.9,
+    "win_up": 51.6
+   },
+   "HOWL_FROM_BEYOND": {
+    "elo": 1433.6,
+    "n": 40774,
+    "n_up": 21237,
+    "pick": 16.1,
+    "pick_by_act": [
+     18.6,
+     15.2,
+     11.9
+    ],
+    "win": 37.1,
+    "win_up": 52.4
+   },
+   "HUDDLE_UP": {
+    "elo": 1384.3,
+    "n": 27192,
+    "n_up": 13530,
+    "pick": 12.3,
+    "pick_by_act": [
+     6.6,
+     16.8,
+     19.0
+    ],
+    "win": 56.1,
+    "win_up": 78.7
+   },
+   "HYPERBEAM": {
+    "elo": 1411.1,
+    "n": 14332,
+    "n_up": 7639,
+    "pick": 9.3,
+    "pick_by_act": [
+     11.0,
+     8.4,
+     4.4
+    ],
+    "win": 39.8,
+    "win_up": 50.6
+   },
+   "ICE_LANCE": {
+    "elo": 1575.6,
+    "n": 33452,
+    "n_up": 11297,
+    "pick": 22.8,
+    "pick_by_act": [
+     27.2,
+     18.8,
+     15.8
+    ],
+    "win": 47.7,
+    "win_up": 55.7
+   },
+   "IGNITION": {
+    "elo": 1644.4,
+    "n": 26021,
+    "n_up": 18317,
+    "pick": 32.1,
+    "pick_by_act": [
+     34.8,
+     30.8,
+     26.4
+    ],
+    "win": 49.9,
+    "win_up": 68.1
+   },
+   "IMITATION_LEARNING": {
+    "elo": 1784.4,
+    "n": 6112,
+    "n_up": 4023,
+    "pick": 46.4,
+    "pick_by_act": [
+     46.6,
+     47.8,
+     40.9
+    ],
+    "win": 57.7,
+    "win_up": 73.3
+   },
+   "IMPATIENCE": {
+    "elo": 1224.2,
+    "n": 16266,
+    "n_up": 4721,
+    "pick": 5.1,
+    "pick_by_act": [
+     3.4,
+     5.6,
+     7.6
+    ],
+    "win": 52.6,
+    "win_up": 76.9
+   },
+   "IMPERVIOUS": {
+    "elo": 1643.7,
+    "n": 53211,
+    "n_up": 14658,
+    "pick": 31.7,
+    "pick_by_act": [
+     30.3,
+     32.6,
+     34.4
+    ],
+    "win": 51.0,
+    "win_up": 67.8
+   },
+   "INFERNAL_BLADE": {
+    "elo": 1549.6,
+    "n": 49354,
+    "n_up": 50223,
+    "pick": 26.4,
+    "pick_by_act": [
+     29.1,
+     24.9,
+     22.7
+    ],
+    "win": 35.2,
+    "win_up": 52.3
+   },
+   "INFERNO": {
+    "elo": 1467.7,
+    "n": 45690,
+    "n_up": 26821,
+    "pick": 18.5,
+    "pick_by_act": [
+     24.5,
+     15.3,
+     11.4
+    ],
+    "win": 38.4,
+    "win_up": 51.1
+   },
+   "INFINITE_BLADES": {
+    "elo": 1620.6,
+    "n": 103658,
+    "n_up": 79541,
+    "pick": 33.4,
+    "pick_by_act": [
+     37.5,
+     32.3,
+     27.6
+    ],
+    "win": 44.5,
+    "win_up": 60.4
+   },
+   "INFLAME": {
+    "elo": 1568.5,
+    "n": 91467,
+    "n_up": 57034,
+    "pick": 29.1,
+    "pick_by_act": [
+     35.2,
+     25.7,
+     21.2
+    ],
+    "win": 37.3,
+    "win_up": 52.2
+   },
+   "INTERCEPT": {
+    "elo": 1156.1,
+    "n": 10271,
+    "n_up": 3271,
+    "pick": 3.4,
+    "pick_by_act": [
+     1.5,
+     4.5,
+     7.1
+    ],
+    "win": 51.1,
+    "win_up": 62.3
+   },
+   "INVOKE": {
+    "elo": 1583.6,
+    "n": 141477,
+    "n_up": 108073,
+    "pick": 30.7,
+    "pick_by_act": [
+     34.6,
+     28.6,
+     25.0
+    ],
+    "win": 36.6,
+    "win_up": 58.4
+   },
+   "IRON_WAVE": {
+    "elo": 1411.8,
+    "n": 89467,
+    "n_up": 43486,
+    "pick": 14.1,
+    "pick_by_act": [
+     17.5,
+     12.1,
+     9.1
+    ],
+    "win": 34.7,
+    "win_up": 51.3
+   },
+   "ITERATION": {
+    "elo": 1486.1,
+    "n": 54582,
+    "n_up": 22647,
+    "pick": 18.8,
+    "pick_by_act": [
+     17.8,
+     19.9,
+     19.3
+    ],
+    "win": 43.7,
+    "win_up": 65.5
+   },
+   "I_AM_INVINCIBLE": {
+    "elo": 1567.5,
+    "n": 35865,
+    "n_up": 8760,
+    "pick": 23.2,
+    "pick_by_act": [
+     25.6,
+     21.5,
+     17.6
+    ],
+    "win": 49.0,
+    "win_up": 62.7
+   },
+   "JACKPOT": {
+    "elo": 1280.8,
+    "n": 15008,
+    "n_up": 17347,
+    "pick": 5.4,
+    "pick_by_act": [
+     3.1,
+     6.0,
+     8.1
+    ],
+    "win": 51.9,
+    "win_up": 65.9
+   },
+   "JACK_OF_ALL_TRADES": {
+    "elo": 1286.6,
+    "n": 18404,
+    "n_up": 9591,
+    "pick": 7.1,
+    "pick_by_act": [
+     5.7,
+     7.4,
+     9.0
+    ],
+    "win": 48.6,
+    "win_up": 60.1
+   },
+   "JUGGERNAUT": {
+    "elo": 1578.6,
+    "n": 32608,
+    "n_up": 16621,
+    "pick": 23.3,
+    "pick_by_act": [
+     24.0,
+     22.6,
+     22.4
+    ],
+    "win": 45.4,
+    "win_up": 60.7
+   },
+   "JUGGLING": {
+    "elo": 1397.7,
+    "n": 42530,
+    "n_up": 28462,
+    "pick": 12.9,
+    "pick_by_act": [
+     12.2,
+     13.5,
+     13.5
+    ],
+    "win": 41.1,
+    "win_up": 58.6
+   },
+   "KINGLY_KICK": {
+    "elo": 1370.3,
+    "n": 26131,
+    "n_up": 16559,
+    "pick": 12.0,
+    "pick_by_act": [
+     16.9,
+     8.8,
+     6.3
+    ],
+    "win": 34.0,
+    "win_up": 47.7
+   },
+   "KINGLY_PUNCH": {
+    "elo": 1389.2,
+    "n": 27209,
+    "n_up": 19383,
+    "pick": 13.1,
+    "pick_by_act": [
+     19.0,
+     9.6,
+     5.7
+    ],
+    "win": 33.0,
+    "win_up": 46.4
+   },
+   "KNIFE_TRAP": {
+    "elo": 1743.0,
+    "n": 44187,
+    "n_up": 49630,
+    "pick": 43.2,
+    "pick_by_act": [
+     45.9,
+     40.5,
+     40.7
+    ],
+    "win": 48.5,
+    "win_up": 71.7
+   },
+   "KNOCKDOWN": {
+    "elo": 1320.7,
+    "n": 7395,
+    "n_up": 12880,
+    "pick": 7.2,
+    "pick_by_act": [
+     3.2,
+     7.5,
+     11.7
+    ],
+    "win": 62.8,
+    "win_up": 80.1
+   },
+   "KNOCKOUT_BLOW": {
+    "elo": 1348.4,
+    "n": 26494,
+    "n_up": 13489,
+    "pick": 10.9,
+    "pick_by_act": [
+     15.4,
+     8.2,
+     5.0
+    ],
+    "win": 33.7,
+    "win_up": 45.9
+   },
+   "KNOW_THY_PLACE": {
+    "elo": 1516.3,
+    "n": 117076,
+    "n_up": 74022,
+    "pick": 23.3,
+    "pick_by_act": [
+     28.3,
+     20.7,
+     16.1
+    ],
+    "win": 39.8,
+    "win_up": 55.5
+   },
+   "LARGESSE": {
+    "elo": 1514.3,
+    "n": 27111,
+    "n_up": 21519,
+    "pick": 23.2,
+    "pick_by_act": [
+     24.3,
+     23.2,
+     21.2
+    ],
+    "win": 49.3,
+    "win_up": 66.7
+   },
+   "LEADING_STRIKE": {
+    "elo": 1555.4,
+    "n": 181616,
+    "n_up": 59715,
+    "pick": 26.4,
+    "pick_by_act": [
+     33.4,
+     22.7,
+     16.5
+    ],
+    "win": 41.1,
+    "win_up": 58.4
+   },
+   "LEAP": {
+    "elo": 1456.7,
+    "n": 104575,
+    "n_up": 37443,
+    "pick": 16.6,
+    "pick_by_act": [
+     19.8,
+     15.1,
+     11.2
+    ],
+    "win": 33.1,
+    "win_up": 51.0
+   },
+   "LEGION_OF_BONE": {
+    "elo": 1575.4,
+    "n": 34655,
+    "n_up": 29558,
+    "pick": 30.0,
+    "pick_by_act": [
+     32.7,
+     29.3,
+     25.7
+    ],
+    "win": 52.3,
+    "win_up": 70.4
+   },
+   "LEG_SWEEP": {
+    "elo": 1551.9,
+    "n": 65940,
+    "n_up": 36219,
+    "pick": 25.5,
+    "pick_by_act": [
+     31.1,
+     23.1,
+     16.8
+    ],
+    "win": 42.5,
+    "win_up": 58.9
+   },
+   "LETHALITY": {
+    "elo": 1654.8,
+    "n": 70535,
+    "n_up": 79773,
+    "pick": 38.9,
+    "pick_by_act": [
+     42.0,
+     37.3,
+     35.2
+    ],
+    "win": 38.7,
+    "win_up": 60.1
+   },
+   "LIFT": {
+    "elo": 1261.5,
+    "n": 18270,
+    "n_up": 4595,
+    "pick": 6.1,
+    "pick_by_act": [
+     3.3,
+     8.8,
+     9.7
+    ],
+    "win": 50.8,
+    "win_up": 65.0
+   },
+   "LIGHTNING_ROD": {
+    "elo": 1550.2,
+    "n": 146045,
+    "n_up": 60812,
+    "pick": 26.1,
+    "pick_by_act": [
+     34.1,
+     21.2,
+     14.7
+    ],
+    "win": 33.0,
+    "win_up": 49.8
+   },
+   "LOOP": {
+    "elo": 1612.3,
+    "n": 68291,
+    "n_up": 50330,
+    "pick": 33.2,
+    "pick_by_act": [
+     35.6,
+     32.2,
+     29.7
+    ],
+    "win": 34.3,
+    "win_up": 52.3
+   },
+   "LUNAR_BLAST": {
+    "elo": 1360.7,
+    "n": 19706,
+    "n_up": 8347,
+    "pick": 10.7,
+    "pick_by_act": [
+     12.5,
+     9.6,
+     8.4
+    ],
+    "win": 45.3,
+    "win_up": 62.2
+   },
+   "MACHINE_LEARNING": {
+    "elo": 1768.6,
+    "n": 46081,
+    "n_up": 28490,
+    "pick": 45.5,
+    "pick_by_act": [
+     44.7,
+     46.8,
+     44.8
+    ],
+    "win": 47.6,
+    "win_up": 68.8
+   },
+   "MAKE_IT_SO": {
+    "elo": 1611.3,
+    "n": 37425,
+    "n_up": 12706,
+    "pick": 27.6,
+    "pick_by_act": [
+     28.6,
+     26.7,
+     25.7
+    ],
+    "win": 51.4,
+    "win_up": 66.0
+   },
+   "MALAISE": {
+    "elo": 1544.8,
+    "n": 26838,
+    "n_up": 19590,
+    "pick": 19.1,
+    "pick_by_act": [
+     19.8,
+     18.6,
+     17.4
+    ],
+    "win": 53.3,
+    "win_up": 72.6
+   },
+   "MANGLE": {
+    "elo": 1571.3,
+    "n": 32515,
+    "n_up": 23516,
+    "pick": 23.7,
+    "pick_by_act": [
+     25.7,
+     22.1,
+     20.8
+    ],
+    "win": 49.6,
+    "win_up": 64.7
+   },
+   "MANIFEST_AUTHORITY": {
+    "elo": 1565.5,
+    "n": 43224,
+    "n_up": 40619,
+    "pick": 28.6,
+    "pick_by_act": [
+     33.2,
+     26.6,
+     21.2
+    ],
+    "win": 40.1,
+    "win_up": 58.7
+   },
+   "MASTER_OF_STRATEGY": {
+    "elo": 1331.1,
+    "n": 35970,
+    "n_up": 9390,
+    "pick": 7.6,
+    "pick_by_act": [
+     2.4,
+     8.8,
+     14.2
+    ],
+    "win": 66.1,
+    "win_up": 80.0
+   },
+   "MASTER_PLANNER": {
+    "elo": 1619.0,
+    "n": 22121,
+    "n_up": 29142,
+    "pick": 26.9,
+    "pick_by_act": [
+     29.9,
+     24.4,
+     21.9
+    ],
+    "win": 40.7,
+    "win_up": 62.1
+   },
+   "MAYHEM": {
+    "elo": 1305.0,
+    "n": 19182,
+    "n_up": 18727,
+    "pick": 6.5,
+    "pick_by_act": [
+     3.1,
+     7.1,
+     11.0
+    ],
+    "win": 58.5,
+    "win_up": 68.3
+   },
+   "MELANCHOLY": {
+    "elo": 1402.1,
+    "n": 31535,
+    "n_up": 13724,
+    "pick": 13.7,
+    "pick_by_act": [
+     15.7,
+     13.4,
+     9.8
+    ],
+    "win": 38.2,
+    "win_up": 56.3
+   },
+   "MEMENTO_MORI": {
+    "elo": 1313.3,
+    "n": 26311,
+    "n_up": 14039,
+    "pick": 8.3,
+    "pick_by_act": [
+     10.0,
+     7.0,
+     6.5
+    ],
+    "win": 38.3,
+    "win_up": 57.2
+   },
+   "METEOR_STRIKE": {
+    "elo": 1467.5,
+    "n": 23271,
+    "n_up": 5715,
+    "pick": 13.5,
+    "pick_by_act": [
+     12.4,
+     13.9,
+     17.3
+    ],
+    "win": 48.4,
+    "win_up": 65.1
+   },
+   "MIDNIGHT": {
+    "elo": 1775.0,
+    "n": 7061,
+    "n_up": 6779,
+    "pick": 47.4,
+    "pick_by_act": [
+     46.5,
+     48.9,
+     46.1
+    ],
+    "win": 64.8,
+    "win_up": 77.8
+   },
+   "MIMIC": {
+    "elo": 1300.5,
+    "n": 11635,
+    "n_up": 9065,
+    "pick": 7.1,
+    "pick_by_act": [
+     3.1,
+     7.6,
+     11.1
+    ],
+    "win": 62.8,
+    "win_up": 73.2
+   },
+   "MIND_BLAST": {
+    "elo": 1220.5,
+    "n": 12605,
+    "n_up": 8562,
+    "pick": 4.8,
+    "pick_by_act": [
+     3.2,
+     4.4,
+     8.1
+    ],
+    "win": 48.2,
+    "win_up": 60.7
+   },
+   "MIRAGE": {
+    "elo": 1458.4,
+    "n": 41310,
+    "n_up": 24587,
+    "pick": 17.2,
+    "pick_by_act": [
+     15.4,
+     18.7,
+     18.7
+    ],
+    "win": 41.8,
+    "win_up": 61.6
+   },
+   "MISERY": {
+    "elo": 1698.2,
+    "n": 50472,
+    "n_up": 19558,
+    "pick": 38.2,
+    "pick_by_act": [
+     40.9,
+     37.9,
+     26.7
+    ],
+    "win": 51.8,
+    "win_up": 67.7
+   },
+   "MODDED": {
+    "elo": 1759.8,
+    "n": 52664,
+    "n_up": 25530,
+    "pick": 45.9,
+    "pick_by_act": [
+     48.2,
+     43.6,
+     43.1
+    ],
+    "win": 43.8,
+    "win_up": 65.4
+   },
+   "MOLTEN_FIST": {
+    "elo": 1579.2,
+    "n": 170152,
+    "n_up": 62776,
+    "pick": 30.8,
+    "pick_by_act": [
+     33.7,
+     28.9,
+     26.6
+    ],
+    "win": 40.2,
+    "win_up": 58.7
+   },
+   "MOMENTUM_STRIKE": {
+    "elo": 1405.2,
+    "n": 75060,
+    "n_up": 26081,
+    "pick": 13.0,
+    "pick_by_act": [
+     17.3,
+     10.1,
+     7.1
+    ],
+    "win": 32.4,
+    "win_up": 49.7
+   },
+   "MONARCHS_GAZE": {
+    "elo": 1561.2,
+    "n": 19235,
+    "n_up": 19730,
+    "pick": 21.5,
+    "pick_by_act": [
+     20.7,
+     22.0,
+     23.6
+    ],
+    "win": 47.3,
+    "win_up": 66.7
+   },
+   "MONOLOGUE": {
+    "elo": 1449.5,
+    "n": 32978,
+    "n_up": 20151,
+    "pick": 16.9,
+    "pick_by_act": [
+     16.4,
+     17.2,
+     17.7
+    ],
+    "win": 39.5,
+    "win_up": 59.7
+   },
+   "MULTI_CAST": {
+    "elo": 1512.7,
+    "n": 24254,
+    "n_up": 10283,
+    "pick": 17.4,
+    "pick_by_act": [
+     18.9,
+     15.4,
+     17.0
+    ],
+    "win": 41.6,
+    "win_up": 56.3
+   },
+   "MURDER": {
+    "elo": 1486.4,
+    "n": 25540,
+    "n_up": 18646,
+    "pick": 15.2,
+    "pick_by_act": [
+     16.2,
+     14.2,
+     14.3
+    ],
+    "win": 46.8,
+    "win_up": 61.2
+   },
+   "NECRO_MASTERY": {
+    "elo": 1660.6,
+    "n": 41317,
+    "n_up": 17492,
+    "pick": 34.1,
+    "pick_by_act": [
+     39.9,
+     28.8,
+     25.9
+    ],
+    "win": 48.6,
+    "win_up": 59.1
+   },
+   "NEGATIVE_PULSE": {
+    "elo": 1585.2,
+    "n": 142373,
+    "n_up": 88050,
+    "pick": 30.6,
+    "pick_by_act": [
+     37.8,
+     27.1,
+     19.4
+    ],
+    "win": 34.1,
+    "win_up": 49.6
+   },
+   "NEUROSURGE": {
+    "elo": 1723.3,
+    "n": 43391,
+    "n_up": 25222,
+    "pick": 40.5,
+    "pick_by_act": [
+     38.9,
+     41.8,
+     43.5
+    ],
+    "win": 54.9,
+    "win_up": 71.4
+   },
+   "NEUTRON_AEGIS": {
+    "elo": 1554.8,
+    "n": 24876,
+    "n_up": 13724,
+    "pick": 21.8,
+    "pick_by_act": [
+     21.5,
+     21.7,
+     23.8
+    ],
+    "win": 45.6,
+    "win_up": 65.1
+   },
+   "NIGHTMARE": {
+    "elo": 1577.3,
+    "n": 26418,
+    "n_up": 25979,
+    "pick": 22.1,
+    "pick_by_act": [
+     21.1,
+     23.1,
+     23.5
+    ],
+    "win": 45.3,
+    "win_up": 66.8
+   },
+   "NOSTALGIA": {
+    "elo": 1235.2,
+    "n": 13296,
+    "n_up": 8293,
+    "pick": 4.1,
+    "pick_by_act": [
+     1.6,
+     4.8,
+     7.2
+    ],
+    "win": 57.7,
+    "win_up": 67.7
+   },
+   "NOT_YET": {
+    "elo": 1654.1,
+    "n": 44503,
+    "n_up": 12690,
+    "pick": 32.6,
+    "pick_by_act": [
+     33.3,
+     33.2,
+     26.8
+    ],
+    "win": 48.3,
+    "win_up": 59.4
+   },
+   "NOXIOUS_FUMES": {
+    "elo": 1636.2,
+    "n": 100991,
+    "n_up": 85175,
+    "pick": 35.2,
+    "pick_by_act": [
+     42.9,
+     32.2,
+     25.9
+    ],
+    "win": 39.9,
+    "win_up": 54.5
+   },
+   "NO_ESCAPE": {
+    "elo": 1655.9,
+    "n": 68984,
+    "n_up": 44353,
+    "pick": 39.7,
+    "pick_by_act": [
+     42.8,
+     38.7,
+     34.6
+    ],
+    "win": 40.2,
+    "win_up": 57.3
+   },
+   "NULL": {
+    "elo": 1443.9,
+    "n": 38671,
+    "n_up": 19490,
+    "pick": 16.0,
+    "pick_by_act": [
+     22.0,
+     12.2,
+     8.8
+    ],
+    "win": 38.5,
+    "win_up": 51.0
+   },
+   "OBLIVION": {
+    "elo": 1683.1,
+    "n": 44050,
+    "n_up": 17757,
+    "pick": 36.5,
+    "pick_by_act": [
+     37.9,
+     35.2,
+     34.6
+    ],
+    "win": 48.7,
+    "win_up": 64.3
+   },
+   "OFFERING": {
+    "elo": 1783.5,
+    "n": 60776,
+    "n_up": 43459,
+    "pick": 50.4,
+    "pick_by_act": [
+     49.4,
+     51.1,
+     52.8
+    ],
+    "win": 51.1,
+    "win_up": 70.2
+   },
+   "OMNISLICE": {
+    "elo": 1301.5,
+    "n": 26536,
+    "n_up": 8593,
+    "pick": 8.1,
+    "pick_by_act": [
+     9.4,
+     7.8,
+     6.4
+    ],
+    "win": 41.2,
+    "win_up": 49.1
+   },
+   "ONE_FOR_ALL": {
+    "elo": 1703.1,
+    "n": 5193,
+    "n_up": 2349,
+    "pick": 34.9,
+    "pick_by_act": [
+     36.1,
+     33.9,
+     34.1
+    ],
+    "win": 61.2,
+    "win_up": 74.1
+   },
+   "ONE_TWO_PUNCH": {
+    "elo": 1652.3,
+    "n": 40028,
+    "n_up": 32171,
+    "pick": 32.8,
+    "pick_by_act": [
+     34.1,
+     32.2,
+     28.7
+    ],
+    "win": 42.9,
+    "win_up": 61.0
+   },
+   "ORBIT": {
+    "elo": 1641.0,
+    "n": 61085,
+    "n_up": 89861,
+    "pick": 37.3,
+    "pick_by_act": [
+     36.6,
+     37.8,
+     37.8
+    ],
+    "win": 40.0,
+    "win_up": 60.2
+   },
+   "OUTBREAK": {
+    "elo": 1491.7,
+    "n": 69510,
+    "n_up": 31201,
+    "pick": 19.5,
+    "pick_by_act": [
+     20.8,
+     19.7,
+     16.8
+    ],
+    "win": 41.2,
+    "win_up": 57.6
+   },
+   "OUTRAGE": {
+    "elo": 1472.5,
+    "n": 4764,
+    "n_up": 4942,
+    "pick": 17.8,
+    "pick_by_act": [
+     23.2,
+     14.6,
+     12.3
+    ],
+    "win": 48.2,
+    "win_up": 58.3
+   },
+   "OVERCLOCK": {
+    "elo": 1621.2,
+    "n": 60080,
+    "n_up": 36343,
+    "pick": 33.6,
+    "pick_by_act": [
+     31.0,
+     35.5,
+     36.9
+    ],
+    "win": 40.2,
+    "win_up": 67.3
+   },
+   "PACTS_END": {
+    "elo": 1568.4,
+    "n": 33062,
+    "n_up": 11394,
+    "pick": 22.6,
+    "pick_by_act": [
+     23.6,
+     22.8,
+     17.9
+    ],
+    "win": 47.2,
+    "win_up": 60.8
+   },
+   "PAGESTORM": {
+    "elo": 1390.9,
+    "n": 28723,
+    "n_up": 28153,
+    "pick": 12.6,
+    "pick_by_act": [
+     11.5,
+     13.0,
+     14.2
+    ],
+    "win": 45.0,
+    "win_up": 66.0
+   },
+   "PALE_BLUE_DOT": {
+    "elo": 1340.0,
+    "n": 27758,
+    "n_up": 19849,
+    "pick": 9.7,
+    "pick_by_act": [
+     6.9,
+     10.5,
+     14.0
+    ],
+    "win": 48.3,
+    "win_up": 72.7
+   },
+   "PANACHE": {
+    "elo": 1372.9,
+    "n": 34378,
+    "n_up": 9985,
+    "pick": 10.9,
+    "pick_by_act": [
+     8.2,
+     12.4,
+     13.5
+    ],
+    "win": 50.9,
+    "win_up": 62.9
+   },
+   "PANIC_BUTTON": {
+    "elo": 1083.6,
+    "n": 10654,
+    "n_up": 1840,
+    "pick": 2.4,
+    "pick_by_act": [
+     1.7,
+     2.3,
+     3.7
+    ],
+    "win": 50.9,
+    "win_up": 66.2
+   },
+   "PARRY": {
+    "elo": 1539.3,
+    "n": 66093,
+    "n_up": 39054,
+    "pick": 25.1,
+    "pick_by_act": [
+     25.4,
+     26.1,
+     23.1
+    ],
+    "win": 41.6,
+    "win_up": 59.7
+   },
+   "PARSE": {
+    "elo": 1475.0,
+    "n": 41235,
+    "n_up": 20133,
+    "pick": 18.9,
+    "pick_by_act": [
+     17.0,
+     20.3,
+     20.7
+    ],
+    "win": 47.5,
+    "win_up": 70.7
+   },
+   "PARTICLE_WALL": {
+    "elo": 1588.3,
+    "n": 67978,
+    "n_up": 32606,
+    "pick": 32.6,
+    "pick_by_act": [
+     35.0,
+     32.6,
+     27.4
+    ],
+    "win": 42.4,
+    "win_up": 62.5
+   },
+   "PATTER": {
+    "elo": 1483.3,
+    "n": 76377,
+    "n_up": 36796,
+    "pick": 20.0,
+    "pick_by_act": [
+     24.9,
+     17.5,
+     13.0
+    ],
+    "win": 39.1,
+    "win_up": 57.0
+   },
+   "PERFECTED_STRIKE": {
+    "elo": 1502.0,
+    "n": 99743,
+    "n_up": 76590,
+    "pick": 22.6,
+    "pick_by_act": [
+     27.2,
+     19.4,
+     16.9
+    ],
+    "win": 31.9,
+    "win_up": 46.4
+   },
+   "PHANTOM_BLADES": {
+    "elo": 1564.5,
+    "n": 72276,
+    "n_up": 39837,
+    "pick": 26.2,
+    "pick_by_act": [
+     29.6,
+     25.4,
+     21.6
+    ],
+    "win": 45.7,
+    "win_up": 59.9
+   },
+   "PHOTON_CUT": {
+    "elo": 1331.1,
+    "n": 50292,
+    "n_up": 34256,
+    "pick": 9.7,
+    "pick_by_act": [
+     12.5,
+     7.7,
+     6.3
+    ],
+    "win": 35.2,
+    "win_up": 56.1
+   },
+   "PIERCING_WAIL": {
+    "elo": 1628.9,
+    "n": 217212,
+    "n_up": 87310,
+    "pick": 34.8,
+    "pick_by_act": [
+     37.3,
+     34.4,
+     30.1
+    ],
+    "win": 44.6,
+    "win_up": 64.5
+   },
+   "PILLAGE": {
+    "elo": 1453.6,
+    "n": 52465,
+    "n_up": 17387,
+    "pick": 17.8,
+    "pick_by_act": [
+     19.1,
+     17.6,
+     14.9
+    ],
+    "win": 43.5,
+    "win_up": 60.9
+   },
+   "PILLAR_OF_CREATION": {
+    "elo": 1459.7,
+    "n": 46066,
+    "n_up": 28961,
+    "pick": 17.2,
+    "pick_by_act": [
+     17.3,
+     17.4,
+     16.8
+    ],
+    "win": 45.3,
+    "win_up": 66.4
+   },
+   "PINPOINT": {
+    "elo": 1391.0,
+    "n": 40111,
+    "n_up": 16916,
+    "pick": 12.5,
+    "pick_by_act": [
+     16.6,
+     10.2,
+     7.4
+    ],
+    "win": 39.6,
+    "win_up": 55.3
+   },
+   "PLOT": {
+    "elo": 1556.4,
+    "n": 6221,
+    "n_up": 4836,
+    "pick": 26.9,
+    "pick_by_act": [
+     27.2,
+     26.8,
+     26.5
+    ],
+    "win": 59.9,
+    "win_up": 77.4
+   },
+   "POISONED_STAB": {
+    "elo": 1422.1,
+    "n": 98329,
+    "n_up": 40353,
+    "pick": 14.5,
+    "pick_by_act": [
+     20.1,
+     10.9,
+     7.6
+    ],
+    "win": 35.0,
+    "win_up": 49.3
+   },
+   "POKE": {
+    "elo": 1470.8,
+    "n": 109306,
+    "n_up": 35746,
+    "pick": 19.0,
+    "pick_by_act": [
+     23.0,
+     16.7,
+     13.0
+    ],
+    "win": 36.2,
+    "win_up": 54.9
+   },
+   "POMMEL_STRIKE": {
+    "elo": 1614.9,
+    "n": 153271,
+    "n_up": 135156,
+    "pick": 35.5,
+    "pick_by_act": [
+     41.1,
+     31.9,
+     28.0
+    ],
+    "win": 33.3,
+    "win_up": 55.7
+   },
+   "POUNCE": {
+    "elo": 1376.4,
+    "n": 36429,
+    "n_up": 16398,
+    "pick": 11.3,
+    "pick_by_act": [
+     15.1,
+     9.2,
+     6.6
+    ],
+    "win": 37.6,
+    "win_up": 49.8
+   },
+   "PRECISE_CUT": {
+    "elo": 1338.4,
+    "n": 34168,
+    "n_up": 10757,
+    "pick": 9.4,
+    "pick_by_act": [
+     12.9,
+     7.3,
+     5.1
+    ],
+    "win": 40.0,
+    "win_up": 53.1
+   },
+   "PREDATOR": {
+    "elo": 1251.0,
+    "n": 35681,
+    "n_up": 16862,
+    "pick": 5.9,
+    "pick_by_act": [
+     8.1,
+     4.2,
+     3.9
+    ],
+    "win": 37.7,
+    "win_up": 51.1
+   },
+   "PREPARED": {
+    "elo": 1678.5,
+    "n": 192684,
+    "n_up": 161138,
+    "pick": 41.7,
+    "pick_by_act": [
+     42.3,
+     42.3,
+     39.6
+    ],
+    "win": 38.0,
+    "win_up": 60.1
+   },
+   "PREP_TIME": {
+    "elo": 1271.9,
+    "n": 18548,
+    "n_up": 7969,
+    "pick": 6.5,
+    "pick_by_act": [
+     5.8,
+     6.3,
+     8.0
+    ],
+    "win": 45.5,
+    "win_up": 54.4
+   },
+   "PRIMAL_FORCE": {
+    "elo": 1470.7,
+    "n": 22307,
+    "n_up": 17097,
+    "pick": 14.7,
+    "pick_by_act": [
+     19.7,
+     9.5,
+     6.5
+    ],
+    "win": 38.8,
+    "win_up": 50.2
+   },
+   "PRODUCTION": {
+    "elo": 1506.4,
+    "n": 54240,
+    "n_up": 24239,
+    "pick": 20.9,
+    "pick_by_act": [
+     16.0,
+     24.2,
+     24.8
+    ],
+    "win": 48.8,
+    "win_up": 66.4
+   },
+   "PROLONG": {
+    "elo": 1367.4,
+    "n": 21428,
+    "n_up": 21560,
+    "pick": 10.5,
+    "pick_by_act": [
+     8.0,
+     11.9,
+     13.3
+    ],
+    "win": 46.5,
+    "win_up": 61.0
+   },
+   "PROPHESIZE": {
+    "elo": 1309.4,
+    "n": 19429,
+    "n_up": 9885,
+    "pick": 8.5,
+    "pick_by_act": [
+     6.5,
+     9.6,
+     11.7
+    ],
+    "win": 48.9,
+    "win_up": 70.2
+   },
+   "PROWESS": {
+    "elo": 1428.6,
+    "n": 23257,
+    "n_up": 28828,
+    "pick": 13.8,
+    "pick_by_act": [
+     13.3,
+     14.6,
+     13.5
+    ],
+    "win": 41.5,
+    "win_up": 56.2
+   },
+   "PULL_AGGRO": {
+    "elo": 1429.9,
+    "n": 85566,
+    "n_up": 53038,
+    "pick": 15.6,
+    "pick_by_act": [
+     20.1,
+     13.0,
+     9.3
+    ],
+    "win": 34.8,
+    "win_up": 51.5
+   },
+   "PULL_FROM_BELOW": {
+    "elo": 1397.5,
+    "n": 25630,
+    "n_up": 20063,
+    "pick": 13.1,
+    "pick_by_act": [
+     13.8,
+     12.6,
+     12.2
+    ],
+    "win": 40.9,
+    "win_up": 64.8
+   },
+   "PURITY": {
+    "elo": 1292.8,
+    "n": 21935,
+    "n_up": 5924,
+    "pick": 7.1,
+    "pick_by_act": [
+     5.1,
+     7.7,
+     9.9
+    ],
+    "win": 53.7,
+    "win_up": 73.4
+   },
+   "PUTREFY": {
+    "elo": 1590.5,
+    "n": 62102,
+    "n_up": 35119,
+    "pick": 31.1,
+    "pick_by_act": [
+     35.3,
+     29.4,
+     24.3
+    ],
+    "win": 45.9,
+    "win_up": 64.5
+   },
+   "PYRE": {
+    "elo": 1819.5,
+    "n": 42700,
+    "n_up": 72973,
+    "pick": 55.9,
+    "pick_by_act": [
+     59.0,
+     53.1,
+     48.7
+    ],
+    "win": 35.8,
+    "win_up": 62.0
+   },
+   "QUASAR": {
+    "elo": 1482.9,
+    "n": 33595,
+    "n_up": 30116,
+    "pick": 20.7,
+    "pick_by_act": [
+     23.1,
+     19.9,
+     16.8
+    ],
+    "win": 39.1,
+    "win_up": 61.3
+   },
+   "RADIATE": {
+    "elo": 1505.4,
+    "n": 50800,
+    "n_up": 27595,
+    "pick": 22.8,
+    "pick_by_act": [
+     25.4,
+     21.8,
+     18.6
+    ],
+    "win": 41.4,
+    "win_up": 63.1
+   },
+   "RAGE": {
+    "elo": 1595.5,
+    "n": 77971,
+    "n_up": 51852,
+    "pick": 32.7,
+    "pick_by_act": [
+     36.3,
+     31.9,
+     25.3
+    ],
+    "win": 37.3,
+    "win_up": 53.7
+   },
+   "RAINBOW": {
+    "elo": 1528.7,
+    "n": 21636,
+    "n_up": 15671,
+    "pick": 18.6,
+    "pick_by_act": [
+     21.5,
+     15.6,
+     15.0
+    ],
+    "win": 40.1,
+    "win_up": 53.5
+   },
+   "RALLY": {
+    "elo": 1362.7,
+    "n": 15746,
+    "n_up": 10741,
+    "pick": 9.4,
+    "pick_by_act": [
+     5.2,
+     11.1,
+     12.5
+    ],
+    "win": 64.6,
+    "win_up": 77.2
+   },
+   "RAMPAGE": {
+    "elo": 1456.7,
+    "n": 40160,
+    "n_up": 31192,
+    "pick": 18.0,
+    "pick_by_act": [
+     24.5,
+     14.1,
+     9.3
+    ],
+    "win": 32.3,
+    "win_up": 45.5
+   },
+   "RATTLE": {
+    "elo": 1454.9,
+    "n": 39256,
+    "n_up": 20632,
+    "pick": 17.7,
+    "pick_by_act": [
+     21.6,
+     15.6,
+     12.4
+    ],
+    "win": 38.0,
+    "win_up": 55.4
+   },
+   "REANIMATE": {
+    "elo": 1659.4,
+    "n": 36796,
+    "n_up": 24184,
+    "pick": 33.9,
+    "pick_by_act": [
+     37.3,
+     30.6,
+     29.6
+    ],
+    "win": 49.6,
+    "win_up": 63.5
+   },
+   "REAP": {
+    "elo": 1301.8,
+    "n": 47401,
+    "n_up": 26393,
+    "pick": 8.3,
+    "pick_by_act": [
+     11.9,
+     5.5,
+     4.4
+    ],
+    "win": 33.3,
+    "win_up": 49.2
+   },
+   "REAPER_FORM": {
+    "elo": 1726.1,
+    "n": 40649,
+    "n_up": 32576,
+    "pick": 41.8,
+    "pick_by_act": [
+     44.4,
+     39.8,
+     36.4
+    ],
+    "win": 45.2,
+    "win_up": 63.7
+   },
+   "REAVE": {
+    "elo": 1403.6,
+    "n": 73439,
+    "n_up": 34093,
+    "pick": 13.4,
+    "pick_by_act": [
+     17.3,
+     11.0,
+     7.9
+    ],
+    "win": 34.1,
+    "win_up": 54.3
+   },
+   "REBOOT": {
+    "elo": 1658.9,
+    "n": 39206,
+    "n_up": 16099,
+    "pick": 31.1,
+    "pick_by_act": [
+     28.6,
+     33.4,
+     35.3
+    ],
+    "win": 49.7,
+    "win_up": 71.9
+   },
+   "REFINE_BLADE": {
+    "elo": 1519.0,
+    "n": 117485,
+    "n_up": 63080,
+    "pick": 24.2,
+    "pick_by_act": [
+     30.2,
+     20.7,
+     16.1
+    ],
+    "win": 37.5,
+    "win_up": 55.1
+   },
+   "REFLECT": {
+    "elo": 1669.2,
+    "n": 84630,
+    "n_up": 44667,
+    "pick": 43.6,
+    "pick_by_act": [
+     48.1,
+     42.5,
+     35.3
+    ],
+    "win": 40.9,
+    "win_up": 57.3
+   },
+   "REFLEX": {
+    "elo": 1546.4,
+    "n": 53089,
+    "n_up": 28994,
+    "pick": 25.4,
+    "pick_by_act": [
+     24.5,
+     26.5,
+     25.6
+    ],
+    "win": 43.5,
+    "win_up": 70.1
+   },
+   "REFRACT": {
+    "elo": 1399.7,
+    "n": 34628,
+    "n_up": 16157,
+    "pick": 13.1,
+    "pick_by_act": [
+     18.9,
+     9.3,
+     6.2
+    ],
+    "win": 33.4,
+    "win_up": 45.0
+   },
+   "REND": {
+    "elo": 1028.0,
+    "n": 5442,
+    "n_up": 1981,
+    "pick": 1.3,
+    "pick_by_act": [
+     0.4,
+     0.9,
+     3.1
+    ],
+    "win": 62.4,
+    "win_up": 71.3
+   },
+   "RESONANCE": {
+    "elo": 1440.7,
+    "n": 32048,
+    "n_up": 21400,
+    "pick": 17.2,
+    "pick_by_act": [
+     18.4,
+     16.8,
+     15.2
+    ],
+    "win": 40.4,
+    "win_up": 59.0
+   },
+   "RESTLESSNESS": {
+    "elo": 1261.4,
+    "n": 19005,
+    "n_up": 6256,
+    "pick": 6.4,
+    "pick_by_act": [
+     4.7,
+     7.0,
+     8.6
+    ],
+    "win": 50.0,
+    "win_up": 68.8
+   },
+   "RICOCHET": {
+    "elo": 1422.9,
+    "n": 102368,
+    "n_up": 48779,
+    "pick": 14.6,
+    "pick_by_act": [
+     19.1,
+     11.9,
+     8.8
+    ],
+    "win": 36.7,
+    "win_up": 55.5
+   },
+   "RIGHT_HAND_HAND": {
+    "elo": 1488.4,
+    "n": 50823,
+    "n_up": 18826,
+    "pick": 20.5,
+    "pick_by_act": [
+     22.1,
+     20.2,
+     17.5
+    ],
+    "win": 41.9,
+    "win_up": 60.9
+   },
+   "ROCKET_PUNCH": {
+    "elo": 1456.2,
+    "n": 32497,
+    "n_up": 28164,
+    "pick": 16.4,
+    "pick_by_act": [
+     17.4,
+     15.8,
+     15.1
+    ],
+    "win": 38.4,
+    "win_up": 61.4
+   },
+   "ROLLING_BOULDER": {
+    "elo": 1241.0,
+    "n": 18906,
+    "n_up": 8781,
+    "pick": 4.5,
+    "pick_by_act": [
+     2.2,
+     4.9,
+     7.6
+    ],
+    "win": 52.1,
+    "win_up": 61.0
+   },
+   "ROYALTIES": {
+    "elo": 1551.7,
+    "n": 28985,
+    "n_up": 8235,
+    "pick": 20.9,
+    "pick_by_act": [
+     27.2,
+     16.0,
+     6.0
+    ],
+    "win": 45.8,
+    "win_up": 59.4
+   },
+   "ROYAL_GAMBLE": {
+    "elo": 1623.3,
+    "n": 61360,
+    "n_up": 46197,
+    "pick": 36.5,
+    "pick_by_act": [
+     35.3,
+     38.0,
+     36.9
+    ],
+    "win": 42.2,
+    "win_up": 62.5
+   },
+   "RUPTURE": {
+    "elo": 1517.2,
+    "n": 62788,
+    "n_up": 58009,
+    "pick": 23.2,
+    "pick_by_act": [
+     24.6,
+     22.6,
+     21.2
+    ],
+    "win": 36.3,
+    "win_up": 56.2
+   },
+   "SACRIFICE": {
+    "elo": 1421.9,
+    "n": 14249,
+    "n_up": 6674,
+    "pick": 11.9,
+    "pick_by_act": [
+     13.9,
+     10.1,
+     8.5
+    ],
+    "win": 43.3,
+    "win_up": 61.1
+   },
+   "SALVO": {
+    "elo": 1095.3,
+    "n": 11206,
+    "n_up": 1957,
+    "pick": 2.1,
+    "pick_by_act": [
+     1.0,
+     1.8,
+     4.2
+    ],
+    "win": 60.4,
+    "win_up": 68.6
+   },
+   "SCARE": {
+    "elo": 1505.6,
+    "n": 24207,
+    "n_up": 11850,
+    "pick": 20.4,
+    "pick_by_act": [
+     23.7,
+     19.6,
+     14.4
+    ],
+    "win": 39.8,
+    "win_up": 53.1
+   },
+   "SCAVENGE": {
+    "elo": 1542.9,
+    "n": 38276,
+    "n_up": 15017,
+    "pick": 24.5,
+    "pick_by_act": [
+     24.0,
+     25.6,
+     23.7
+    ],
+    "win": 41.3,
+    "win_up": 63.2
+   },
+   "SCOURGE": {
+    "elo": 1502.5,
+    "n": 94223,
+    "n_up": 68566,
+    "pick": 21.5,
+    "pick_by_act": [
+     25.9,
+     19.0,
+     15.5
+    ],
+    "win": 33.9,
+    "win_up": 54.8
+   },
+   "SCRAPE": {
+    "elo": 1421.0,
+    "n": 34667,
+    "n_up": 18462,
+    "pick": 13.7,
+    "pick_by_act": [
+     14.3,
+     13.6,
+     12.6
+    ],
+    "win": 40.6,
+    "win_up": 61.6
+   },
+   "SCRAWL": {
+    "elo": 1176.3,
+    "n": 12544,
+    "n_up": 5191,
+    "pick": 3.0,
+    "pick_by_act": [
+     0.7,
+     3.0,
+     6.5
+    ],
+    "win": 66.9,
+    "win_up": 80.6
+   },
+   "SCULPTING_STRIKE": {
+    "elo": 1306.1,
+    "n": 38458,
+    "n_up": 10963,
+    "pick": 8.2,
+    "pick_by_act": [
+     10.8,
+     6.5,
+     4.8
+    ],
+    "win": 41.2,
+    "win_up": 60.1
+   },
+   "SEANCE": {
+    "elo": 1615.3,
+    "n": 26152,
+    "n_up": 26039,
+    "pick": 27.7,
+    "pick_by_act": [
+     28.5,
+     27.9,
+     23.3
+    ],
+    "win": 48.1,
+    "win_up": 67.8
+   },
+   "SECOND_WIND": {
+    "elo": 1460.3,
+    "n": 51009,
+    "n_up": 22129,
+    "pick": 18.1,
+    "pick_by_act": [
+     19.5,
+     17.5,
+     15.9
+    ],
+    "win": 43.2,
+    "win_up": 62.5
+   },
+   "SECRET_TECHNIQUE": {
+    "elo": 1228.7,
+    "n": 15242,
+    "n_up": 10754,
+    "pick": 4.3,
+    "pick_by_act": [
+     1.3,
+     4.7,
+     8.7
+    ],
+    "win": 64.1,
+    "win_up": 76.8
+   },
+   "SECRET_WEAPON": {
+    "elo": 1169.8,
+    "n": 13348,
+    "n_up": 5936,
+    "pick": 3.1,
+    "pick_by_act": [
+     0.9,
+     3.1,
+     6.4
+    ],
+    "win": 61.0,
+    "win_up": 73.5
+   },
+   "SEEKER_STRIKE": {
+    "elo": 1200.2,
+    "n": 17844,
+    "n_up": 3039,
+    "pick": 4.7,
+    "pick_by_act": [
+     3.9,
+     4.9,
+     6.0
+    ],
+    "win": 50.3,
+    "win_up": 63.6
+   },
+   "SEEKING_EDGE": {
+    "elo": 1687.5,
+    "n": 49611,
+    "n_up": 15041,
+    "pick": 37.0,
+    "pick_by_act": [
+     43.7,
+     32.0,
+     21.7
+    ],
+    "win": 48.1,
+    "win_up": 58.0
+   },
+   "SENTRY_MODE": {
+    "elo": 1624.2,
+    "n": 25002,
+    "n_up": 28108,
+    "pick": 29.6,
+    "pick_by_act": [
+     34.1,
+     25.4,
+     22.6
+    ],
+    "win": 42.9,
+    "win_up": 61.5
+   },
+   "SERPENT_FORM": {
+    "elo": 1673.2,
+    "n": 42387,
+    "n_up": 30481,
+    "pick": 33.0,
+    "pick_by_act": [
+     34.9,
+     30.5,
+     33.1
+    ],
+    "win": 48.0,
+    "win_up": 66.9
+   },
+   "SETUP_STRIKE": {
+    "elo": 1445.4,
+    "n": 105877,
+    "n_up": 50571,
+    "pick": 17.0,
+    "pick_by_act": [
+     20.8,
+     14.1,
+     12.1
+    ],
+    "win": 33.9,
+    "win_up": 51.0
+   },
+   "SEVEN_STARS": {
+    "elo": 1593.7,
+    "n": 30922,
+    "n_up": 18811,
+    "pick": 26.1,
+    "pick_by_act": [
+     29.3,
+     23.6,
+     18.9
+    ],
+    "win": 43.6,
+    "win_up": 62.7
+   },
+   "SEVERANCE": {
+    "elo": 1479.3,
+    "n": 47623,
+    "n_up": 18792,
+    "pick": 19.4,
+    "pick_by_act": [
+     23.4,
+     17.4,
+     13.7
+    ],
+    "win": 42.4,
+    "win_up": 59.1
+   },
+   "SHADOWMELD": {
+    "elo": 1564.7,
+    "n": 27719,
+    "n_up": 24474,
+    "pick": 21.0,
+    "pick_by_act": [
+     21.2,
+     21.1,
+     19.7
+    ],
+    "win": 42.8,
+    "win_up": 62.2
+   },
+   "SHADOW_SHIELD": {
+    "elo": 1539.9,
+    "n": 52180,
+    "n_up": 22466,
+    "pick": 25.3,
+    "pick_by_act": [
+     32.3,
+     21.2,
+     15.0
+    ],
+    "win": 35.8,
+    "win_up": 50.8
+   },
+   "SHADOW_STEP": {
+    "elo": 1579.3,
+    "n": 30009,
+    "n_up": 24937,
+    "pick": 22.6,
+    "pick_by_act": [
+     23.6,
+     21.5,
+     21.5
+    ],
+    "win": 45.7,
+    "win_up": 62.3
+   },
+   "SHARED_FATE": {
+    "elo": 1533.3,
+    "n": 25282,
+    "n_up": 13104,
+    "pick": 19.8,
+    "pick_by_act": [
+     19.8,
+     19.7,
+     19.8
+    ],
+    "win": 54.3,
+    "win_up": 72.6
+   },
+   "SHATTER": {
+    "elo": 1624.1,
+    "n": 42702,
+    "n_up": 11309,
+    "pick": 28.5,
+    "pick_by_act": [
+     33.8,
+     24.0,
+     18.5
+    ],
+    "win": 41.7,
+    "win_up": 51.3
+   },
+   "SHINING_STRIKE": {
+    "elo": 1554.8,
+    "n": 68804,
+    "n_up": 26806,
+    "pick": 27.5,
+    "pick_by_act": [
+     36.8,
+     22.8,
+     15.1
+    ],
+    "win": 40.1,
+    "win_up": 55.1
+   },
+   "SHOCKWAVE": {
+    "elo": 1353.8,
+    "n": 22843,
+    "n_up": 17875,
+    "pick": 9.6,
+    "pick_by_act": [
+     9.7,
+     9.9,
+     8.8
+    ],
+    "win": 49.2,
+    "win_up": 62.3
+   },
+   "SHROUD": {
+    "elo": 1520.1,
+    "n": 57478,
+    "n_up": 35740,
+    "pick": 22.9,
+    "pick_by_act": [
+     22.5,
+     23.8,
+     22.5
+    ],
+    "win": 40.7,
+    "win_up": 61.3
+   },
+   "SHRUG_IT_OFF": {
+    "elo": 1601.5,
+    "n": 227873,
+    "n_up": 101505,
+    "pick": 33.2,
+    "pick_by_act": [
+     38.5,
+     31.7,
+     23.7
+    ],
+    "win": 38.3,
+    "win_up": 56.5
+   },
+   "SIC_EM": {
+    "elo": 1484.9,
+    "n": 42112,
+    "n_up": 25659,
+    "pick": 20.2,
+    "pick_by_act": [
+     24.7,
+     17.8,
+     13.8
+    ],
+    "win": 35.9,
+    "win_up": 54.3
+   },
+   "SIDESTEP": {
+    "elo": 1668.4,
+    "n": 10536,
+    "n_up": 8249,
+    "pick": 38.0,
+    "pick_by_act": [
+     39.1,
+     38.2,
+     35.7
+    ],
+    "win": 41.7,
+    "win_up": 65.1
+   },
+   "SIGNAL_BOOST": {
+    "elo": 1706.0,
+    "n": 41430,
+    "n_up": 24085,
+    "pick": 37.0,
+    "pick_by_act": [
+     33.9,
+     40.3,
+     40.6
+    ],
+    "win": 46.2,
+    "win_up": 64.8
+   },
+   "SKEWER": {
+    "elo": 1239.3,
+    "n": 17530,
+    "n_up": 11938,
+    "pick": 5.6,
+    "pick_by_act": [
+     7.1,
+     4.5,
+     4.4
+    ],
+    "win": 39.1,
+    "win_up": 52.6
+   },
+   "SKIM": {
+    "elo": 1565.3,
+    "n": 52766,
+    "n_up": 27520,
+    "pick": 27.1,
+    "pick_by_act": [
+     23.0,
+     29.3,
+     33.6
+    ],
+    "win": 44.4,
+    "win_up": 69.0
+   },
+   "SLEIGHT_OF_FLESH": {
+    "elo": 1529.2,
+    "n": 53069,
+    "n_up": 45403,
+    "pick": 23.8,
+    "pick_by_act": [
+     25.0,
+     23.6,
+     21.8
+    ],
+    "win": 40.1,
+    "win_up": 60.4
+   },
+   "SLICE": {
+    "elo": 1349.3,
+    "n": 77505,
+    "n_up": 24874,
+    "pick": 9.6,
+    "pick_by_act": [
+     11.6,
+     8.3,
+     7.1
+    ],
+    "win": 37.8,
+    "win_up": 53.3
+   },
+   "SMOKESTACK": {
+    "elo": 1493.5,
+    "n": 43834,
+    "n_up": 18334,
+    "pick": 19.0,
+    "pick_by_act": [
+     20.5,
+     18.0,
+     17.3
+    ],
+    "win": 39.1,
+    "win_up": 55.7
+   },
+   "SNAKEBITE": {
+    "elo": 1413.6,
+    "n": 80723,
+    "n_up": 51505,
+    "pick": 14.1,
+    "pick_by_act": [
+     19.1,
+     10.6,
+     8.3
+    ],
+    "win": 35.0,
+    "win_up": 50.6
+   },
+   "SNAP": {
+    "elo": 1404.0,
+    "n": 90708,
+    "n_up": 26641,
+    "pick": 14.0,
+    "pick_by_act": [
+     17.2,
+     12.4,
+     9.3
+    ],
+    "win": 38.6,
+    "win_up": 59.5
+   },
+   "SNEAKY": {
+    "elo": 1734.6,
+    "n": 29361,
+    "n_up": 32147,
+    "pick": 41.0,
+    "pick_by_act": [
+     42.3,
+     39.9,
+     39.8
+    ],
+    "win": 55.4,
+    "win_up": 73.9
+   },
+   "SOLAR_STRIKE": {
+    "elo": 1424.0,
+    "n": 78744,
+    "n_up": 50910,
+    "pick": 15.3,
+    "pick_by_act": [
+     20.9,
+     11.5,
+     8.4
+    ],
+    "win": 33.5,
+    "win_up": 51.6
+   },
+   "SOULBOUND": {
+    "elo": 1548.7,
+    "n": 7299,
+    "n_up": 6684,
+    "pick": 23.9,
+    "pick_by_act": [
+     24.8,
+     23.1,
+     23.4
+    ],
+    "win": 51.6,
+    "win_up": 69.7
+   },
+   "SOUL_STORM": {
+    "elo": 1550.2,
+    "n": 28973,
+    "n_up": 15220,
+    "pick": 21.8,
+    "pick_by_act": [
+     24.4,
+     19.3,
+     17.9
+    ],
+    "win": 45.1,
+    "win_up": 64.1
+   },
+   "SOW": {
+    "elo": 1333.5,
+    "n": 62057,
+    "n_up": 21521,
+    "pick": 9.6,
+    "pick_by_act": [
+     14.7,
+     6.0,
+     3.1
+    ],
+    "win": 30.1,
+    "win_up": 45.6
+   },
+   "SPECTRUM_SHIFT": {
+    "elo": 1515.5,
+    "n": 39415,
+    "n_up": 56586,
+    "pick": 22.4,
+    "pick_by_act": [
+     25.0,
+     20.8,
+     19.8
+    ],
+    "win": 40.5,
+    "win_up": 59.9
+   },
+   "SPEEDSTER": {
+    "elo": 1408.1,
+    "n": 49405,
+    "n_up": 32005,
+    "pick": 13.1,
+    "pick_by_act": [
+     13.7,
+     12.4,
+     12.9
+    ],
+    "win": 41.7,
+    "win_up": 59.0
+   },
+   "SPINNER": {
+    "elo": 1673.9,
+    "n": 40821,
+    "n_up": 16507,
+    "pick": 33.5,
+    "pick_by_act": [
+     38.7,
+     28.6,
+     25.1
+    ],
+    "win": 45.3,
+    "win_up": 56.2
+   },
+   "SPIRIT_OF_ASH": {
+    "elo": 1537.2,
+    "n": 25779,
+    "n_up": 11933,
+    "pick": 20.1,
+    "pick_by_act": [
+     20.7,
+     18.8,
+     21.3
+    ],
+    "win": 50.2,
+    "win_up": 68.5
+   },
+   "SPITE": {
+    "elo": 1408.8,
+    "n": 39420,
+    "n_up": 18374,
+    "pick": 14.5,
+    "pick_by_act": [
+     15.9,
+     13.9,
+     12.1
+    ],
+    "win": 39.8,
+    "win_up": 56.4
+   },
+   "SPLASH": {
+    "elo": 1399.5,
+    "n": 19419,
+    "n_up": 23999,
+    "pick": 11.4,
+    "pick_by_act": [
+     11.9,
+     11.3,
+     10.5
+    ],
+    "win": 45.8,
+    "win_up": 56.7
+   },
+   "SPOILS_OF_BATTLE": {
+    "elo": 1464.9,
+    "n": 94004,
+    "n_up": 43490,
+    "pick": 18.8,
+    "pick_by_act": [
+     21.9,
+     17.0,
+     14.6
+    ],
+    "win": 39.8,
+    "win_up": 58.8
+   },
+   "SPUR": {
+    "elo": 1578.9,
+    "n": 56355,
+    "n_up": 39153,
+    "pick": 30.8,
+    "pick_by_act": [
+     35.6,
+     29.2,
+     22.4
+    ],
+    "win": 37.8,
+    "win_up": 56.6
+   },
+   "SQUEEZE": {
+    "elo": 1559.0,
+    "n": 22089,
+    "n_up": 23466,
+    "pick": 22.8,
+    "pick_by_act": [
+     26.9,
+     18.5,
+     18.4
+    ],
+    "win": 42.1,
+    "win_up": 61.7
+   },
+   "STAMPEDE": {
+    "elo": 1543.7,
+    "n": 53092,
+    "n_up": 80106,
+    "pick": 25.5,
+    "pick_by_act": [
+     30.2,
+     23.5,
+     19.6
+    ],
+    "win": 33.8,
+    "win_up": 49.9
+   },
+   "STARDUST": {
+    "elo": 1538.8,
+    "n": 46590,
+    "n_up": 45722,
+    "pick": 26.0,
+    "pick_by_act": [
+     29.0,
+     24.5,
+     21.9
+    ],
+    "win": 37.2,
+    "win_up": 61.4
+   },
+   "STOKE": {
+    "elo": 1563.5,
+    "n": 22676,
+    "n_up": 29719,
+    "pick": 22.3,
+    "pick_by_act": [
+     24.1,
+     21.1,
+     18.5
+    ],
+    "win": 41.3,
+    "win_up": 65.9
+   },
+   "STOMP": {
+    "elo": 1489.7,
+    "n": 60587,
+    "n_up": 22990,
+    "pick": 21.2,
+    "pick_by_act": [
+     27.8,
+     17.4,
+     11.1
+    ],
+    "win": 35.8,
+    "win_up": 50.1
+   },
+   "STONE_ARMOR": {
+    "elo": 1516.9,
+    "n": 66323,
+    "n_up": 47356,
+    "pick": 22.8,
+    "pick_by_act": [
+     24.3,
+     22.3,
+     20.7
+    ],
+    "win": 39.4,
+    "win_up": 57.1
+   },
+   "STORM": {
+    "elo": 1567.8,
+    "n": 57477,
+    "n_up": 42165,
+    "pick": 27.0,
+    "pick_by_act": [
+     26.5,
+     26.8,
+     28.5
+    ],
+    "win": 36.3,
+    "win_up": 61.7
+   },
+   "STORM_OF_STEEL": {
+    "elo": 1627.7,
+    "n": 42247,
+    "n_up": 24022,
+    "pick": 28.3,
+    "pick_by_act": [
+     30.6,
+     25.7,
+     27.3
+    ],
+    "win": 50.2,
+    "win_up": 63.9
+   },
+   "STRANGLE": {
+    "elo": 1485.5,
+    "n": 52314,
+    "n_up": 33353,
+    "pick": 19.5,
+    "pick_by_act": [
+     23.0,
+     17.6,
+     15.1
+    ],
+    "win": 40.5,
+    "win_up": 58.3
+   },
+   "STRATAGEM": {
+    "elo": 1293.1,
+    "n": 13893,
+    "n_up": 8120,
+    "pick": 5.9,
+    "pick_by_act": [
+     4.5,
+     6.3,
+     7.8
+    ],
+    "win": 47.9,
+    "win_up": 62.5
+   },
+   "SUBROUTINE": {
+    "elo": 1636.5,
+    "n": 70710,
+    "n_up": 58657,
+    "pick": 34.6,
+    "pick_by_act": [
+     32.2,
+     35.9,
+     37.9
+    ],
+    "win": 38.7,
+    "win_up": 60.2
+   },
+   "SUCKER_PUNCH": {
+    "elo": 1329.2,
+    "n": 63804,
+    "n_up": 32738,
+    "pick": 8.7,
+    "pick_by_act": [
+     11.6,
+     6.6,
+     5.3
+    ],
+    "win": 36.3,
+    "win_up": 53.8
+   },
+   "SUMMON_FORTH": {
+    "elo": 1620.4,
+    "n": 69831,
+    "n_up": 33561,
+    "pick": 35.9,
+    "pick_by_act": [
+     38.8,
+     34.4,
+     31.6
+    ],
+    "win": 43.3,
+    "win_up": 59.7
+   },
+   "SUNDER": {
+    "elo": 1343.4,
+    "n": 24739,
+    "n_up": 15022,
+    "pick": 9.8,
+    "pick_by_act": [
+     14.3,
+     6.7,
+     4.5
+    ],
+    "win": 29.0,
+    "win_up": 41.2
+   },
+   "SUPERCRITICAL": {
+    "elo": 1746.1,
+    "n": 55944,
+    "n_up": 17001,
+    "pick": 42.2,
+    "pick_by_act": [
+     39.8,
+     44.1,
+     46.9
+    ],
+    "win": 48.4,
+    "win_up": 67.8
+   },
+   "SUPERMASSIVE": {
+    "elo": 1420.2,
+    "n": 25505,
+    "n_up": 16481,
+    "pick": 14.4,
+    "pick_by_act": [
+     15.0,
+     14.1,
+     13.4
+    ],
+    "win": 42.8,
+    "win_up": 62.1
+   },
+   "SWEEPING_BEAM": {
+    "elo": 1383.4,
+    "n": 71737,
+    "n_up": 23464,
+    "pick": 11.6,
+    "pick_by_act": [
+     16.1,
+     8.1,
+     5.8
+    ],
+    "win": 32.4,
+    "win_up": 50.3
+   },
+   "SWORD_BOOMERANG": {
+    "elo": 1332.0,
+    "n": 58301,
+    "n_up": 36675,
+    "pick": 9.8,
+    "pick_by_act": [
+     11.4,
+     8.6,
+     7.8
+    ],
+    "win": 34.9,
+    "win_up": 54.5
+   },
+   "SWORD_SAGE": {
+    "elo": 1709.0,
+    "n": 28297,
+    "n_up": 32789,
+    "pick": 39.4,
+    "pick_by_act": [
+     40.4,
+     38.2,
+     38.7
+    ],
+    "win": 44.3,
+    "win_up": 65.1
+   },
+   "SYNCHRONIZE": {
+    "elo": 1445.8,
+    "n": 26960,
+    "n_up": 24184,
+    "pick": 16.7,
+    "pick_by_act": [
+     16.2,
+     17.5,
+     16.4
+    ],
+    "win": 34.4,
+    "win_up": 53.3
+   },
+   "SYNTHESIS": {
+    "elo": 1360.5,
+    "n": 30169,
+    "n_up": 10894,
+    "pick": 10.1,
+    "pick_by_act": [
+     10.7,
+     10.0,
+     8.9
+    ],
+    "win": 38.8,
+    "win_up": 53.5
+   },
+   "TACTICIAN": {
+    "elo": 1602.5,
+    "n": 61485,
+    "n_up": 60736,
+    "pick": 32.0,
+    "pick_by_act": [
+     30.9,
+     32.4,
+     33.6
+    ],
+    "win": 37.8,
+    "win_up": 64.0
+   },
+   "TAG_TEAM": {
+    "elo": 1272.8,
+    "n": 19897,
+    "n_up": 3730,
+    "pick": 6.3,
+    "pick_by_act": [
+     3.4,
+     8.7,
+     10.4
+    ],
+    "win": 52.6,
+    "win_up": 65.2
+   },
+   "TANK": {
+    "elo": 1368.0,
+    "n": 10526,
+    "n_up": 4293,
+    "pick": 8.7,
+    "pick_by_act": [
+     8.7,
+     8.2,
+     11.1
+    ],
+    "win": 55.5,
+    "win_up": 75.6
+   },
+   "TAUNT": {
+    "elo": 1638.4,
+    "n": 106783,
+    "n_up": 79962,
+    "pick": 37.6,
+    "pick_by_act": [
+     45.5,
+     34.4,
+     25.5
+    ],
+    "win": 38.6,
+    "win_up": 55.7
+   },
+   "TEAR_ASUNDER": {
+    "elo": 1561.6,
+    "n": 24879,
+    "n_up": 14408,
+    "pick": 23.0,
+    "pick_by_act": [
+     25.1,
+     21.4,
+     19.1
+    ],
+    "win": 48.2,
+    "win_up": 62.6
+   },
+   "TEMPEST": {
+    "elo": 1542.2,
+    "n": 42598,
+    "n_up": 32989,
+    "pick": 25.2,
+    "pick_by_act": [
+     27.6,
+     23.5,
+     22.5
+    ],
+    "win": 35.4,
+    "win_up": 52.9
+   },
+   "TERRAFORMING": {
+    "elo": 1381.4,
+    "n": 26736,
+    "n_up": 13069,
+    "pick": 12.5,
+    "pick_by_act": [
+     13.2,
+     12.2,
+     11.5
+    ],
+    "win": 38.5,
+    "win_up": 60.1
+   },
+   "TESLA_COIL": {
+    "elo": 1534.1,
+    "n": 56776,
+    "n_up": 31299,
+    "pick": 24.2,
+    "pick_by_act": [
+     29.3,
+     21.7,
+     16.8
+    ],
+    "win": 33.5,
+    "win_up": 48.6
+   },
+   "THE_BALL": {
+    "elo": 1565.0,
+    "n": 5303,
+    "n_up": 9471,
+    "pick": 20.2,
+    "pick_by_act": [
+     21.5,
+     21.9,
+     16.4
+    ],
+    "win": 51.6,
+    "win_up": 61.1
+   },
+   "THE_BOMB": {
+    "elo": 1225.8,
+    "n": 16205,
+    "n_up": 6274,
+    "pick": 5.1,
+    "pick_by_act": [
+     5.4,
+     4.6,
+     5.3
+    ],
+    "win": 38.7,
+    "win_up": 45.9
+   },
+   "THE_GAMBIT": {
+    "elo": 1058.9,
+    "n": 7239,
+    "n_up": 2456,
+    "pick": 1.7,
+    "pick_by_act": [
+     0.6,
+     1.5,
+     3.9
+    ],
+    "win": 55.2,
+    "win_up": 74.3
+   },
+   "THE_HUNT": {
+    "elo": 1465.0,
+    "n": 31373,
+    "n_up": 9278,
+    "pick": 13.7,
+    "pick_by_act": [
+     19.7,
+     9.3,
+     4.1
+    ],
+    "win": 41.9,
+    "win_up": 54.9
+   },
+   "THE_SCYTHE": {
+    "elo": 1517.0,
+    "n": 22919,
+    "n_up": 18045,
+    "pick": 18.4,
+    "pick_by_act": [
+     26.4,
+     11.5,
+     5.1
+    ],
+    "win": 38.2,
+    "win_up": 53.8
+   },
+   "THE_SMITH": {
+    "elo": 1677.2,
+    "n": 39273,
+    "n_up": 28416,
+    "pick": 36.3,
+    "pick_by_act": [
+     39.0,
+     33.8,
+     31.6
+    ],
+    "win": 43.0,
+    "win_up": 65.8
+   },
+   "THINKING_AHEAD": {
+    "elo": 1293.0,
+    "n": 18359,
+    "n_up": 10494,
+    "pick": 7.5,
+    "pick_by_act": [
+     5.3,
+     8.4,
+     10.4
+    ],
+    "win": 53.3,
+    "win_up": 64.7
+   },
+   "THRASH": {
+    "elo": 1595.0,
+    "n": 48056,
+    "n_up": 16837,
+    "pick": 26.1,
+    "pick_by_act": [
+     30.0,
+     22.8,
+     17.9
+    ],
+    "win": 47.6,
+    "win_up": 58.7
+   },
+   "THRUMMING_HATCHET": {
+    "elo": 1169.2,
+    "n": 13799,
+    "n_up": 5526,
+    "pick": 3.8,
+    "pick_by_act": [
+     4.2,
+     3.1,
+     4.1
+    ],
+    "win": 41.3,
+    "win_up": 46.3
+   },
+   "THUNDER": {
+    "elo": 1616.5,
+    "n": 84915,
+    "n_up": 39486,
+    "pick": 33.8,
+    "pick_by_act": [
+     37.7,
+     31.5,
+     29.3
+    ],
+    "win": 36.8,
+    "win_up": 55.8
+   },
+   "THUNDERCLAP": {
+    "elo": 1456.2,
+    "n": 125760,
+    "n_up": 43346,
+    "pick": 17.6,
+    "pick_by_act": [
+     23.5,
+     13.9,
+     9.2
+    ],
+    "win": 36.6,
+    "win_up": 53.2
+   },
+   "TIMES_UP": {
+    "elo": 1602.3,
+    "n": 28182,
+    "n_up": 22159,
+    "pick": 26.9,
+    "pick_by_act": [
+     27.1,
+     26.8,
+     26.9
+    ],
+    "win": 43.0,
+    "win_up": 68.7
+   },
+   "TOOLS_OF_THE_TRADE": {
+    "elo": 1728.0,
+    "n": 45459,
+    "n_up": 40039,
+    "pick": 40.0,
+    "pick_by_act": [
+     42.2,
+     38.3,
+     36.3
+    ],
+    "win": 50.8,
+    "win_up": 68.4
+   },
+   "TRACKING": {
+    "elo": 1689.6,
+    "n": 32982,
+    "n_up": 41850,
+    "pick": 35.0,
+    "pick_by_act": [
+     36.4,
+     33.8,
+     32.7
+    ],
+    "win": 47.4,
+    "win_up": 69.7
+   },
+   "TRANSFIGURE": {
+    "elo": 1686.1,
+    "n": 32170,
+    "n_up": 34000,
+    "pick": 36.3,
+    "pick_by_act": [
+     35.0,
+     38.6,
+     34.1
+    ],
+    "win": 44.3,
+    "win_up": 67.9
+   },
+   "TRASH_TO_TREASURE": {
+    "elo": 1635.3,
+    "n": 29316,
+    "n_up": 19317,
+    "pick": 28.4,
+    "pick_by_act": [
+     30.9,
+     25.7,
+     25.7
+    ],
+    "win": 44.7,
+    "win_up": 63.2
+   },
+   "TREMBLE": {
+    "elo": 1531.1,
+    "n": 187754,
+    "n_up": 68572,
+    "pick": 24.5,
+    "pick_by_act": [
+     29.3,
+     21.4,
+     18.3
+    ],
+    "win": 38.7,
+    "win_up": 57.6
+   },
+   "TRUE_GRIT": {
+    "elo": 1431.0,
+    "n": 69436,
+    "n_up": 101312,
+    "pick": 15.8,
+    "pick_by_act": [
+     18.1,
+     14.8,
+     12.0
+    ],
+    "win": 30.7,
+    "win_up": 53.0
+   },
+   "TURBO": {
+    "elo": 1580.9,
+    "n": 112638,
+    "n_up": 52612,
+    "pick": 28.0,
+    "pick_by_act": [
+     27.8,
+     29.2,
+     26.6
+    ],
+    "win": 37.6,
+    "win_up": 63.4
+   },
+   "TUTOR": {
+    "elo": 1629.5,
+    "n": 2754,
+    "n_up": 3211,
+    "pick": 28.4,
+    "pick_by_act": [
+     28.2,
+     29.8,
+     24.8
+    ],
+    "win": 55.2,
+    "win_up": 74.7
+   },
+   "TWIN_STRIKE": {
+    "elo": 1426.5,
+    "n": 97753,
+    "n_up": 42083,
+    "pick": 15.6,
+    "pick_by_act": [
+     18.9,
+     13.6,
+     11.4
+    ],
+    "win": 34.6,
+    "win_up": 51.9
+   },
+   "TYRANNY": {
+    "elo": 1584.1,
+    "n": 22554,
+    "n_up": 20434,
+    "pick": 23.9,
+    "pick_by_act": [
+     24.0,
+     24.3,
+     21.5
+    ],
+    "win": 48.5,
+    "win_up": 73.3
+   },
+   "ULTIMATE_DEFEND": {
+    "elo": 1322.4,
+    "n": 69917,
+    "n_up": 16098,
+    "pick": 8.5,
+    "pick_by_act": [
+     7.4,
+     9.8,
+     8.7
+    ],
+    "win": 45.6,
+    "win_up": 63.7
+   },
+   "ULTIMATE_STRIKE": {
+    "elo": 1179.5,
+    "n": 72063,
+    "n_up": 18896,
+    "pick": 4.1,
+    "pick_by_act": [
+     4.0,
+     3.8,
+     4.6
+    ],
+    "win": 42.6,
+    "win_up": 59.1
+   },
+   "UNDEATH": {
+    "elo": 1656.7,
+    "n": 39246,
+    "n_up": 21017,
+    "pick": 32.5,
+    "pick_by_act": [
+     35.2,
+     30.6,
+     26.3
+    ],
+    "win": 47.0,
+    "win_up": 60.5
+   },
+   "UNDERWORLD": {
+    "elo": 1566.1,
+    "n": 4543,
+    "n_up": 7225,
+    "pick": 26.8,
+    "pick_by_act": [
+     28.9,
+     25.2,
+     25.3
+    ],
+    "win": 47.3,
+    "win_up": 71.0
+   },
+   "UNMOVABLE": {
+    "elo": 1728.3,
+    "n": 33890,
+    "n_up": 49035,
+    "pick": 42.1,
+    "pick_by_act": [
+     44.1,
+     41.1,
+     35.3
+    ],
+    "win": 43.7,
+    "win_up": 62.7
+   },
+   "UNRELENTING": {
+    "elo": 1475.7,
+    "n": 48761,
+    "n_up": 25344,
+    "pick": 19.6,
+    "pick_by_act": [
+     25.1,
+     16.5,
+     12.3
+    ],
+    "win": 36.4,
+    "win_up": 50.3
+   },
+   "UNTOUCHABLE": {
+    "elo": 1458.5,
+    "n": 126862,
+    "n_up": 45770,
+    "pick": 17.2,
+    "pick_by_act": [
+     19.0,
+     17.0,
+     13.7
+    ],
+    "win": 40.2,
+    "win_up": 60.8
+   },
+   "UPPERCUT": {
+    "elo": 1533.1,
+    "n": 48563,
+    "n_up": 52660,
+    "pick": 25.4,
+    "pick_by_act": [
+     32.3,
+     21.3,
+     16.1
+    ],
+    "win": 35.9,
+    "win_up": 55.3
+   },
+   "UPROAR": {
+    "elo": 1336.5,
+    "n": 46534,
+    "n_up": 20481,
+    "pick": 8.9,
+    "pick_by_act": [
+     10.7,
+     7.5,
+     6.9
+    ],
+    "win": 34.7,
+    "win_up": 50.2
+   },
+   "UP_MY_SLEEVE": {
+    "elo": 1639.7,
+    "n": 79451,
+    "n_up": 59091,
+    "pick": 36.7,
+    "pick_by_act": [
+     42.3,
+     34.4,
+     28.0
+    ],
+    "win": 40.7,
+    "win_up": 59.5
+   },
+   "VEILPIERCER": {
+    "elo": 1444.4,
+    "n": 30486,
+    "n_up": 9477,
+    "pick": 16.4,
+    "pick_by_act": [
+     19.7,
+     14.7,
+     12.0
+    ],
+    "win": 43.7,
+    "win_up": 61.8
+   },
+   "VICIOUS": {
+    "elo": 1495.7,
+    "n": 64077,
+    "n_up": 48827,
+    "pick": 21.1,
+    "pick_by_act": [
+     21.9,
+     21.2,
+     19.6
+    ],
+    "win": 39.8,
+    "win_up": 65.5
+   },
+   "VOID_FORM": {
+    "elo": 1843.2,
+    "n": 50358,
+    "n_up": 43251,
+    "pick": 57.8,
+    "pick_by_act": [
+     61.2,
+     55.0,
+     51.1
+    ],
+    "win": 47.5,
+    "win_up": 66.3
+   },
+   "VOLLEY": {
+    "elo": 1178.2,
+    "n": 11152,
+    "n_up": 7258,
+    "pick": 3.9,
+    "pick_by_act": [
+     3.4,
+     3.7,
+     4.9
+    ],
+    "win": 43.6,
+    "win_up": 52.0
+   },
+   "VOLTAIC": {
+    "elo": 1678.9,
+    "n": 26638,
+    "n_up": 35691,
+    "pick": 35.0,
+    "pick_by_act": [
+     38.7,
+     31.4,
+     30.3
+    ],
+    "win": 34.7,
+    "win_up": 60.8
+   },
+   "WELL_LAID_PLANS": {
+    "elo": 1558.8,
+    "n": 25343,
+    "n_up": 24468,
+    "pick": 24.0,
+    "pick_by_act": [
+     26.2,
+     24.0,
+     17.3
+    ],
+    "win": 29.8,
+    "win_up": 61.3
+   },
+   "WHIRLWIND": {
+    "elo": 1497.2,
+    "n": 46480,
+    "n_up": 40772,
+    "pick": 21.9,
+    "pick_by_act": [
+     27.4,
+     19.9,
+     12.6
+    ],
+    "win": 34.7,
+    "win_up": 51.7
+   },
+   "WHITE_NOISE": {
+    "elo": 1734.6,
+    "n": 70221,
+    "n_up": 63881,
+    "pick": 49.2,
+    "pick_by_act": [
+     49.6,
+     49.0,
+     48.9
+    ],
+    "win": 35.3,
+    "win_up": 55.2
+   },
+   "WISP": {
+    "elo": 1598.0,
+    "n": 160963,
+    "n_up": 91750,
+    "pick": 32.1,
+    "pick_by_act": [
+     30.0,
+     33.7,
+     34.3
+    ],
+    "win": 39.6,
+    "win_up": 60.3
+   },
+   "WROUGHT_IN_WAR": {
+    "elo": 1419.1,
+    "n": 82258,
+    "n_up": 38490,
+    "pick": 15.1,
+    "pick_by_act": [
+     20.6,
+     11.5,
+     7.9
+    ],
+    "win": 35.2,
+    "win_up": 50.8
+   }
+  },
+  "total_runs": 1924904
+ },
+ "encounters": {
+  "AEONGLASS_BOSS": {
+   "act": 3,
+   "avg_damage": 73.8,
+   "avg_turns": 7.34,
+   "fatal": 0.2481,
+   "room": "boss"
+  },
+  "AXEBOTS_NORMAL": {
+   "act": 3,
+   "avg_damage": 12.4,
+   "avg_turns": 6.0,
+   "fatal": 0.0134,
+   "room": "monster"
+  },
+  "BATTLEWORN_DUMMY_EVENT_ENCOUNTER": {
+   "act": 3,
+   "avg_damage": 1.5,
+   "avg_turns": 2.81,
+   "fatal": 0.0,
+   "room": "monster"
+  },
+  "BATTLEWORN_DUMMY_EVENT_V1_ENCOUNTER": {
+   "act": 3,
+   "avg_damage": 0.6,
+   "avg_turns": 2.56,
+   "fatal": 0.0011,
+   "room": "monster"
+  },
+  "BATTLEWORN_DUMMY_EVENT_V2_ENCOUNTER": {
+   "act": 3,
+   "avg_damage": 1.4,
+   "avg_turns": 2.83,
+   "fatal": 0.0008,
+   "room": "monster"
+  },
+  "BATTLEWORN_DUMMY_EVENT_V3_ENCOUNTER": {
+   "act": 3,
+   "avg_damage": 2.5,
+   "avg_turns": 2.87,
+   "fatal": 0.0016,
+   "room": "monster"
+  },
+  "BOWLBUGS_NORMAL": {
+   "act": 2,
+   "avg_damage": 18.7,
+   "avg_turns": 4.21,
+   "fatal": 0.0527,
+   "room": "monster"
+  },
+  "BOWLBUGS_WEAK": {
+   "act": 2,
+   "avg_damage": 15.8,
+   "avg_turns": 3.61,
+   "fatal": 0.0036,
+   "room": "monster"
+  },
+  "BYGONE_EFFIGY_ELITE": {
+   "act": 1,
+   "avg_damage": 22.6,
+   "avg_turns": 4.7,
+   "fatal": 0.074,
+   "room": "elite"
+  },
+  "BYRDONIS_ELITE": {
+   "act": 1,
+   "avg_damage": 27.8,
+   "avg_turns": 4.5,
+   "fatal": 0.053,
+   "room": "elite"
+  },
+  "CEREMONIAL_BEAST_BOSS": {
+   "act": 1,
+   "avg_damage": 43.7,
+   "avg_turns": 9.0,
+   "fatal": 0.1336,
+   "room": "boss"
+  },
+  "CHOMPERS_NORMAL": {
+   "act": 2,
+   "avg_damage": 23.8,
+   "avg_turns": 5.18,
+   "fatal": 0.0461,
+   "room": "monster"
+  },
+  "CONSTRUCT_MENAGERIE_NORMAL": {
+   "act": 3,
+   "avg_damage": 25.0,
+   "avg_turns": 4.19,
+   "fatal": 0.0424,
+   "room": "monster"
+  },
+  "CORPSE_SLUGS_NORMAL": {
+   "act": 1,
+   "avg_damage": 11.4,
+   "avg_turns": 4.23,
+   "fatal": 0.0276,
+   "room": "monster"
+  },
+  "CORPSE_SLUGS_WEAK": {
+   "act": 1,
+   "avg_damage": 8.4,
+   "avg_turns": 4.03,
+   "fatal": 0.0084,
+   "room": "monster"
+  },
+  "CUBEX_CONSTRUCT_NORMAL": {
+   "act": 1,
+   "avg_damage": 8.5,
+   "avg_turns": 4.04,
+   "fatal": 0.0124,
+   "room": "monster"
+  },
+  "CULTISTS_NORMAL": {
+   "act": 1,
+   "avg_damage": 10.7,
+   "avg_turns": 4.79,
+   "fatal": 0.0365,
+   "room": "monster"
+  },
+  "DECIMILLIPEDE_ELITE": {
+   "act": 2,
+   "avg_damage": 39.0,
+   "avg_turns": 4.44,
+   "fatal": 0.118,
+   "room": "elite"
+  },
+  "DENSE_VEGETATION_EVENT_ENCOUNTER": {
+   "act": 1,
+   "avg_damage": 20.6,
+   "avg_turns": 4.51,
+   "fatal": 0.0032,
+   "room": "monster"
+  },
+  "DEVOTED_SCULPTOR_WEAK": {
+   "act": 3,
+   "avg_damage": 13.9,
+   "avg_turns": 4.01,
+   "fatal": 0.0055,
+   "room": "monster"
+  },
+  "DOORMAKER_BOSS": {
+   "act": 3,
+   "avg_damage": 61.6,
+   "avg_turns": 8.66,
+   "fatal": 0.1417,
+   "room": "boss"
+  },
+  "ENTOMANCER_ELITE": {
+   "act": 2,
+   "avg_damage": 29.5,
+   "avg_turns": 5.16,
+   "fatal": 0.0708,
+   "room": "elite"
+  },
+  "EXOSKELETONS_NORMAL": {
+   "act": 2,
+   "avg_damage": 17.8,
+   "avg_turns": 4.16,
+   "fatal": 0.044,
+   "room": "monster"
+  },
+  "EXOSKELETONS_WEAK": {
+   "act": 2,
+   "avg_damage": 13.0,
+   "avg_turns": 4.03,
+   "fatal": 0.0026,
+   "room": "monster"
+  },
+  "FABRICATOR_NORMAL": {
+   "act": 3,
+   "avg_damage": 19.7,
+   "avg_turns": 4.05,
+   "fatal": 0.041,
+   "room": "monster"
+  },
+  "FAKE_MERCHANT_EVENT_ENCOUNTER": {
+   "act": 2,
+   "avg_damage": 13.5,
+   "avg_turns": 5.25,
+   "fatal": 0.0058,
+   "room": "monster"
+  },
+  "FLYCONID_NORMAL": {
+   "act": 1,
+   "avg_damage": 15.4,
+   "avg_turns": 4.53,
+   "fatal": 0.03,
+   "room": "monster"
+  },
+  "FOGMOG_NORMAL": {
+   "act": 1,
+   "avg_damage": 9.2,
+   "avg_turns": 4.53,
+   "fatal": 0.0148,
+   "room": "monster"
+  },
+  "FOSSIL_STALKER_NORMAL": {
+   "act": 1,
+   "avg_damage": 11.9,
+   "avg_turns": 3.4,
+   "fatal": 0.0255,
+   "room": "monster"
+  },
+  "FROG_KNIGHT_NORMAL": {
+   "act": 3,
+   "avg_damage": 17.4,
+   "avg_turns": 5.09,
+   "fatal": 0.0223,
+   "room": "monster"
+  },
+  "FUZZY_WURM_CRAWLER_WEAK": {
+   "act": 1,
+   "avg_damage": 3.7,
+   "avg_turns": 4.04,
+   "fatal": 0.0054,
+   "room": "monster"
+  },
+  "GLOBE_HEAD_NORMAL": {
+   "act": 3,
+   "avg_damage": 16.6,
+   "avg_turns": 3.74,
+   "fatal": 0.0155,
+   "room": "monster"
+  },
+  "GREMLIN_MERC_NORMAL": {
+   "act": 1,
+   "avg_damage": 11.8,
+   "avg_turns": 4.99,
+   "fatal": 0.0233,
+   "room": "monster"
+  },
+  "HAUNTED_SHIP_NORMAL": {
+   "act": 1,
+   "avg_damage": 9.7,
+   "avg_turns": 4.27,
+   "fatal": 0.0148,
+   "room": "monster"
+  },
+  "HUNTER_KILLER_NORMAL": {
+   "act": 2,
+   "avg_damage": 22.1,
+   "avg_turns": 4.73,
+   "fatal": 0.0575,
+   "room": "monster"
+  },
+  "INFESTED_PRISMS_ELITE": {
+   "act": 2,
+   "avg_damage": 32.7,
+   "avg_turns": 5.49,
+   "fatal": 0.0787,
+   "room": "elite"
+  },
+  "INKLETS_NORMAL": {
+   "act": 1,
+   "avg_damage": 12.4,
+   "avg_turns": 3.68,
+   "fatal": 0.0197,
+   "room": "monster"
+  },
+  "KAISER_CRAB_BOSS": {
+   "act": 2,
+   "avg_damage": 62.8,
+   "avg_turns": 8.24,
+   "fatal": 0.2042,
+   "room": "boss"
+  },
+  "KNIGHTS_ELITE": {
+   "act": 3,
+   "avg_damage": 29.3,
+   "avg_turns": 4.52,
+   "fatal": 0.0423,
+   "room": "elite"
+  },
+  "KNOWLEDGE_DEMON_BOSS": {
+   "act": 2,
+   "avg_damage": 56.7,
+   "avg_turns": 8.23,
+   "fatal": 0.2194,
+   "room": "boss"
+  },
+  "LAGAVULIN_MATRIARCH_BOSS": {
+   "act": 1,
+   "avg_damage": 39.7,
+   "avg_turns": 9.19,
+   "fatal": 0.1633,
+   "room": "boss"
+  },
+  "LIVING_FOG_NORMAL": {
+   "act": 1,
+   "avg_damage": 13.5,
+   "avg_turns": 4.87,
+   "fatal": 0.0298,
+   "room": "monster"
+  },
+  "LOUSE_PROGENITOR_NORMAL": {
+   "act": 2,
+   "avg_damage": 14.3,
+   "avg_turns": 5.26,
+   "fatal": 0.0272,
+   "room": "monster"
+  },
+  "MAWLER_NORMAL": {
+   "act": 1,
+   "avg_damage": 9.3,
+   "avg_turns": 4.19,
+   "fatal": 0.014,
+   "room": "monster"
+  },
+  "MECHA_KNIGHT_ELITE": {
+   "act": 3,
+   "avg_damage": 34.4,
+   "avg_turns": 5.82,
+   "fatal": 0.0386,
+   "room": "elite"
+  },
+  "MYSTERIOUS_KNIGHT_EVENT_ENCOUNTER": {
+   "act": 2,
+   "avg_damage": 34.3,
+   "avg_turns": 4.36,
+   "fatal": 0.0035,
+   "room": "monster"
+  },
+  "MYTES_NORMAL": {
+   "act": 2,
+   "avg_damage": 19.8,
+   "avg_turns": 4.74,
+   "fatal": 0.0443,
+   "room": "monster"
+  },
+  "NIBBITS_NORMAL": {
+   "act": 1,
+   "avg_damage": 16.7,
+   "avg_turns": 5.11,
+   "fatal": 0.0349,
+   "room": "monster"
+  },
+  "NIBBITS_WEAK": {
+   "act": 1,
+   "avg_damage": 6.3,
+   "avg_turns": 3.82,
+   "fatal": 0.0063,
+   "room": "monster"
+  },
+  "OVERGROWTH_CRAWLERS": {
+   "act": 1,
+   "avg_damage": 14.9,
+   "avg_turns": 5.4,
+   "fatal": 0.0474,
+   "room": "monster"
+  },
+  "OVICOPTER_NORMAL": {
+   "act": 2,
+   "avg_damage": 18.8,
+   "avg_turns": 4.79,
+   "fatal": 0.054,
+   "room": "monster"
+  },
+  "OWL_MAGISTRATE_NORMAL": {
+   "act": 3,
+   "avg_damage": 19.4,
+   "avg_turns": 4.87,
+   "fatal": 0.0292,
+   "room": "monster"
+  },
+  "PHANTASMAL_GARDENERS_ELITE": {
+   "act": 1,
+   "avg_damage": 34.8,
+   "avg_turns": 5.94,
+   "fatal": 0.1087,
+   "room": "elite"
+  },
+  "PHROG_PARASITE_ELITE": {
+   "act": 1,
+   "avg_damage": 28.1,
+   "avg_turns": 6.99,
+   "fatal": 0.0951,
+   "room": "elite"
+  },
+  "PUNCH_CONSTRUCT_NORMAL": {
+   "act": 1,
+   "avg_damage": 8.7,
+   "avg_turns": 4.21,
+   "fatal": 0.0107,
+   "room": "monster"
+  },
+  "PUNCH_OFF_EVENT_ENCOUNTER": {
+   "act": 1,
+   "avg_damage": 41.9,
+   "avg_turns": 6.53,
+   "fatal": 0.0152,
+   "room": "monster"
+  },
+  "QUEEN_BOSS": {
+   "act": 3,
+   "avg_damage": 64.4,
+   "avg_turns": 8.56,
+   "fatal": 0.191,
+   "room": "boss"
+  },
+  "RUBY_RAIDERS_NORMAL": {
+   "act": 1,
+   "avg_damage": 18.0,
+   "avg_turns": 4.06,
+   "fatal": 0.0398,
+   "room": "monster"
+  },
+  "SCROLLS_OF_BITING_NORMAL": {
+   "act": 3,
+   "avg_damage": 15.0,
+   "avg_turns": 2.95,
+   "fatal": 0.03,
+   "room": "monster"
+  },
+  "SCROLLS_OF_BITING_WEAK": {
+   "act": 3,
+   "avg_damage": 12.0,
+   "avg_turns": 2.88,
+   "fatal": 0.0024,
+   "room": "monster"
+  },
+  "SEAPUNK_NORMAL": {
+   "act": 1,
+   "avg_damage": 14.3,
+   "avg_turns": 4.69,
+   "fatal": 0.0371,
+   "room": "monster"
+  },
+  "SEAPUNK_WEAK": {
+   "act": 1,
+   "avg_damage": 6.3,
+   "avg_turns": 3.82,
+   "fatal": 0.0064,
+   "room": "monster"
+  },
+  "SEWER_CLAM_NORMAL": {
+   "act": 1,
+   "avg_damage": 9.5,
+   "avg_turns": 4.97,
+   "fatal": 0.0142,
+   "room": "monster"
+  },
+  "SHRINKER_BEETLE_WEAK": {
+   "act": 1,
+   "avg_damage": 3.4,
+   "avg_turns": 3.49,
+   "fatal": 0.0052,
+   "room": "monster"
+  },
+  "SKULKING_COLONY_ELITE": {
+   "act": 1,
+   "avg_damage": 24.3,
+   "avg_turns": 5.73,
+   "fatal": 0.0428,
+   "room": "elite"
+  },
+  "SLIMED_BERSERKER_NORMAL": {
+   "act": 3,
+   "avg_damage": 15.3,
+   "avg_turns": 5.5,
+   "fatal": 0.0215,
+   "room": "monster"
+  },
+  "SLIMES_NORMAL": {
+   "act": 1,
+   "avg_damage": 12.9,
+   "avg_turns": 4.69,
+   "fatal": 0.0234,
+   "room": "monster"
+  },
+  "SLIMES_WEAK": {
+   "act": 1,
+   "avg_damage": 6.1,
+   "avg_turns": 4.26,
+   "fatal": 0.0067,
+   "room": "monster"
+  },
+  "SLITHERING_STRANGLER_NORMAL": {
+   "act": 1,
+   "avg_damage": 14.4,
+   "avg_turns": 4.6,
+   "fatal": 0.027,
+   "room": "monster"
+  },
+  "SLUDGE_SPINNER_WEAK": {
+   "act": 1,
+   "avg_damage": 5.7,
+   "avg_turns": 3.55,
+   "fatal": 0.0061,
+   "room": "monster"
+  },
+  "SLUMBERING_BEETLE_NORMAL": {
+   "act": 2,
+   "avg_damage": 23.7,
+   "avg_turns": 5.92,
+   "fatal": 0.086,
+   "room": "monster"
+  },
+  "SNAPPING_JAXFRUIT_NORMAL": {
+   "act": 1,
+   "avg_damage": 17.5,
+   "avg_turns": 4.59,
+   "fatal": 0.0347,
+   "room": "monster"
+  },
+  "SOUL_FYSH_BOSS": {
+   "act": 1,
+   "avg_damage": 43.1,
+   "avg_turns": 9.83,
+   "fatal": 0.1301,
+   "room": "boss"
+  },
+  "SOUL_NEXUS_ELITE": {
+   "act": 3,
+   "avg_damage": 28.3,
+   "avg_turns": 4.42,
+   "fatal": 0.0331,
+   "room": "elite"
+  },
+  "SPINY_TOAD_NORMAL": {
+   "act": 2,
+   "avg_damage": 21.3,
+   "avg_turns": 4.6,
+   "fatal": 0.0428,
+   "room": "monster"
+  },
+  "TERROR_EEL_ELITE": {
+   "act": 1,
+   "avg_damage": 28.6,
+   "avg_turns": 6.6,
+   "fatal": 0.075,
+   "room": "elite"
+  },
+  "TEST_SUBJECT_BOSS": {
+   "act": 3,
+   "avg_damage": 75.0,
+   "avg_turns": 9.44,
+   "fatal": 0.2315,
+   "room": "boss"
+  },
+  "THE_INSATIABLE_BOSS": {
+   "act": 2,
+   "avg_damage": 47.7,
+   "avg_turns": 7.83,
+   "fatal": 0.1611,
+   "room": "boss"
+  },
+  "THE_KIN_BOSS": {
+   "act": 1,
+   "avg_damage": 49.0,
+   "avg_turns": 9.31,
+   "fatal": 0.1592,
+   "room": "boss"
+  },
+  "THE_LOST_AND_FORGOTTEN_NORMAL": {
+   "act": 3,
+   "avg_damage": 14.9,
+   "avg_turns": 4.5,
+   "fatal": 0.0209,
+   "room": "monster"
+  },
+  "THE_OBSCURA_NORMAL": {
+   "act": 2,
+   "avg_damage": 20.4,
+   "avg_turns": 5.1,
+   "fatal": 0.0624,
+   "room": "monster"
+  },
+  "THIEVING_HOPPER_WEAK": {
+   "act": 2,
+   "avg_damage": 16.6,
+   "avg_turns": 3.98,
+   "fatal": 0.0038,
+   "room": "monster"
+  },
+  "TOADPOLES_WEAK": {
+   "act": 1,
+   "avg_damage": 7.9,
+   "avg_turns": 3.91,
+   "fatal": 0.0071,
+   "room": "monster"
+  },
+  "TUNNELER_NORMAL": {
+   "act": 2,
+   "avg_damage": 15.4,
+   "avg_turns": 5.22,
+   "fatal": 0.0409,
+   "room": "monster"
+  },
+  "TUNNELER_WEAK": {
+   "act": 2,
+   "avg_damage": 13.4,
+   "avg_turns": 4.68,
+   "fatal": 0.0032,
+   "room": "monster"
+  },
+  "TURRET_OPERATOR_WEAK": {
+   "act": 3,
+   "avg_damage": 13.4,
+   "avg_turns": 3.41,
+   "fatal": 0.0019,
+   "room": "monster"
+  },
+  "TWO_TAILED_RATS_NORMAL": {
+   "act": 1,
+   "avg_damage": 11.2,
+   "avg_turns": 3.79,
+   "fatal": 0.023,
+   "room": "monster"
+  },
+  "VANTOM_BOSS": {
+   "act": 1,
+   "avg_damage": 48.7,
+   "avg_turns": 8.91,
+   "fatal": 0.1604,
+   "room": "boss"
+  },
+  "VINE_SHAMBLER_NORMAL": {
+   "act": 1,
+   "avg_damage": 11.7,
+   "avg_turns": 4.24,
+   "fatal": 0.0177,
+   "room": "monster"
+  },
+  "WATERFALL_GIANT_BOSS": {
+   "act": 1,
+   "avg_damage": 47.2,
+   "avg_turns": 10.25,
+   "fatal": 0.1478,
+   "room": "boss"
+  }
+ },
+ "potions": {
+  "baseline_win": 37.4,
+  "rows": {
+   "AMBERGRIS": {
+    "elo": null,
+    "n": 1322,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.2
+   },
+   "ASHWATER": {
+    "elo": null,
+    "n": 12770,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.3
+   },
+   "ATTACK_POTION": {
+    "elo": null,
+    "n": 19139,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.7
+   },
+   "BEETLE_JUICE": {
+    "elo": null,
+    "n": 6580,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 40.6
+   },
+   "BLESSING_OF_THE_FORGE": {
+    "elo": null,
+    "n": 35154,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 39.7
+   },
+   "BLOCK_POTION": {
+    "elo": null,
+    "n": 29037,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.7
+   },
+   "BLOOD_POTION": {
+    "elo": null,
+    "n": 14555,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 78.5
+   },
+   "BONE_BREW": {
+    "elo": null,
+    "n": 1386,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 36.3
+   },
+   "BOTTLED_POTENTIAL": {
+    "elo": null,
+    "n": 12000,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.5
+   },
+   "CLARITY": {
+    "elo": null,
+    "n": 17563,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.3
+   },
+   "COLORLESS_POTION": {
+    "elo": null,
+    "n": 16874,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.2
+   },
+   "COSMIC_CONCOCTION": {
+    "elo": null,
+    "n": 825,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 47.8
+   },
+   "CUNNING_POTION": {
+    "elo": null,
+    "n": 2312,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.7
+   },
+   "CURE_ALL": {
+    "elo": null,
+    "n": 11163,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.1
+   },
+   "DEXTERITY_POTION": {
+    "elo": null,
+    "n": 61440,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 21.8
+   },
+   "DISTILLED_CHAOS": {
+    "elo": null,
+    "n": 3463,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.9
+   },
+   "DROPLET_OF_PRECOGNITION": {
+    "elo": null,
+    "n": 10065,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 36.9
+   },
+   "DUPLICATOR": {
+    "elo": null,
+    "n": 44380,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.6
+   },
+   "ENERGY_POTION": {
+    "elo": null,
+    "n": 75091,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 39.4
+   },
+   "ENTROPIC_BREW": {
+    "elo": null,
+    "n": 5858,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.1
+   },
+   "ESSENCE_OF_DARKNESS": {
+    "elo": null,
+    "n": 1376,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.2
+   },
+   "EXPLOSIVE_AMPOULE": {
+    "elo": null,
+    "n": 44869,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.9
+   },
+   "FAIRY_IN_A_BOTTLE": {
+    "elo": null,
+    "n": 60491,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 92.8
+   },
+   "FIRE_POTION": {
+    "elo": null,
+    "n": 46982,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 38.1
+   },
+   "FLEX_POTION": {
+    "elo": null,
+    "n": 107193,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.9
+   },
+   "FOCUS_POTION": {
+    "elo": null,
+    "n": 8693,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 10.4
+   },
+   "FORTIFIER": {
+    "elo": null,
+    "n": 34800,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.5
+   },
+   "FOUL_POTION": {
+    "elo": null,
+    "n": 21512,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 19.7
+   },
+   "FRUIT_JUICE": {
+    "elo": null,
+    "n": 1572,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 26.6
+   },
+   "FYSH_OIL": {
+    "elo": null,
+    "n": 19820,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 17.5
+   },
+   "GAMBLERS_BREW": {
+    "elo": null,
+    "n": 28269,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.7
+   },
+   "GHOST_IN_A_JAR": {
+    "elo": null,
+    "n": 4818,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 79.7
+   },
+   "GIGANTIFICATION_POTION": {
+    "elo": null,
+    "n": 21890,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.3
+   },
+   "GLOWWATER_POTION": {
+    "elo": null,
+    "n": 7280,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 10.3
+   },
+   "HEART_OF_IRON": {
+    "elo": null,
+    "n": 9189,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.1
+   },
+   "KINGS_COURAGE": {
+    "elo": null,
+    "n": 3705,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 22.4
+   },
+   "LIQUID_BRONZE": {
+    "elo": null,
+    "n": 17962,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 11.5
+   },
+   "LIQUID_MEMORIES": {
+    "elo": null,
+    "n": 10073,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.7
+   },
+   "LUCKY_TONIC": {
+    "elo": null,
+    "n": 20312,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 68.6
+   },
+   "MAZALETHS_GIFT": {
+    "elo": null,
+    "n": 11415,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 10.3
+   },
+   "OROBIC_ACID": {
+    "elo": null,
+    "n": 4072,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.7
+   },
+   "POISON_POTION": {
+    "elo": null,
+    "n": 5076,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 21.6
+   },
+   "POTION_OF_BINDING": {
+    "elo": null,
+    "n": 12919,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.8
+   },
+   "POTION_OF_CAPACITY": {
+    "elo": null,
+    "n": 7556,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 8.1
+   },
+   "POTION_OF_DOOM": {
+    "elo": null,
+    "n": 6631,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 25.5
+   },
+   "POTION_SHAPED_ROCK": {
+    "elo": null,
+    "n": 18753,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.5
+   },
+   "POT_OF_GHOULS": {
+    "elo": null,
+    "n": 1413,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.7
+   },
+   "POWDERED_DEMISE": {
+    "elo": null,
+    "n": 16507,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 13.1
+   },
+   "POWER_POTION": {
+    "elo": null,
+    "n": 22546,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 18.5
+   },
+   "RADIANT_TINCTURE": {
+    "elo": null,
+    "n": 24969,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.0
+   },
+   "REGEN_POTION": {
+    "elo": null,
+    "n": 12452,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.0
+   },
+   "SHACKLING_POTION": {
+    "elo": null,
+    "n": 7144,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.8
+   },
+   "SHIP_IN_A_BOTTLE": {
+    "elo": null,
+    "n": 3916,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.7
+   },
+   "SKILL_POTION": {
+    "elo": null,
+    "n": 18310,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 36.9
+   },
+   "SNECKO_OIL": {
+    "elo": null,
+    "n": 7007,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 40.2
+   },
+   "SOLDIERS_STEW": {
+    "elo": null,
+    "n": 2171,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 16.7
+   },
+   "SPEED_POTION": {
+    "elo": null,
+    "n": 100921,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.2
+   },
+   "STABLE_SERUM": {
+    "elo": null,
+    "n": 56559,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 26.2
+   },
+   "STAR_POTION": {
+    "elo": null,
+    "n": 16465,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 27.2
+   },
+   "STRENGTH_POTION": {
+    "elo": null,
+    "n": 63020,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 16.1
+   },
+   "SWIFT_POTION": {
+    "elo": null,
+    "n": 45416,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 36.3
+   },
+   "TOUCH_OF_INSANITY": {
+    "elo": null,
+    "n": 37857,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 39.3
+   },
+   "VULNERABLE_POTION": {
+    "elo": null,
+    "n": 70126,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 26.3
+   },
+   "WEAK_POTION": {
+    "elo": null,
+    "n": 35543,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 38.4
+   }
+  },
+  "total_runs": 1924904
+ },
+ "relics": {
+  "baseline_win": 51.6,
+  "rows": {
+   "AKABEKO": {
+    "elo": null,
+    "n": 222548,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.0
+   },
+   "ALCHEMICAL_COFFER": {
+    "elo": null,
+    "n": 25550,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.5
+   },
+   "AMETHYST_AUBERGINE": {
+    "elo": null,
+    "n": 302902,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.8
+   },
+   "ANCHOR": {
+    "elo": null,
+    "n": 428976,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.4
+   },
+   "ARCANE_SCROLL": {
+    "elo": null,
+    "n": 229901,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.6
+   },
+   "ARCHAIC_TOOTH": {
+    "elo": null,
+    "n": 137097,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.1
+   },
+   "ART_OF_WAR": {
+    "elo": null,
+    "n": 102302,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.1
+   },
+   "ASTROLABE": {
+    "elo": null,
+    "n": 48353,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.6
+   },
+   "BAG_OF_MARBLES": {
+    "elo": null,
+    "n": 371508,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.4
+   },
+   "BAG_OF_PREPARATION": {
+    "elo": null,
+    "n": 434013,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.3
+   },
+   "BEATING_REMNANT": {
+    "elo": null,
+    "n": 89353,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.7
+   },
+   "BEAUTIFUL_BRACELET": {
+    "elo": null,
+    "n": 36359,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 77.9
+   },
+   "BELLOWS": {
+    "elo": null,
+    "n": 133609,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.1
+   },
+   "BELT_BUCKLE": {
+    "elo": null,
+    "n": 29536,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.9
+   },
+   "BIG_HAT": {
+    "elo": null,
+    "n": 9733,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.7
+   },
+   "BIG_MUSHROOM": {
+    "elo": null,
+    "n": 47570,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.1
+   },
+   "BIIIG_HUG": {
+    "elo": null,
+    "n": 30676,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.4
+   },
+   "BING_BONG": {
+    "elo": null,
+    "n": 54469,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.6
+   },
+   "BLACK_BLOOD": {
+    "elo": null,
+    "n": 30944,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 40.2
+   },
+   "BLACK_STAR": {
+    "elo": null,
+    "n": 35158,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.9
+   },
+   "BLESSED_ANTLER": {
+    "elo": null,
+    "n": 42943,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 69.7
+   },
+   "BLOOD_SOAKED_ROSE": {
+    "elo": null,
+    "n": 33553,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.1
+   },
+   "BLOOD_VIAL": {
+    "elo": null,
+    "n": 402582,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.4
+   },
+   "BONE_FLUTE": {
+    "elo": null,
+    "n": 58399,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.6
+   },
+   "BONE_TEA": {
+    "elo": null,
+    "n": 62962,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.7
+   },
+   "BOOKMARK": {
+    "elo": null,
+    "n": 9373,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.0
+   },
+   "BOOK_OF_FIVE_RINGS": {
+    "elo": null,
+    "n": 292742,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.5
+   },
+   "BOOK_REPAIR_KNIFE": {
+    "elo": null,
+    "n": 26606,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.2
+   },
+   "BOOMING_CONCH": {
+    "elo": null,
+    "n": 71635,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.4
+   },
+   "BOUND_PHYLACTERY": {
+    "elo": null,
+    "n": 508454,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.3
+   },
+   "BOWLER_HAT": {
+    "elo": null,
+    "n": 168498,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.7
+   },
+   "BREAD": {
+    "elo": null,
+    "n": 51483,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.2
+   },
+   "BRILLIANT_SCARF": {
+    "elo": null,
+    "n": 39523,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 73.7
+   },
+   "BRIMSTONE": {
+    "elo": null,
+    "n": 6552,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.0
+   },
+   "BRONZE_SCALES": {
+    "elo": null,
+    "n": 401148,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.9
+   },
+   "BURNING_BLOOD": {
+    "elo": null,
+    "n": 610575,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 30.6
+   },
+   "BURNING_STICKS": {
+    "elo": null,
+    "n": 33171,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 68.3
+   },
+   "BYRDPIP": {
+    "elo": null,
+    "n": 46271,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 34.5
+   },
+   "CALLING_BELL": {
+    "elo": null,
+    "n": 35857,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.9
+   },
+   "CANDELABRA": {
+    "elo": null,
+    "n": 246171,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.1
+   },
+   "CAPTAINS_WHEEL": {
+    "elo": null,
+    "n": 107673,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.9
+   },
+   "CAULDRON": {
+    "elo": null,
+    "n": 10229,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 71.1
+   },
+   "CENTENNIAL_PUZZLE": {
+    "elo": null,
+    "n": 391930,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.2
+   },
+   "CHANDELIER": {
+    "elo": null,
+    "n": 111364,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.3
+   },
+   "CHARONS_ASHES": {
+    "elo": null,
+    "n": 12304,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.2
+   },
+   "CHEMICAL_X": {
+    "elo": null,
+    "n": 30737,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.9
+   },
+   "CHOICES_PARADOX": {
+    "elo": null,
+    "n": 50938,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.0
+   },
+   "CHOSEN_CHEESE": {
+    "elo": null,
+    "n": 160033,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.5
+   },
+   "CIRCLET": {
+    "elo": null,
+    "n": 238,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.7
+   },
+   "CLAWS": {
+    "elo": null,
+    "n": 29033,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.0
+   },
+   "CLOAK_CLASP": {
+    "elo": null,
+    "n": 106435,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.9
+   },
+   "CRACKED_CORE": {
+    "elo": null,
+    "n": 492674,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.3
+   },
+   "CROSSBOW": {
+    "elo": null,
+    "n": 40732,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 76.6
+   },
+   "CURSED_PEARL": {
+    "elo": null,
+    "n": 152617,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.6
+   },
+   "DARKSTONE_PERIAPT": {
+    "elo": null,
+    "n": 21777,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 34.8
+   },
+   "DATA_DISK": {
+    "elo": null,
+    "n": 67349,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.7
+   },
+   "DAUGHTER_OF_THE_WIND": {
+    "elo": null,
+    "n": 72320,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.7
+   },
+   "DELICATE_FROND": {
+    "elo": null,
+    "n": 33422,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 72.5
+   },
+   "DEMON_TONGUE": {
+    "elo": null,
+    "n": 13422,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.0
+   },
+   "DIAMOND_DIADEM": {
+    "elo": null,
+    "n": 21182,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 69.0
+   },
+   "DINGY_RUG": {
+    "elo": null,
+    "n": 25227,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.6
+   },
+   "DISTINGUISHED_CAPE": {
+    "elo": null,
+    "n": 36701,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 66.4
+   },
+   "DIVINE_DESTINY": {
+    "elo": null,
+    "n": 25196,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 46.6
+   },
+   "DIVINE_RIGHT": {
+    "elo": null,
+    "n": 497118,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.9
+   },
+   "DOLLYS_MIRROR": {
+    "elo": null,
+    "n": 71813,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.7
+   },
+   "DOWSING_ROD": {
+    "elo": null,
+    "n": 21568,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.0
+   },
+   "DRAGON_FRUIT": {
+    "elo": null,
+    "n": 48776,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.4
+   },
+   "DREAM_CATCHER": {
+    "elo": null,
+    "n": 23890,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.3
+   },
+   "DRIFTWOOD": {
+    "elo": null,
+    "n": 42366,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 46.3
+   },
+   "DUSTY_TOME": {
+    "elo": null,
+    "n": 52254,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 53.8
+   },
+   "ECTOPLASM": {
+    "elo": null,
+    "n": 4946,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.2
+   },
+   "ELECTRIC_SHRYMP": {
+    "elo": null,
+    "n": 56588,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.6
+   },
+   "EMBER_TEA": {
+    "elo": null,
+    "n": 22881,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.3
+   },
+   "EMOTION_CHIP": {
+    "elo": null,
+    "n": 9781,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.7
+   },
+   "EMPTY_CAGE": {
+    "elo": null,
+    "n": 35530,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.7
+   },
+   "ETERNAL_FEATHER": {
+    "elo": null,
+    "n": 237052,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.3
+   },
+   "FAKE_ANCHOR": {
+    "elo": null,
+    "n": 24977,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.9
+   },
+   "FAKE_BLOOD_VIAL": {
+    "elo": null,
+    "n": 21311,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 47.0
+   },
+   "FAKE_HAPPY_FLOWER": {
+    "elo": null,
+    "n": 29462,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 53.3
+   },
+   "FAKE_LEES_WAFFLE": {
+    "elo": null,
+    "n": 19660,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.1
+   },
+   "FAKE_MANGO": {
+    "elo": null,
+    "n": 20022,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.4
+   },
+   "FAKE_MERCHANTS_RUG": {
+    "elo": null,
+    "n": 1059,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.0
+   },
+   "FAKE_ORICHALCUM": {
+    "elo": null,
+    "n": 10801,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.1
+   },
+   "FAKE_SNECKO_EYE": {
+    "elo": null,
+    "n": 1416,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.1
+   },
+   "FAKE_STRIKE_DUMMY": {
+    "elo": null,
+    "n": 11046,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 46.8
+   },
+   "FAKE_VENERABLE_TEA_SET": {
+    "elo": null,
+    "n": 24387,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 53.5
+   },
+   "FENCING_MANUAL": {
+    "elo": null,
+    "n": 61490,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.4
+   },
+   "FESTIVE_POPPER": {
+    "elo": null,
+    "n": 354404,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.4
+   },
+   "FIDDLE": {
+    "elo": null,
+    "n": 22777,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 72.0
+   },
+   "FISHING_ROD": {
+    "elo": null,
+    "n": 81079,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 30.1
+   },
+   "FORGOTTEN_SOUL": {
+    "elo": null,
+    "n": 66257,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 67.1
+   },
+   "FRAGRANT_MUSHROOM": {
+    "elo": null,
+    "n": 97533,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 69.9
+   },
+   "FRESNEL_LENS": {
+    "elo": null,
+    "n": 91174,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 28.0
+   },
+   "FROZEN_EGG": {
+    "elo": null,
+    "n": 83746,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.1
+   },
+   "FUNERARY_MASK": {
+    "elo": null,
+    "n": 31528,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.1
+   },
+   "FUR_COAT": {
+    "elo": null,
+    "n": 44661,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.0
+   },
+   "GALACTIC_DUST": {
+    "elo": null,
+    "n": 29600,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.2
+   },
+   "GAMBLING_CHIP": {
+    "elo": null,
+    "n": 110109,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.4
+   },
+   "GAME_PIECE": {
+    "elo": null,
+    "n": 104053,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.5
+   },
+   "GHOST_SEED": {
+    "elo": null,
+    "n": 41984,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.7
+   },
+   "GIRYA": {
+    "elo": null,
+    "n": 79072,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.6
+   },
+   "GLASS_EYE": {
+    "elo": null,
+    "n": 52824,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.9
+   },
+   "GLITTER": {
+    "elo": null,
+    "n": 56579,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 71.6
+   },
+   "GNARLED_HAMMER": {
+    "elo": null,
+    "n": 40727,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.8
+   },
+   "GOLDEN_COMPASS": {
+    "elo": null,
+    "n": 60363,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.7
+   },
+   "GOLDEN_PEARL": {
+    "elo": null,
+    "n": 139533,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.3
+   },
+   "GOLD_PLATED_CABLES": {
+    "elo": null,
+    "n": 23448,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.4
+   },
+   "GORGET": {
+    "elo": null,
+    "n": 417560,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.7
+   },
+   "GREMLIN_HORN": {
+    "elo": null,
+    "n": 223774,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.4
+   },
+   "HAND_DRILL": {
+    "elo": null,
+    "n": 21255,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 36.3
+   },
+   "HAPPY_FLOWER": {
+    "elo": null,
+    "n": 431856,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.6
+   },
+   "HEFTY_TABLET": {
+    "elo": null,
+    "n": 186619,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 27.4
+   },
+   "HELICAL_DART": {
+    "elo": null,
+    "n": 13196,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.5
+   },
+   "HISTORY_COURSE": {
+    "elo": null,
+    "n": 30789,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 88.6
+   },
+   "HORN_CLEAT": {
+    "elo": null,
+    "n": 237812,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.0
+   },
+   "ICE_CREAM": {
+    "elo": null,
+    "n": 115417,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.7
+   },
+   "INFUSED_CORE": {
+    "elo": null,
+    "n": 27030,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 41.0
+   },
+   "INTIMIDATING_HELMET": {
+    "elo": null,
+    "n": 102089,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.9
+   },
+   "IRON_CLUB": {
+    "elo": null,
+    "n": 41657,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 79.4
+   },
+   "IVORY_TILE": {
+    "elo": null,
+    "n": 9424,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.6
+   },
+   "JEWELED_MASK": {
+    "elo": null,
+    "n": 75521,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 67.6
+   },
+   "JEWELRY_BOX": {
+    "elo": null,
+    "n": 44742,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 72.2
+   },
+   "JOSS_PAPER": {
+    "elo": null,
+    "n": 181460,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.5
+   },
+   "JUZU_BRACELET": {
+    "elo": null,
+    "n": 319668,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.0
+   },
+   "KALEIDOSCOPE": {
+    "elo": null,
+    "n": 89068,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 28.9
+   },
+   "KIFUDA": {
+    "elo": null,
+    "n": 55510,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.0
+   },
+   "KUNAI": {
+    "elo": null,
+    "n": 108878,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.4
+   },
+   "KUSARIGAMA": {
+    "elo": null,
+    "n": 212953,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.9
+   },
+   "LANTERN": {
+    "elo": null,
+    "n": 447788,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.5
+   },
+   "LARGE_CAPSULE": {
+    "elo": null,
+    "n": 158109,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.4
+   },
+   "LASTING_CANDY": {
+    "elo": null,
+    "n": 163419,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 48.5
+   },
+   "LAVA_LAMP": {
+    "elo": null,
+    "n": 21596,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.8
+   },
+   "LAVA_ROCK": {
+    "elo": null,
+    "n": 69837,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 34.7
+   },
+   "LEAD_PAPERWEIGHT": {
+    "elo": null,
+    "n": 149573,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.5
+   },
+   "LEAFY_POULTICE": {
+    "elo": null,
+    "n": 182933,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 34.5
+   },
+   "LEES_WAFFLE": {
+    "elo": null,
+    "n": 63070,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.4
+   },
+   "LETTER_OPENER": {
+    "elo": null,
+    "n": 222773,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.0
+   },
+   "LIZARD_TAIL": {
+    "elo": null,
+    "n": 113215,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.0
+   },
+   "LOOMING_FRUIT": {
+    "elo": null,
+    "n": 40816,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 68.8
+   },
+   "LORDS_PARASOL": {
+    "elo": null,
+    "n": 33319,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.8
+   },
+   "LOST_COFFER": {
+    "elo": null,
+    "n": 116056,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.1
+   },
+   "LOST_WISP": {
+    "elo": null,
+    "n": 32299,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.4
+   },
+   "LUCKY_FYSH": {
+    "elo": null,
+    "n": 167270,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.4
+   },
+   "LUNAR_PASTRY": {
+    "elo": null,
+    "n": 14462,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.9
+   },
+   "MANGO": {
+    "elo": null,
+    "n": 111647,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.0
+   },
+   "MASSIVE_SCROLL": {
+    "elo": null,
+    "n": 113409,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.3
+   },
+   "MAW_BANK": {
+    "elo": null,
+    "n": 17924,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.9
+   },
+   "MEAL_TICKET": {
+    "elo": null,
+    "n": 320386,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.1
+   },
+   "MEAT_CLEAVER": {
+    "elo": null,
+    "n": 45504,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 72.8
+   },
+   "MEAT_ON_THE_BONE": {
+    "elo": null,
+    "n": 106835,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.0
+   },
+   "MEMBERSHIP_CARD": {
+    "elo": null,
+    "n": 113063,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.4
+   },
+   "MERCURY_HOURGLASS": {
+    "elo": null,
+    "n": 221615,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.2
+   },
+   "METRONOME": {
+    "elo": null,
+    "n": 12323,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.3
+   },
+   "MINIATURE_CANNON": {
+    "elo": null,
+    "n": 199416,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.6
+   },
+   "MINIATURE_TENT": {
+    "elo": null,
+    "n": 130446,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.6
+   },
+   "MINI_REGENT": {
+    "elo": null,
+    "n": 10665,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.9
+   },
+   "MOLTEN_EGG": {
+    "elo": null,
+    "n": 83277,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.3
+   },
+   "MR_STRUGGLES": {
+    "elo": null,
+    "n": 58744,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.2
+   },
+   "MUMMIFIED_HAND": {
+    "elo": null,
+    "n": 114918,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.5
+   },
+   "MUSIC_BOX": {
+    "elo": null,
+    "n": 49664,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.8
+   },
+   "MYSTIC_LIGHTER": {
+    "elo": null,
+    "n": 29497,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.9
+   },
+   "NEOWS_BONES": {
+    "elo": null,
+    "n": 141593,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.7
+   },
+   "NEOWS_SACRIFICE": {
+    "elo": null,
+    "n": 8604,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 37.4
+   },
+   "NEOWS_TALISMAN": {
+    "elo": null,
+    "n": 38774,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 30.4
+   },
+   "NEOWS_TORMENT": {
+    "elo": null,
+    "n": 66803,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.4
+   },
+   "NEW_LEAF": {
+    "elo": null,
+    "n": 149663,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 33.6
+   },
+   "NINJA_SCROLL": {
+    "elo": null,
+    "n": 14429,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.6
+   },
+   "NUNCHAKU": {
+    "elo": null,
+    "n": 230402,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.3
+   },
+   "NUTRITIOUS_OYSTER": {
+    "elo": null,
+    "n": 60060,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.1
+   },
+   "NUTRITIOUS_SOUP": {
+    "elo": null,
+    "n": 84416,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.7
+   },
+   "ODDLY_SMOOTH_STONE": {
+    "elo": null,
+    "n": 417658,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.0
+   },
+   "OLD_COIN": {
+    "elo": null,
+    "n": 78451,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.7
+   },
+   "ORANGE_DOUGH": {
+    "elo": null,
+    "n": 9611,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.4
+   },
+   "ORICHALCUM": {
+    "elo": null,
+    "n": 222112,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.3
+   },
+   "ORNAMENTAL_FAN": {
+    "elo": null,
+    "n": 239109,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.0
+   },
+   "ORRERY": {
+    "elo": null,
+    "n": 67845,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.1
+   },
+   "PAELS_BLOOD": {
+    "elo": null,
+    "n": 76212,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.8
+   },
+   "PAELS_CLAW": {
+    "elo": null,
+    "n": 43229,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.4
+   },
+   "PAELS_EYE": {
+    "elo": null,
+    "n": 23267,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.5
+   },
+   "PAELS_FLESH": {
+    "elo": null,
+    "n": 102229,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.8
+   },
+   "PAELS_GROWTH": {
+    "elo": null,
+    "n": 40901,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.6
+   },
+   "PAELS_HORN": {
+    "elo": null,
+    "n": 45477,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 40.3
+   },
+   "PAELS_LEGION": {
+    "elo": null,
+    "n": 45432,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 46.8
+   },
+   "PAELS_TEARS": {
+    "elo": null,
+    "n": 83583,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.6
+   },
+   "PAELS_TOOTH": {
+    "elo": null,
+    "n": 50068,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.8
+   },
+   "PAELS_WING": {
+    "elo": null,
+    "n": 86322,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 42.7
+   },
+   "PANDORAS_BOX": {
+    "elo": null,
+    "n": 40820,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.1
+   },
+   "PANTOGRAPH": {
+    "elo": null,
+    "n": 243417,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.6
+   },
+   "PAPER_KRANE": {
+    "elo": null,
+    "n": 17492,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 66.5
+   },
+   "PAPER_PHROG": {
+    "elo": null,
+    "n": 44290,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.1
+   },
+   "PARRYING_SHIELD": {
+    "elo": null,
+    "n": 221445,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.7
+   },
+   "PEAR": {
+    "elo": null,
+    "n": 237393,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.8
+   },
+   "PENDULUM": {
+    "elo": null,
+    "n": 395457,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.6
+   },
+   "PEN_NIB": {
+    "elo": null,
+    "n": 228075,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.8
+   },
+   "PERMAFROST": {
+    "elo": null,
+    "n": 257810,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.3
+   },
+   "PETRIFIED_TOAD": {
+    "elo": null,
+    "n": 213534,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.5
+   },
+   "PHIAL_HOLSTER": {
+    "elo": null,
+    "n": 70283,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.2
+   },
+   "PHILOSOPHERS_STONE": {
+    "elo": null,
+    "n": 7014,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.4
+   },
+   "PHYLACTERY_UNBOUND": {
+    "elo": null,
+    "n": 33075,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.0
+   },
+   "PLANISPHERE": {
+    "elo": null,
+    "n": 177311,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.9
+   },
+   "POCKETWATCH": {
+    "elo": null,
+    "n": 101576,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.9
+   },
+   "POLLINOUS_CORE": {
+    "elo": null,
+    "n": 44526,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.2
+   },
+   "POMANDER": {
+    "elo": null,
+    "n": 71595,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.1
+   },
+   "POTION_BELT": {
+    "elo": null,
+    "n": 411745,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.5
+   },
+   "POWER_CELL": {
+    "elo": null,
+    "n": 10025,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.5
+   },
+   "PRAYER_WHEEL": {
+    "elo": null,
+    "n": 107535,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.3
+   },
+   "PRECARIOUS_SHEARS": {
+    "elo": null,
+    "n": 146215,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 38.0
+   },
+   "PRECISE_SCISSORS": {
+    "elo": null,
+    "n": 88721,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.4
+   },
+   "PRESERVED_FOG": {
+    "elo": null,
+    "n": 45577,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 68.9
+   },
+   "PRISMATIC_GEM": {
+    "elo": null,
+    "n": 23056,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 53.4
+   },
+   "PUMPKIN_CANDLE": {
+    "elo": null,
+    "n": 36516,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.0
+   },
+   "PUNCH_DAGGER": {
+    "elo": null,
+    "n": 52182,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.8
+   },
+   "RADIANT_PEARL": {
+    "elo": null,
+    "n": 34162,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 50.4
+   },
+   "RAINBOW_RING": {
+    "elo": null,
+    "n": 106383,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.3
+   },
+   "RAZOR_TOOTH": {
+    "elo": null,
+    "n": 113203,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.7
+   },
+   "RED_MASK": {
+    "elo": null,
+    "n": 366208,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.0
+   },
+   "RED_SKULL": {
+    "elo": null,
+    "n": 73552,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.8
+   },
+   "REGALITE": {
+    "elo": null,
+    "n": 22457,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.1
+   },
+   "REGAL_PILLOW": {
+    "elo": null,
+    "n": 412339,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.3
+   },
+   "REPTILE_TRINKET": {
+    "elo": null,
+    "n": 212776,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.0
+   },
+   "RINGING_TRIANGLE": {
+    "elo": null,
+    "n": 25627,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.8
+   },
+   "RING_OF_THE_DRAKE": {
+    "elo": null,
+    "n": 24176,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.3
+   },
+   "RING_OF_THE_SNAKE": {
+    "elo": null,
+    "n": 617341,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.6
+   },
+   "RIPPLE_BASIN": {
+    "elo": null,
+    "n": 195217,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.2
+   },
+   "ROYAL_POISON": {
+    "elo": null,
+    "n": 21758,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.4
+   },
+   "ROYAL_STAMP": {
+    "elo": null,
+    "n": 71522,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 65.5
+   },
+   "RUINED_HELMET": {
+    "elo": null,
+    "n": 16919,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.5
+   },
+   "RUNIC_CAPACITOR": {
+    "elo": null,
+    "n": 17423,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.1
+   },
+   "RUNIC_PYRAMID": {
+    "elo": null,
+    "n": 33577,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.9
+   },
+   "SAI": {
+    "elo": null,
+    "n": 58521,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 76.1
+   },
+   "SAND_CASTLE": {
+    "elo": null,
+    "n": 47413,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 45.3
+   },
+   "SCREAMING_FLAGON": {
+    "elo": null,
+    "n": 22206,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.3
+   },
+   "SCROLL_BOXES": {
+    "elo": null,
+    "n": 143225,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 29.4
+   },
+   "SEAL_OF_GOLD": {
+    "elo": null,
+    "n": 29183,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.0
+   },
+   "SEA_GLASS": {
+    "elo": null,
+    "n": 28876,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.9
+   },
+   "SELF_FORMING_CLAY": {
+    "elo": null,
+    "n": 29210,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.9
+   },
+   "SERE_TALON": {
+    "elo": null,
+    "n": 26894,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 67.0
+   },
+   "SHOVEL": {
+    "elo": null,
+    "n": 83300,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.1
+   },
+   "SHURIKEN": {
+    "elo": null,
+    "n": 108981,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.3
+   },
+   "SIGNET_RING": {
+    "elo": null,
+    "n": 57847,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 72.3
+   },
+   "SILKEN_TRESS": {
+    "elo": null,
+    "n": 126046,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 31.3
+   },
+   "SILVER_CRUCIBLE": {
+    "elo": null,
+    "n": 63132,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 20.5
+   },
+   "SLING_OF_COURAGE": {
+    "elo": null,
+    "n": 21959,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.8
+   },
+   "SMALL_CAPSULE": {
+    "elo": null,
+    "n": 92122,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.4
+   },
+   "SNECKO_EYE": {
+    "elo": null,
+    "n": 7511,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.1
+   },
+   "SNECKO_SKULL": {
+    "elo": null,
+    "n": 61585,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.7
+   },
+   "SOZU": {
+    "elo": null,
+    "n": 11792,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 49.8
+   },
+   "SPARKLING_ROUGE": {
+    "elo": null,
+    "n": 228208,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.6
+   },
+   "SPIKED_GAUNTLETS": {
+    "elo": null,
+    "n": 34312,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 68.9
+   },
+   "STONE_CALENDAR": {
+    "elo": null,
+    "n": 103342,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.5
+   },
+   "STONE_CRACKER": {
+    "elo": null,
+    "n": 227436,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.2
+   },
+   "STONE_HUMIDIFIER": {
+    "elo": null,
+    "n": 65197,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 32.0
+   },
+   "STORYBOOK": {
+    "elo": null,
+    "n": 45583,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.4
+   },
+   "STRAWBERRY": {
+    "elo": null,
+    "n": 414259,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.4
+   },
+   "STRIKE_DUMMY": {
+    "elo": null,
+    "n": 385311,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.7
+   },
+   "STURDY_CLAMP": {
+    "elo": null,
+    "n": 114133,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.0
+   },
+   "SWORD_OF_JADE": {
+    "elo": null,
+    "n": 45315,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 78.4
+   },
+   "SWORD_OF_STONE": {
+    "elo": null,
+    "n": 99544,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 8.3
+   },
+   "SYMBIOTIC_VIRUS": {
+    "elo": null,
+    "n": 27790,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.2
+   },
+   "TANXS_WHISTLE": {
+    "elo": null,
+    "n": 31260,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 73.4
+   },
+   "TEA_OF_DISCOURTESY": {
+    "elo": null,
+    "n": 50249,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 43.0
+   },
+   "THE_ABACUS": {
+    "elo": null,
+    "n": 24485,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 67.5
+   },
+   "THE_BOOT": {
+    "elo": null,
+    "n": 19921,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 35.8
+   },
+   "THE_COURIER": {
+    "elo": null,
+    "n": 100882,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.7
+   },
+   "THROWING_AXE": {
+    "elo": null,
+    "n": 54547,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.5
+   },
+   "TINGSHA": {
+    "elo": null,
+    "n": 36943,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.4
+   },
+   "TINY_MAILBOX": {
+    "elo": null,
+    "n": 196706,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.1
+   },
+   "TOASTY_MITTENS": {
+    "elo": null,
+    "n": 16862,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 54.5
+   },
+   "TOOLBOX": {
+    "elo": null,
+    "n": 41994,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.6
+   },
+   "TOUCH_OF_OROBAS": {
+    "elo": null,
+    "n": 122648,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 44.1
+   },
+   "TOUGH_BANDAGES": {
+    "elo": null,
+    "n": 16726,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 67.0
+   },
+   "TOXIC_EGG": {
+    "elo": null,
+    "n": 87173,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.0
+   },
+   "TOY_BOX": {
+    "elo": null,
+    "n": 29922,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 51.4
+   },
+   "TRI_BOOMERANG": {
+    "elo": null,
+    "n": 55854,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.7
+   },
+   "TUNGSTEN_ROD": {
+    "elo": null,
+    "n": 92476,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.4
+   },
+   "TUNING_FORK": {
+    "elo": null,
+    "n": 226856,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.3
+   },
+   "TWISTED_FUNNEL": {
+    "elo": null,
+    "n": 29293,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 61.4
+   },
+   "UNCEASING_TOP": {
+    "elo": null,
+    "n": 104906,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.9
+   },
+   "UNDYING_SIGIL": {
+    "elo": null,
+    "n": 8298,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 60.1
+   },
+   "UNSETTLING_LAMP": {
+    "elo": null,
+    "n": 103101,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.7
+   },
+   "VAJRA": {
+    "elo": null,
+    "n": 419083,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.0
+   },
+   "VAMBRACE": {
+    "elo": null,
+    "n": 229280,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 56.5
+   },
+   "VELVET_CHOKER": {
+    "elo": null,
+    "n": 4274,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 57.6
+   },
+   "VENERABLE_TEA_SET": {
+    "elo": null,
+    "n": 408180,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.5
+   },
+   "VERY_HOT_COCOA": {
+    "elo": null,
+    "n": 122983,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 47.8
+   },
+   "VEXING_PUZZLEBOX": {
+    "elo": null,
+    "n": 99087,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 59.5
+   },
+   "VITRUVIAN_MINION": {
+    "elo": null,
+    "n": 5711,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 58.9
+   },
+   "WAR_HAMMER": {
+    "elo": null,
+    "n": 31731,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 70.9
+   },
+   "WAR_PAINT": {
+    "elo": null,
+    "n": 421338,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.9
+   },
+   "WHETSTONE": {
+    "elo": null,
+    "n": 412766,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 55.1
+   },
+   "WHISPERING_EARRING": {
+    "elo": null,
+    "n": 45375,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 64.9
+   },
+   "WHITE_BEAST_STATUE": {
+    "elo": null,
+    "n": 79791,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.1
+   },
+   "WHITE_STAR": {
+    "elo": null,
+    "n": 72453,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 52.3
+   },
+   "WINGED_BOOTS": {
+    "elo": null,
+    "n": 20073,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 18.9
+   },
+   "WING_CHARM": {
+    "elo": null,
+    "n": 24886,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 63.4
+   },
+   "WONGOS_MYSTERY_TICKET": {
+    "elo": null,
+    "n": 18960,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 53.8
+   },
+   "WONGO_CUSTOMER_APPRECIATION_BADGE": {
+    "elo": null,
+    "n": 32,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 62.5
+   },
+   "YUMMY_COOKIE": {
+    "elo": null,
+    "n": 133578,
+    "pick": null,
+    "pick_by_act": [
+     null,
+     null,
+     null
+    ],
+    "win": 45.3
+   }
+  },
+  "total_runs": 1924904
+ },
+ "source": "spire-codex.com"
+}

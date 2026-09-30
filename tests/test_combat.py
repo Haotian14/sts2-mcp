@@ -1,0 +1,113 @@
+"""战斗规划：用手工构造的 /state 验证几条关键判断。"""
+
+from __future__ import annotations
+
+from agent.strategy.combat import plan_turn
+
+
+def card(i, cid, cost=1, ctype="Attack", target="AnyEnemy", **values):
+    return {"i": i, "id": cid, "cost": cost, "type": ctype, "target": target,
+            "playable": True, "values": values}
+
+
+def strike(i):
+    return card(i, "StrikeSilent", Damage=6)
+
+
+def defend(i):
+    return card(i, "DefendSilent", ctype="Skill", target="Self", Block=5)
+
+
+def enemy(i, hp, attack=0, block=0, powers=(), hits=1):
+    intents = [{"type": "Attack", "damage": attack // hits, "total": attack, **({"repeats": hits} if hits > 1 else {})}] \
+        if attack else [{"type": "Buff"}]
+    return {"i": i, "id": f"Foe{i}", "hp": hp, "max_hp": hp, "block": block, "alive": True,
+            "hittable": True, "intents": intents,
+            "powers": [{"id": p, "amount": a} for p, a in powers]}
+
+
+def state(hand, enemies, energy=3, hp=50, max_hp=70, block=0, potions=(None, None), encounter="TestWeak"):
+    return {"in_run": True, "in_combat": True,
+            "combat": {"energy": energy, "phase": "Play", "encounter": encounter},
+            "player": {"character": "Silent", "hp": hp, "max_hp": max_hp, "block": block, "powers": []},
+            "run": {"act": 1, "total_floor": 3}, "hand": hand, "enemies": enemies,
+            "potions": list(potions), "deck": []}
+
+
+def first_card(s):
+    plan = plan_turn(s)
+    assert plan.move is not None, plan.why()
+    return next(c["id"] for c in s["hand"] if c["i"] == plan.move.get("card")), plan
+
+
+def test_kill_beats_block():
+    """斩杀优先：两刀打死它，它这一回合的 10 点就没了。"""
+    s = state([strike(0), strike(1), defend(2)], [enemy(0, 12, attack=10)])
+    cid, plan = first_card(s)
+    assert cid == "StrikeSilent", plan.why()
+
+
+def test_enemy_block_counts_toward_lethal():
+    """斩杀线是血量 + 格挡：12 血 + 8 格挡两刀打不死，该叠格挡。"""
+    s = state([strike(0), strike(1), defend(2)], [enemy(0, 12, attack=10, block=8)], energy=2)
+    cid, plan = first_card(s)
+    assert cid == "DefendSilent", plan.why()
+
+
+def test_no_block_when_enemy_not_attacking():
+    s = state([strike(0), defend(1), defend(2)], [enemy(0, 40)], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "StrikeSilent", plan.why()
+
+
+def test_block_against_big_hit():
+    s = state([strike(0), defend(1), defend(2), defend(3)], [enemy(0, 60, attack=18)], hp=30)
+    cid, plan = first_card(s)
+    assert cid == "DefendSilent", plan.why()
+
+
+def test_poison_kills_before_enemy_acts():
+    """毒在敌人行动前结算：毒够就不用挡。"""
+    s = state([card(0, "PoisonedStab", Damage=6, PoisonPower=3), defend(1)],
+              [enemy(0, 9, attack=12, powers=[("PoisonPower", 1)])], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "PoisonedStab", plan.why()
+    assert plan.move["target"] == 0
+
+
+def test_vulnerable_before_attacks():
+    """先上易伤再打：痛击排在打击前面。"""
+    hand = [card(0, "Bash", cost=2, Damage=8, VulnerablePower=2), card(1, "StrikeIronclad", Damage=6)]
+    s = state(hand, [enemy(0, 80)], energy=3)
+    s["player"]["character"] = "Ironclad"
+    cid, plan = first_card(s)
+    assert cid == "Bash", plan.why()
+
+
+def test_block_potion_when_lethal_incoming():
+    s = state([defend(0)], [enemy(0, 60, attack=24)], energy=1, hp=18, potions=("BlockPotion", None))
+    plan = plan_turn(s)
+    assert "potion" in (plan.move or {}) or "药水" in " ".join(plan.line), plan.why()
+
+
+def test_blade_dance_shivs_for_lethal():
+    """刀刃之舞生成的小刀在模拟里能打出去：3 刀 × 4 = 12 正好斩杀。"""
+    hand = [card(0, "BladeDance", ctype="Skill", target="Self", Cards=3), defend(1)]
+    s = state(hand, [enemy(0, 12, attack=14)], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "BladeDance", plan.why()
+
+
+def test_end_turn_when_nothing_useful():
+    s = state([card(0, "AscendersBane", cost=None, ctype="Curse", target="None")],
+              [enemy(0, 30, attack=5)])
+    s["hand"][0]["playable"] = False
+    assert plan_turn(s).move is None
+
+
+def test_aoe_on_many_enemies():
+    hand = [card(0, "DaggerSpray", target="AllEnemies", Damage=4, ), strike(1)]
+    hand[0]["hits"] = 2
+    s = state(hand, [enemy(0, 8, attack=5), enemy(1, 8, attack=5), enemy(2, 8, attack=5)], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "DaggerSpray", plan.why()

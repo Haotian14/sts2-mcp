@@ -59,6 +59,8 @@ namespace Sts2Bridge
             public List<object?> Options = new List<object?>();
             public int Min;
             public int Max;
+            public string? Purpose;        // CardSelectCmd 的入口名，如 FromDeckForUpgrade
+            public string? Source;         // 发起选择的模型类名，如 Survivor
             public object Tcs = null!;     // TaskCompletionSource<IEnumerable<CardModel>>
         }
 
@@ -159,7 +161,8 @@ namespace Sts2Bridge
                 .MakeGenericType(typeof(IEnumerable<>).MakeGenericType(cardType));
             var tcs = Activator.CreateInstance(tcsType)!;
 
-            var pending = new Pending { Min = min, Max = max, Tcs = tcs };
+            var (purpose, source) = Caller();
+            var pending = new Pending { Min = min, Max = max, Tcs = tcs, Purpose = purpose, Source = source };
             foreach (var card in GamePaths.Enumerate(options)) pending.Options.Add(card);
 
             lock (Gate)
@@ -174,6 +177,38 @@ namespace Sts2Bridge
 
             Log.Write($"[选牌] 待答：{pending.Options.Count} 选 {min}~{max}");
             return GamePaths.Get(tcs, "Task")!;
+        }
+
+        /// <summary>
+        /// 这次选牌是谁、为了什么发起的。
+        ///
+        /// 选择器接口只给候选牌与张数，不说用途 —— 而「弃哪张」和「升级哪张」的
+        /// 最优解正好相反。用途就写在调用栈上：GetSelectedCards 是被
+        /// <c>CardSelectCmd.FromXxx</c> 的状态机同步调用的，状态机类型名形如
+        /// <c>CardSelectCmd+&lt;FromDeckForUpgrade&gt;d__12</c>；再往外一层通常是发起它
+        /// 的牌（<c>Survivor+&lt;OnPlay&gt;d__3</c>）或遗物、事件。
+        /// 跨过 await 边界的那部分栈看不到，取不到时就是 null。
+        /// </summary>
+        private static (string? purpose, string? source) Caller()
+        {
+            string? purpose = null, source = null;
+            try
+            {
+                foreach (var frame in new System.Diagnostics.StackTrace(false).GetFrames())
+                {
+                    var t = frame.GetMethod()?.DeclaringType;
+                    var owner = t?.DeclaringType;
+                    if (t == null || owner == null || !t.Name.StartsWith("<")) continue;
+                    var method = t.Name.Substring(1, Math.Max(0, t.Name.IndexOf('>') - 1));
+                    if (owner.Name == "CardSelectCmd")
+                        purpose ??= method;
+                    else if (source == null && owner.Namespace?.StartsWith("MegaCrit.Sts2.Core.Models") == true)
+                        source = owner.Name;
+                    if (purpose != null && source != null) break;
+                }
+            }
+            catch (Exception ex) { Log.Error("读取选牌来源", ex); }
+            return (purpose, source);
         }
 
         private static void OnTimeout(Pending pending)
@@ -205,6 +240,8 @@ namespace Sts2Bridge
             w.Prop("kind", "cards");
             w.Prop("min", (int?)pending.Min);
             w.Prop("max", (int?)pending.Max);
+            w.Prop("purpose", pending.Purpose);
+            w.Prop("source", pending.Source);
             w.BeginArray("options");
             for (int i = 0; i < pending.Options.Count; i++)
             {
@@ -215,6 +252,8 @@ namespace Sts2Bridge
                 var cost = GamePaths.Int(GamePaths.Get(card, "EnergyCost"), "Canonical");
                 w.Prop("cost", cost.HasValue && cost.Value < 0 ? null : cost);
                 w.Prop("type", GamePaths.Text(card, "Type"));
+                var level = GamePaths.Int(card, "CurrentUpgradeLevel");
+                if (level.HasValue && level.Value > 0) w.Prop("upgraded", level);
 
                 // 候选牌可能根本不在牌库里（事件的「从 5 张随机牌中选 1 张」、
                 // 卡牌奖励），/glossary 一个都覆盖不到 —— 光给标识等于让模型

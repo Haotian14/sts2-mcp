@@ -43,6 +43,9 @@ namespace Sts2Bridge
         private const string RestSiteButton   = "NRestSiteButton";
         private const string TreasureRoom     = "NTreasureRoom";
         private const string RelicHolder      = "NTreasureRoomRelicHolder";
+        private const string EventRoom        = "NEventRoom";
+        private const string RelicChoiceScreen = "NChooseARelicSelection";
+        private const string EventOptionButton = "NEventOptionButton";
         private const string CharacterButton = "NCharacterSelectButton";
         private const string GameOverScreen  = "NGameOverScreen";
 
@@ -244,6 +247,7 @@ namespace Sts2Bridge
                 if (opt.Available.HasValue) w.Prop("available", opt.Available);
                 if (opt.Cost.HasValue) w.Prop("cost", opt.Cost);
                 if (opt.Selected.HasValue) w.Prop("selected", opt.Selected);
+                if (opt.Relic != null) w.Prop("relic", opt.Relic);
 
                 // 待选物的名字与效果 —— 只有卡牌/遗物/药水这类有模型的选项才有。
                 // 不发进 /glossary 的理由见 GlossaryExporter.TitleOf 上方注释。
@@ -278,6 +282,7 @@ namespace Sts2Bridge
             public bool? Selected; // 角色选择按钮；让跨局 runner 知道何时可以按确认
             public object? Model;
             public int? Cost;      // 商店价格，其余界面为 null
+            public string? Relic;  // 事件选项附带的遗物
         }
 
         /// <summary>
@@ -306,6 +311,20 @@ namespace Sts2Bridge
                     {
                         var card = GamePaths.Get(h, "CardModel");
                         result.Add(new Option { Node = h, Id = GamePaths.Id(card), Model = card });
+                    }
+                    // 「跳过 / 重抽」：按钮与 _extraOptions 按同一顺序创建（见
+                    // NCardRewardSelectionScreen.RefreshOptions），据此取 OptionId，
+                    // 导出为 `Alt:Skip` / `Alt:REROLL`，不依赖按钮上的本地化文字。
+                    var alts = new List<object?>(GamePaths.Enumerate(GamePaths.Get(top, "_extraOptions")));
+                    var altButtons = FindAll(top, "NCardRewardAlternativeButton");
+                    for (int k = 0; k < altButtons.Count; k++)
+                    {
+                        var optionId = k < alts.Count ? GamePaths.Text(alts[k], "OptionId") : null;
+                        result.Add(new Option {
+                            Node = altButtons[k],
+                            Id = "Alt:" + (optionId ?? LabelOf(altButtons[k]) ?? k.ToString()),
+                            Available = GamePaths.Bool(altButtons[k], "IsEnabled"),
+                        });
                     }
                     break;
 
@@ -372,6 +391,38 @@ namespace Sts2Bridge
                         }
                     }
                     break;
+
+                case RelicChoiceScreen:
+                    // 遗物多选一（Boss 遗物等）：NRelicBasicHolder.Relic.Model 即遗物
+                    foreach (var h in FindAll(top, "NRelicBasicHolder"))
+                    {
+                        var relic = GamePaths.Get(GamePaths.Get(h, "Relic"), "Model");
+                        result.Add(new Option { Node = h, Id = GamePaths.Id(relic) ?? "Relic", Model = relic,
+                                                Available = GamePaths.Bool(h, "IsEnabled") });
+                    }
+                    foreach (var s in FindAll(top, "NChoiceSelectionSkipButton"))
+                        result.Add(new Option { Node = s, Id = "Alt:Skip", Available = GamePaths.Bool(s, "IsEnabled") });
+                    break;
+
+                case EventRoom:
+                    // 事件：选项按钮上挂着 EventOption。TextKey（如
+                    // `BIG_FISH.pages.INITIAL.options.BANANA`）跨语言稳定，
+                    // 标题与描述渲染后带具体数值（「失去 7 点生命」），
+                    // 策略靠这两者判断选项的得失。已锁定的选项不可点。
+                    foreach (var b in FindAll(top, EventOptionButton))
+                    {
+                        var option = GamePaths.Get(b, "Option");
+                        if (option == null) continue;
+                        result.Add(new Option {
+                            Node = b,
+                            Id = GamePaths.Text(option, "TextKey") ?? LabelOf(b),
+                            Available = !(GamePaths.Bool(option, "IsLocked") ?? false),
+                            Model = option,
+                            Relic = GamePaths.Id(GamePaths.Get(option, "Relic")),
+                        });
+                    }
+                    if (result.Count > 0) break;
+                    goto default;   // 事件结束后只剩「继续」等通用按钮
 
                 case CombatRoom:
                     // 战斗房不给选项：出牌走 play_card，房间里那些按钮

@@ -141,7 +141,46 @@ namespace Sts2Bridge
             }
             w.EndArray();
 
+            // 整章地图：路线要往后看好几层（精英、休息点、商店在哪），只看下一步
+            // 选不出好路线。只在能走的时候发，其余时间它没有用处。
+            if (canMove) WriteNodes(w, state);
+
             w.EndObject();
+        }
+
+        /// <summary>
+        /// 从本章起点沿 Children 遍历整张图，每个节点写 `[行, 列, 类型, [[行, 列]…]]`。
+        /// 用数组而非对象：一章六七十个节点，键名会占掉一大半体积。
+        /// </summary>
+        private static void WriteNodes(JsonWriter w, object state)
+        {
+            var start = GamePaths.Get(GamePaths.Get(state, "Map"), "StartingMapPoint");
+            var seen = new HashSet<(int, int)>();
+            var queue = new Queue<object?>();
+            if (start != null) queue.Enqueue(start);
+
+            w.BeginArray("nodes");
+            while (queue.Count > 0)
+            {
+                var p = queue.Dequeue();
+                if (!seen.Add((Row(p), Col(p)))) continue;
+                w.BeginArray();
+                w.Value(Row(p));
+                w.Value(Col(p));
+                w.Value(GamePaths.Text(p, "PointType"));
+                w.BeginArray();
+                foreach (var c in GamePaths.Enumerate(GamePaths.Get(p, "Children")))
+                {
+                    w.BeginArray();
+                    w.Value(Row(c));
+                    w.Value(Col(c));
+                    w.EndArray();
+                    queue.Enqueue(c);
+                }
+                w.EndArray();
+                w.EndArray();
+            }
+            w.EndArray();
         }
 
         /// <summary>
