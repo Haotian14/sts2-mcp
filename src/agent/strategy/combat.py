@@ -40,7 +40,8 @@ KILL_BASE = 4.0
 ALL_DEAD_BONUS = 40.0
 DEATH_PENALTY = 1000.0
 DRAW_W = 1.4          # 抽 1 张（还有能量打它）
-DEBUFF_EARLY = 0.03   # 减益越早挂越好的微小偏好，只用来打破平局
+DEBUFF_EARLY = 0.03   # 减益 / 能力越早上越好的微小偏好，只用来打破平局
+DRAW_EARLY = 0.05     # 每抽 1 张、每早一步的偏好
 POTION_KEEP = {"monster": 6.0, "elite": 2.5, "boss": 0.0}
 
 # 能力的长期价值：每层每回合约等于多少分。没列出的己方能力按能力牌的社区估值折算。
@@ -106,6 +107,8 @@ class Node:
     str_gain: int = 0
     dex_gain: int = 0
     hp_cost: int = 0
+    gained: dict[str, int] = field(default_factory=dict)   # 本回合模拟中新上的己方能力
+    shiv_played: bool = False
     future: float = 0.0
     first: dict | None = None
     line: list[str] = field(default_factory=list)
@@ -214,6 +217,11 @@ def _per_hit(card: Card, foe: Foe, node: Node, ctx: Ctx, var: Any, x: int) -> in
         else:
             already_vuln = foe.vulnerable
     dmg += node.str_gain
+    if card.id == "Shiv":
+        # 本回合才打出的精准 / 幻影之刃：实时数值里还没有，要自己加
+        dmg += node.gained.get("AccuracyPower", 0)
+        if not node.shiv_played:
+            dmg += node.gained.get("PhantomBladesPower", 0)
     if foe.vuln_add > 0 and not already_vuln:
         dmg = int(dmg * 1.5)
     # 跟踪（TrackingPower）：对虚弱的敌人伤害 ×层数。已经虚弱的，实时数值里已含；
@@ -224,10 +232,13 @@ def _per_hit(card: Card, foe: Foe, node: Node, ctx: Ctx, var: Any, x: int) -> in
     return max(0, dmg)
 
 
-def _hit(foe: Foe, dmg: float) -> None:
+def _hit(foe: Foe, dmg: float) -> int:
+    """结算一段伤害，返回打穿格挡的部分。"""
     absorbed = min(foe.block, dmg)
     foe.block -= int(absorbed)
-    foe.hp -= int(round(dmg - absorbed))
+    through = int(round(dmg - absorbed))
+    foe.hp -= through
+    return through
 
 
 def _hits(card: Card, e: dict, foe: Foe | None, x: int) -> int:
@@ -243,7 +254,7 @@ def _hits(card: Card, e: dict, foe: Foe | None, x: int) -> int:
 
 def _clone(node: Node) -> Node:
     return replace(node, hand=list(node.hand), foes=[replace(f) for f in node.foes],
-                   potions=list(node.potions), line=list(node.line))
+                   potions=list(node.potions), line=list(node.line), gained=dict(node.gained))
 
 
 def play(node: Node, ctx: Ctx, card: Card, target: Foe | None) -> Node | None:
@@ -260,7 +271,14 @@ def play(node: Node, ctx: Ctx, card: Card, target: Foe | None) -> Node | None:
     tgt = next((f for f in n.foes if target is not None and f.i == target.i), None)
     defn = card.defn
     effects = defn.get("effects") or []
+    # 残影：每打一张牌 +层数格挡（打出残影这张本身不触发 —— 先结算，再上能力）
+    n.block += _power(n, ctx, "AfterimagePower")
     _apply_effects(n, ctx, card, effects, tgt, x)
+    if card.id == "Shiv":
+        n.shiv_played = True
+    if card.type == "Power":
+        # 能力越早打，同回合后面的牌越能吃到它；同分时也先打能力
+        n.future += DEBUFF_EARLY * max(0, MAX_DEPTH - len(n.line))
 
     if not defn or not effects:
         # 不认识的牌：只按社区估值给一点分，保证能量富余时会打出它
@@ -284,11 +302,12 @@ def _apply_effects(n: Node, ctx: Ctx, card: Card, effects: list[dict], tgt: Foe 
                 targets = [(f, 1.0 / len(alive)) for f in alive] if alive else []
             else:
                 targets = [(tgt, 1.0)] if tgt and tgt.alive else []
+            envenom = _power(n, ctx, "EnvenomPower")
             for foe, share in targets:
                 per = _per_hit(card, foe, n, ctx, e.get("var"), x)
                 for _ in range(_hits(card, e, foe, x)):
-                    if foe.alive:
-                        _hit(foe, per * share)
+                    if foe.alive and _hit(foe, per * share) > 0 and envenom:
+                        foe.poison_add += envenom
         elif op == "block":
             amount = _var(card, e.get("var"), x)
             if card.i is None:
@@ -309,6 +328,9 @@ def _apply_effects(n: Node, ctx: Ctx, card: Card, effects: list[dict], tgt: Foe 
             # 抽到的牌要有能量打才值钱：剩的能量越多，这次抽牌越值（也就越该先打）
             k = _var(card, e.get("var"), x)
             n.future += k * (0.35 + DRAW_W * min(n.energy, 3) / 3)
+            # 先过牌：模拟不知道会抽到什么，但先看到牌才能决定这回合怎么打。
+            # 实战里出现过「背刺 → 防御 → 肾上腺素」这种把过牌拖到后面的规划
+            n.future += k * DRAW_EARLY * max(0, MAX_DEPTH - len(n.line))
         elif op == "energy":
             n.energy += _var(card, e.get("var"), x)
         elif op == "make" and e.get("pile") == "hand":
@@ -328,7 +350,13 @@ def _apply_effects(n: Node, ctx: Ctx, card: Card, effects: list[dict], tgt: Foe 
             n.future += 0.5 * _var(card, e.get("var"), x)
 
 
+def _power(n: Node, ctx: Ctx, power: str) -> int:
+    """己方某能力此刻的层数：回合开始已有的 + 本回合模拟中新上的。"""
+    return ctx.player_powers.get(power, 0) + n.gained.get(power, 0)
+
+
 def _self_power(n: Node, ctx: Ctx, power: str, amount: int) -> None:
+    n.gained[power] = n.gained.get(power, 0) + amount
     if power == "StrengthPower":
         n.str_gain += amount
     elif power == "DexterityPower":
@@ -481,7 +509,8 @@ def _children(node: Node, ctx: Ctx) -> list[Node]:
 def _key(n: Node) -> tuple:
     return (n.energy, n.block, tuple(sorted(c.id for c in n.hand)),
             tuple((f.hp, f.block, f.vuln_add, f.weak_add, f.poison_add) for f in n.foes),
-            tuple(p or "" for p in n.potions), n.str_gain, n.dex_gain)
+            tuple(p or "" for p in n.potions), n.str_gain, n.dex_gain,
+            tuple(sorted(n.gained.items())), n.shiv_played)
 
 
 @dataclass

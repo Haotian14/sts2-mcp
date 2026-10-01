@@ -128,3 +128,39 @@ def test_tracking_doubles_after_weak():
     s["player"]["powers"] = [{"id": "TrackingPower", "amount": 2}]
     plan = plan_turn(s)
     assert plan.line[0].startswith("中和") and plan.score > 40, plan.why()
+
+
+def test_afterimage_before_other_cards():
+    """残影先打：之后每张牌 +1 格挡。后打等于白白少挡几点。"""
+    s = state([strike(0), card(1, "Afterimage", ctype="Power", target="Self", AfterimagePower=1),
+               card(2, "BladeDance", ctype="Skill", target="Self", Cards=3)],
+              [enemy(0, 60, attack=12)])
+    cid, plan = first_card(s)
+    assert cid == "Afterimage", plan.why()
+
+
+def test_accuracy_before_shivs():
+    """精准先打：手里的小刀每把 +4。"""
+    shiv = lambda i: card(i, "Shiv", cost=0, Damage=4)
+    s = state([shiv(0), shiv(1), shiv(2), card(3, "Accuracy", ctype="Power", target="Self", AccuracyPower=4)],
+              [enemy(0, 60, attack=5)], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "Accuracy", plan.why()
+
+
+def test_existing_afterimage_counts_block():
+    """已有残影时，多打一张 0 费小刀也多 1 格挡 —— 敌人打 3 点时，打完 3 把刀正好挡住。"""
+    shiv = lambda i: card(i, "Shiv", cost=0, Damage=4)
+    s = state([shiv(0), shiv(1), shiv(2)], [enemy(0, 60, attack=3)], energy=0)
+    s["player"]["powers"] = [{"id": "AfterimagePower", "amount": 1}]
+    plan = plan_turn(s)
+    assert len(plan.line) == 3 and plan.score > 0, plan.why()
+
+
+def test_draw_before_other_cards():
+    """肾上腺素先打：抽牌加能量，先看到牌再决定怎么出。"""
+    s = state([card(0, "Backstab", cost=0, Damage=11), defend(1),
+               card(2, "Adrenaline", cost=0, ctype="Skill", target="Self", Cards=2, Energy=1)],
+              [enemy(0, 60, attack=8)], energy=1)
+    cid, plan = first_card(s)
+    assert cid == "Adrenaline", plan.why()
