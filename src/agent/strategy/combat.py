@@ -112,6 +112,7 @@ class Node:
     future: float = 0.0
     first: dict | None = None
     line: list[str] = field(default_factory=list)
+    used: list[str] = field(default_factory=list)          # 本回合打出的手牌 id（弃牌取舍用）
 
 
 @dataclass
@@ -254,7 +255,8 @@ def _hits(card: Card, e: dict, foe: Foe | None, x: int) -> int:
 
 def _clone(node: Node) -> Node:
     return replace(node, hand=list(node.hand), foes=[replace(f) for f in node.foes],
-                   potions=list(node.potions), line=list(node.line), gained=dict(node.gained))
+                   potions=list(node.potions), line=list(node.line), gained=dict(node.gained),
+                   used=list(node.used))
 
 
 def play(node: Node, ctx: Ctx, card: Card, target: Foe | None) -> Node | None:
@@ -286,6 +288,8 @@ def play(node: Node, ctx: Ctx, card: Card, target: Foe | None) -> Node | None:
     elif defn.get("complex"):
         n.future += 0.5
     n.line.append(_label(card, tgt))
+    if card.i is not None:
+        n.used.append(card.id)
     if n.first is None:
         n.first = {"card": card.i, "target": tgt.i if tgt and _needs_target(card) else None}
     return n
@@ -518,6 +522,7 @@ class Plan:
     move: dict | None           # {"card": i, "target": j} / {"potion": s, "target": j} / None=结束回合
     score: float
     line: list[str]
+    used: list[str] = field(default_factory=list)
 
     def why(self) -> str:
         seq = " → ".join(self.line) if self.line else "（不出牌）"
@@ -537,7 +542,7 @@ def plan_turn(state: dict) -> Plan:
                 if k not in scored or s > scored[k][0]:
                     scored[k] = (s, child)
                 if s > best.score + 1e-9:
-                    best = Plan(child.first, s, child.line)
+                    best = Plan(child.first, s, child.line, child.used)
         if not scored:
             break
         ranked = sorted(scored.values(), key=lambda t: t[0], reverse=True)

@@ -222,3 +222,24 @@ def test_bundle_choice_picks_best_then_confirms():
     assert d.action == "pick" and d.arg == 1, d.why
     s["screen"]["options"].append({"i": 2, "id": "Confirm", "available": True})
     assert runner.decide(s, runner.Memory()).arg == 2
+
+
+def test_discard_keeps_cards_planned_this_turn():
+    # 投掷匕首要弃一张：敌人要打 12，手里防御能挡、致命毒药也要打 —— 弃打不出的那张
+    hand = [{"i": 0, "id": "DeadlyPoison", "cost": 1, "type": "Skill", "target": "AnyEnemy",
+             "playable": True, "values": {"PoisonPower": 5}},
+            {"i": 1, "id": "DefendSilent", "cost": 1, "type": "Skill", "target": "Self",
+             "playable": True, "values": {"Block": 5}},
+            {"i": 2, "id": "Backflip", "cost": 1, "type": "Skill", "target": "Self",
+             "playable": True, "values": {"Block": 5, "Cards": 2}}]
+    s = base_state(in_combat=True, awaiting_choice=True, hand=hand,
+                   combat={"energy": 2, "phase": "Play", "encounter": "TestWeak"},
+                   enemies=[{"i": 0, "id": "X", "hp": 40, "block": 0, "alive": True, "hittable": True,
+                             "intents": [{"type": "Attack", "total": 12}], "powers": []}],
+                   choice={"min": 1, "max": 1, "purpose": "FromHandForDiscard", "source": "DaggerThrow",
+                           "options": [{"i": 0, "id": "DeadlyPoison"}, {"i": 1, "id": "DefendSilent"},
+                                       {"i": 2, "id": "Backflip"}]})
+    idx, why = choices.answer(s, rooms.deck_context(s))
+    planned = choices._planned_cards(s)
+    dropped = s["choice"]["options"][idx[0]]["id"]
+    assert planned[dropped] == 0, (why, planned)

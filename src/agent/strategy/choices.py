@@ -11,7 +11,10 @@
 
 from __future__ import annotations
 
+from collections import Counter
+
 from ..gamedata import base_id, db
+from . import combat
 from . import deck as deckval
 from .deck import DeckContext
 
@@ -64,7 +67,8 @@ def answer(state: dict, ctx: DeckContext, hint: str | None = None) -> tuple[list
         n = hi
     elif purpose == NEGATIVE:
         in_combat = bool(state.get("in_combat"))
-        ranked = sorted(options, key=lambda o: _discard_key(o, in_combat, ctx))
+        planned = _planned_cards(state) if in_combat else Counter()
+        ranked = sorted(options, key=lambda o: _discard_key(o, in_combat, ctx, planned))
         n = lo
     else:
         ranked = sorted(options, key=lambda o: deckval.value_in_deck(cid(o), ctx), reverse=True)
@@ -81,13 +85,27 @@ def answer(state: dict, ctx: DeckContext, hint: str | None = None) -> tuple[list
     return [o["i"] for o in picked], f"{label} {names}（{choice.get('purpose') or '?'} / {choice.get('source') or '?'}）"
 
 
-def _discard_key(o: dict, in_combat: bool, ctx: DeckContext) -> float:
+def _planned_cards(state: dict) -> Counter:
+    """战斗规划这回合打算打出的手牌（按 id 计数）。规划失败时返回空，退回纯估值。"""
+    try:
+        return Counter(combat.plan_turn(state).used)
+    except Exception:  # 规划只是参考，任何异常都不该让选牌卡住
+        return Counter()
+
+
+def _discard_key(o: dict, in_combat: bool, ctx: DeckContext, planned: Counter | None = None) -> float:
     d = db().card(o.get("id", ""))
     kws = d.get("keywords") or []
+    value = deckval.value_in_deck(o.get("id", "") + ("+" if o.get("upgraded") else ""), ctx)
     if in_combat:
         if "Sly" in kws:
             return -10.0                          # 奇巧：弃掉 = 免费打出
         if d.get("type") in ("Curse", "Status"):
             # 虚无的诅咒留在手里，回合末自己消耗；弃掉反而会再抽到
             return 3.0 if "Ethereal" in kws else -8.0
-    return deckval.value_in_deck(o.get("id", "") + ("+" if o.get("upgraded") else ""), ctx)
+        # 这回合要打的牌留着，打不上的先弃。静态估值只排同一类里的先后 ——
+        # 实战里投掷匕首弃掉过唯一的致命毒药，敌人攻击时也弃过防御
+        if planned and planned[o.get("id", "")] > 0:
+            planned[o.get("id", "")] -= 1
+            return 5.0 + value
+    return value
