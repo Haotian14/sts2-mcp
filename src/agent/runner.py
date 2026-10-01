@@ -156,6 +156,10 @@ def _menu(state: dict, character: str) -> Decision:
     o = find("标准模式", "standard") or find("单人模式", "singleplayer")
     if o:
         return Decision("pick", o["i"], f"菜单：{o.get('id')}")
+    # 主菜单上开着别的子菜单（死后弹出的时间线等）：先退回去
+    back = next((o for o in options if o.get("id") == "Back"), None)
+    if back:
+        return Decision("pick", back["i"], "退出主菜单子界面")
     return Decision("wait", None, "主菜单切换中")
 
 

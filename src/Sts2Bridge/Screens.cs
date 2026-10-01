@@ -491,6 +491,17 @@ namespace Sts2Bridge
                             Selected = isCharacter ? GamePaths.Bool(b, "IsSelected") : null,
                         });
                     }
+                    // 返回按钮单独追加在末尾，不受 FindClickable 的 24 个上限：
+                    // 死后主菜单会弹出时间线（NTimelineScreen），几十个纪元格子把
+                    // 列表占满，返回按钮被挤掉，runner 卡在「主菜单切换中」。
+                    foreach (var back in FindAll(top, "NBackButton"))
+                    {
+                        if (result.Exists(o => ReferenceEquals(o.Node, back))) continue;
+                        bool shown = false;
+                        try { shown = GamePaths.Call(back, "IsVisibleInTree") is bool v && v; } catch { }
+                        if (!shown || !(GamePaths.Bool(back, "IsEnabled") ?? false)) continue;
+                        result.Add(new Option { Node = back, Id = "Back", Available = true });
+                    }
                     break;
             }
             return result;
