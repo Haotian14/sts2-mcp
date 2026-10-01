@@ -468,6 +468,7 @@ namespace Sts2Bridge
                     break;
 
                 default:
+                    if (TimelineOptions(top, result)) break;
                     // 兜底：认不出的界面，就把所有可点、可见、启用的按钮按**节点名**
                     // 列出来。节点名本身是有语义（Continue / SingleplayerButton /
                     // ConfirmButton），模型看得懂。
@@ -505,6 +506,45 @@ namespace Sts2Bridge
                     break;
             }
             return result;
+        }
+
+        /// <summary>
+        /// 主菜单上开着时间线（NTimelineScreen）时的选项。返回 false 表示没开着。
+        ///
+        /// 存档里有「已发现未揭示」的纪元时，主菜单会禁用单人 / 多人 / 百科，只留时间线
+        /// （NMainMenu.UpdateTimelineButtonBehavior）—— 不揭示就开不了新局。揭示流程：
+        /// 点 State=Obtained 的纪元格子（OnRelease → RevealEpoch → 打开检视界面）→
+        /// 关掉检视界面 / 解锁展示 → 返回。按这个顺序导出：模态按钮在前，纪元其次，返回最后。
+        /// 不能交给兜底：几十个纪元格子会占满 24 个名额，标签全是「1」。
+        /// </summary>
+        private static bool TimelineOptions(object? top, List<Option> result)
+        {
+            if (GamePaths.Id(top) != "NMainMenu") return false;
+            var timeline = NodeAt(top, "Submenus", "TimelineScreen");
+            if (timeline == null || !Shown(timeline)) return false;
+
+            void Add(object? node, string id)
+            {
+                if (node == null || !Shown(node) || !(GamePaths.Bool(node, "IsEnabled") ?? true)) return;
+                if (result.Exists(o => ReferenceEquals(o.Node, node))) return;
+                result.Add(new Option { Node = node, Id = id, Available = true });
+            }
+
+            foreach (var b in FindAll(timeline, "NUnlockConfirmButton")) Add(b, "Timeline:Confirm");
+            foreach (var b in FindAll(timeline, "NAcknowledgeButton")) Add(b, "Timeline:Ack");
+            foreach (var inspect in FindAll(timeline, "NEpochInspectScreen"))
+                if (Shown(inspect)) Add(GamePaths.Get(inspect, "_closeButton"), "Timeline:Close");
+            foreach (var slot in FindAll(timeline, "NEpochSlot"))
+                if (GamePaths.Get(slot, "State")?.ToString() == "Obtained")
+                    Add(slot, "Epoch:" + (GamePaths.Id(GamePaths.Get(slot, "model")) ?? "?"));
+            foreach (var back in FindAll(timeline, "NBackButton")) Add(back, "Back");
+            return true;
+        }
+
+        private static bool Shown(object? node)
+        {
+            try { return GamePaths.Call(node, "IsVisibleInTree") is bool v && v; }
+            catch { return false; }
         }
 
         private static void AddGameOverButton(List<Option> result, object? button, string id)

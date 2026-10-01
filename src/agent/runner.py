@@ -156,10 +156,17 @@ def _menu(state: dict, character: str) -> Decision:
     o = find("标准模式", "standard") or find("单人模式", "singleplayer")
     if o:
         return Decision("pick", o["i"], f"菜单：{o.get('id')}")
-    # 主菜单上开着别的子菜单（死后弹出的时间线等）：先退回去
+    # 时间线：有新纪元时单人模式被禁用，必须先揭示。桥接层按「模态按钮 → 纪元 → 返回」排好序
+    for o in options:
+        oid = str(o.get("id", ""))
+        if oid.startswith(("Timeline:", "Epoch:")):
+            return Decision("pick", o["i"], f"时间线：{oid}")
     back = next((o for o in options if o.get("id") == "Back"), None)
     if back:
         return Decision("pick", back["i"], "退出主菜单子界面")
+    timeline = find("时间线", "timeline")
+    if timeline:
+        return Decision("pick", timeline["i"], "单人模式被禁用，先去时间线揭示新纪元")
     return Decision("wait", None, "主菜单切换中")
 
 
