@@ -71,6 +71,18 @@ _PRODUCER_RE = {k: re.compile(v) for k, v in PRODUCERS.items()}
 # 收益件缺来源的扣分：一个来源都没有 / 只有一个。越往后越难补上来源，每章加重
 PAYOFF_NO_SOURCE, PAYOFF_ONE_SOURCE, PAYOFF_PER_ACT = -0.8, -0.3, 0.4
 
+# 牌组的两种结构缺口。首局死于第二章：打击/防御之外几乎没有格挡，
+# 也没有随回合增长的伤害，普通怪每场都掉社区平均水平的血，长战斗打不动。
+# - 防御件：格挡、虚弱、削敌方力量、敏捷 / 无实体 / 覆甲 / 荆棘 / 缓冲 / 模糊
+# - 成长件：能力牌、毒与灾厄的来源、永久力量 / 集中 —— 战斗越长越值钱
+_DEFENSE_RE = re.compile(r"\[gold\](Weak|Intangible|Plating|Dexterity|Thorns|Buffer|Blur)\b"
+                         r"|loses? \S+ \[gold\]Strength")
+_SCALING_SELF_POWERS = {"StrengthPower", "FocusPower"}
+# 每章希望有几张（不含起始牌）
+DEFENSE_TARGET = (2, 4, 5)
+SCALING_TARGET = (1, 3, 4)
+DEFENSE_GAP, SCALING_GAP = 0.25, 0.2
+
 
 @dataclass
 class DeckContext:
@@ -119,6 +131,21 @@ def sources_of(tag: str, ctx: DeckContext, exclude: str | None = None) -> int:
     r = _PRODUCER_RE[tag]
     n += sum(1 for rid in ctx.relics if r.search((db().relics.get(rid) or {}).get("text") or ""))
     return n
+
+
+def is_defense(card_id: str) -> bool:
+    d = db().card(card_id)
+    if any(e.get("op") == "block" for e in d.get("effects") or []):
+        return True
+    return bool(_DEFENSE_RE.search(d.get("text") or ""))
+
+
+def is_scaling(card_id: str) -> bool:
+    d = db().card(card_id)
+    if d.get("type") == "Power" or produces(card_id) & {"poison", "doom"}:
+        return True
+    return any(e.get("op") == "apply" and e.get("to") == "self" and e.get("power") in _SCALING_SELF_POWERS
+               and "Lose" not in (d.get("text") or "") for e in d.get("effects") or [])
 
 
 def is_basic(card_id: str) -> bool:
@@ -208,6 +235,12 @@ def value_in_deck(card_id: str, ctx: DeckContext) -> float:
         real_attacks = sum(1 for c in others if db().card(c).get("type") == "Attack" and not is_basic(c))
         if real_attacks < 3:
             value += 0.3
+    act_i = min(max(ctx.act, 1), 3) - 1
+    real = [c for c in others if not is_basic(c)]
+    if is_defense(cid):
+        value += DEFENSE_GAP * min(3, max(0, DEFENSE_TARGET[act_i] - sum(map(is_defense, real))))
+    if is_scaling(cid) and worst > 0:
+        value += SCALING_GAP * min(3, max(0, SCALING_TARGET[act_i] - sum(map(is_scaling, real))))
 
     # 重复与费用曲线
     copies = ids.count(cid)

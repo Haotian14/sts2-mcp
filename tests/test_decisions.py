@@ -139,3 +139,26 @@ def test_payoffs_do_not_count_each_other_as_synergy():
     alone = DeckContext("Silent", list(STARTER))
     with_other_payoff = DeckContext("Silent", STARTER + ["Accuracy"])
     assert value_in_deck("PhantomBlades", with_other_payoff) <= value_in_deck("PhantomBlades", alone)
+
+
+def test_defense_gap_lifts_block_cards():
+    # 起始牌之外没有格挡时，同分段的防御牌应压过纯输出牌
+    from agent.strategy.deck import value_in_deck
+    bare = DeckContext("Silent", list(STARTER), act=2)
+    stocked = DeckContext("Silent", STARTER + ["LegSweep", "Backflip", "CloakAndDagger", "DodgeAndRoll"], act=2)
+    assert value_in_deck("EscapePlan", bare) > value_in_deck("EscapePlan", stocked) + 0.5
+
+
+def test_route_takes_elite_once_deck_has_grown():
+    # 两条路：前面先打两场小怪，再选精英还是问号。血量健康时应该打精英
+    nodes = [[1, 0, "Monster", [[2, 0]]], [2, 0, "Monster", [[3, 0], [3, 1]]],
+             [3, 0, "Elite", [[4, 0]]], [3, 1, "Unknown", [[4, 0]]],
+             [4, 0, "RestSite", [[5, 0]]], [5, 0, "Boss", []]]
+    m = {"can_move": True, "coord": {"row": 2, "col": 0},
+         "options": [{"i": 0, "row": 3, "col": 0, "type": "Elite"},
+                     {"i": 1, "row": 3, "col": 1, "type": "Unknown"}], "nodes": nodes}
+    s = base_state(map=m)
+    s["run"]["floor"] = 3
+    s["player"]["hp"] = 55
+    i, why = route.best_move(s)
+    assert i == 0, why

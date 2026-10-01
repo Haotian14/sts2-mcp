@@ -18,6 +18,15 @@ from ..gamedata import db
 
 MAX_PATHS = 20000
 DAMAGE_SCALE = 0.7
+# 打一场牌组就强一点（多一张牌、精英还多一件遗物），后面的战斗掉血随之下降。
+# 不算这一项时「少打架」永远最安全：首局第一章一个精英没打，牌组到第二章打不动。
+GROWTH_PER_FIGHT, GROWTH_PER_ELITE, GROWTH_FLOOR = 0.04, 0.08, 0.7
+# 精英奖励（血量当量）：遗物越早拿到，生效的战斗越多
+ELITE_REWARD = (34.0, 30.0, 24.0)
+# 普通怪：一次卡牌奖励 + 金币。问号房多是事件，收益更不确定，略低于普通怪 ——
+# 两者收益相同时问号房（掉血只有三成多）会永远压过普通怪，第二章就一场架都不打
+MONSTER_REWARD = (8.0, 8.0, 6.0)
+UNKNOWN_REWARD = 4.0
 
 # 数据缺失时的兜底期望掉血（按章）
 FALLBACK_DAMAGE = {"Monster": (7, 11, 14), "Elite": (22, 28, 32), "Boss": (40, 55, 70)}
@@ -52,17 +61,19 @@ def _loss_weight(hp: float, max_hp: int) -> float:
     return 1.0 + 2.5 * (1 - max(0.0, hp) / max_hp) ** 2
 
 
-def _step(room: str, hp: float, v: RunView, gold: float, fights: int) -> tuple[float, float, float]:
-    """进这个房间：返回 (收益, 新血量, 新金币)。"""
+def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
+          growth: float = 0.0) -> tuple[float, float, float]:
+    """进这个房间：返回 (收益, 新血量, 新金币)。growth 是这条路上已经积累的变强程度。"""
     reward = 0.0
+    shrink = max(GROWTH_FLOOR, 1.0 - growth)
     if room == "Monster":
-        dmg = expected_damage("Monster", v.act)
-        reward = (7.0 if v.act == 1 else 5.0)
+        dmg = expected_damage("Monster", v.act) * shrink
+        reward = MONSTER_REWARD[min(v.act, 3) - 1]
         gold += 15
     elif room == "Elite":
         # 牌组还没成型时精英更危险：本章小怪打得越少，掉血越多
-        dmg = expected_damage("Elite", v.act) * (1.35 if fights < 2 and v.act == 1 else 1.0)
-        reward = 28.0             # 遗物 + 更好的卡牌奖励
+        dmg = expected_damage("Elite", v.act) * (1.35 if fights < 2 and v.act == 1 else 1.0) * shrink
+        reward = ELITE_REWARD[min(v.act, 3) - 1]   # 遗物 + 更好的卡牌奖励
         gold += 30
     elif room == "RestSite":
         dmg = 0.0
@@ -80,11 +91,11 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int) -> tuple[f
     elif room == "Treasure":
         dmg, reward = 0.0, 13.0
     elif room == "Unknown":
-        dmg = 0.35 * expected_damage("Monster", v.act)
-        reward = 5.0
+        dmg = 0.35 * expected_damage("Monster", v.act) * shrink
+        reward = UNKNOWN_REWARD
     elif room == "Boss":
         # Boss 躲不掉：不按「打死/没打死」截断，只按到达时的血量计风险
-        dmg = expected_damage("Boss", v.act)
+        dmg = expected_damage("Boss", v.act) * shrink
         return -dmg * _loss_weight(hp - dmg / 2, v.max_hp) - max(0.0, dmg - hp) * 3, hp, gold
     else:
         dmg, reward = 0.0, 1.0
@@ -122,11 +133,11 @@ def _best_from(start, graph, v: RunView) -> tuple[float, list[str]]:
     best = [float("-inf"), []]
     count = [0]
 
-    def dfs(node, hp, gold, fights, acc, path):
+    def dfs(node, hp, gold, fights, growth, acc, path):
         if count[0] >= MAX_PATHS:
             return
         room, nxt = graph.get(node, ("Unknown", []))
-        gain, hp2, gold2 = _step(room, hp, v, gold, fights)
+        gain, hp2, gold2 = _step(room, hp, v, gold, fights, growth)
         total = acc + gain
         path = path + [room]
         # 推演里「死了」不截断路径：截断会让先死的路线少算后面的代价，
@@ -141,10 +152,11 @@ def _best_from(start, graph, v: RunView) -> tuple[float, list[str]]:
                 best[0], best[1] = total, path
             return
         f2 = fights + (1 if room in ("Monster", "Elite") else 0)
+        g2 = growth + {"Monster": GROWTH_PER_FIGHT, "Elite": GROWTH_PER_ELITE}.get(room, 0.0)
         for child in nxt:
-            dfs(child, hp2, gold2, f2, total, path)
+            dfs(child, hp2, gold2, f2, g2, total, path)
 
-    dfs(start, float(v.hp), float(v.gold), _fights_so_far(v), 0.0, [])
+    dfs(start, float(v.hp), float(v.gold), _fights_so_far(v), 0.0, 0.0, [])
     return best[0], best[1]
 
 
