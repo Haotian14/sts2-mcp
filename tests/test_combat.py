@@ -164,3 +164,11 @@ def test_draw_before_other_cards():
               [enemy(0, 60, attack=8)], energy=1)
     cid, plan = first_card(s)
     assert cid == "Adrenaline", plan.why()
+
+
+def test_burst_before_skill_not_attack():
+    """爆发之后接技能牌（防御打两次），而不是接攻击牌白白浪费。"""
+    s = state([card(0, "Burst", ctype="Skill", target="Self", Skills=1), strike(1), defend(2)],
+              [enemy(0, 60, attack=14)], energy=2)
+    plan = plan_turn(s)
+    assert plan.line[:2] == ["爆发", "防御"], plan.why()

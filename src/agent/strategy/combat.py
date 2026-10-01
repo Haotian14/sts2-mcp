@@ -48,6 +48,7 @@ POTION_KEEP = {"monster": 6.0, "elite": 2.5, "boss": 0.0}
 SELF_POWER_PER_TURN = {
     "StrengthPower": 1.2, "DexterityPower": 0.8, "ThornsPower": 0.5, "PlatingPower": 0.9,
     "RegenPower": 0.5, "FocusPower": 1.5, "AccuracyPower": 0.9,
+    "BurstPower": 0.0,   # 只管本回合，价值体现在下一张技能牌打两次
 }
 
 
@@ -275,7 +276,14 @@ def play(node: Node, ctx: Ctx, card: Card, target: Foe | None) -> Node | None:
     effects = defn.get("effects") or []
     # 残影：每打一张牌 +层数格挡（打出残影这张本身不触发 —— 先结算，再上能力）
     n.block += _power(n, ctx, "AfterimagePower")
-    _apply_effects(n, ctx, card, effects, tgt, x)
+    # 爆发：本回合下一张技能牌多结算一次。不建模时「爆发 → 打击」与「爆发 → 防御」
+    # 同分，实战里多次把爆发浪费在攻击牌前面
+    reps = 1
+    if card.type == "Skill" and _power(n, ctx, "BurstPower") > 0:
+        reps = 2
+        n.gained["BurstPower"] = n.gained.get("BurstPower", 0) - 1
+    for _ in range(reps):
+        _apply_effects(n, ctx, card, effects, tgt, x)
     if card.id == "Shiv":
         n.shiv_played = True
     if card.type == "Power":

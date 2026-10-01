@@ -86,7 +86,8 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
             reward = 8.0              # 升级一张牌
     elif room == "Shop":
         dmg = 0.0
-        reward = min(12.0, gold / 16.0) + (3.0 if v.deck_size >= 15 else 0.0)
+        # 钱越多商店越值：原先封顶 12，迭代局攥着 276 金整章没进过商店
+        reward = gold / 16.0 + (3.0 if v.deck_size >= 15 else 0.0)
         gold = max(0.0, gold - 150)
     elif room == "Treasure":
         dmg, reward = 0.0, 13.0
