@@ -95,6 +95,7 @@ def decide(state: dict, mem: Memory, new_run: str | None = None) -> Decision:
         "NTreasureRoom": lambda: rooms.treasure(state),
         "NEventRoom": lambda: rooms.event(state),
         "NChooseARelicSelection": lambda: rooms.relic_choice(state),
+        "NCrystalSphereScreen": lambda: rooms.crystal_sphere(state),
     }
     if stype in handler:
         d = handler[stype]()

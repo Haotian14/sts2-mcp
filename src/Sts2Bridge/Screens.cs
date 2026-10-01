@@ -48,6 +48,8 @@ namespace Sts2Bridge
         private const string EventOptionButton = "NEventOptionButton";
         private const string CharacterButton = "NCharacterSelectButton";
         private const string GameOverScreen  = "NGameOverScreen";
+        private const string CrystalSphereScreen = "NCrystalSphereScreen";
+        private const string CrystalSphereCell   = "NCrystalSphereCell";
 
         /// <summary>
         /// 覆盖层栈顶界面，没有则 null。须在主线程调用。
@@ -442,6 +444,29 @@ namespace Sts2Bridge
                     AddGameOverButton(result, GamePaths.Get(top, "_mainMenuButton"), "返回主菜单");
                     break;
 
+                case CrystalSphereScreen:
+                    // 水晶球（「分期付款」等事件后的开格子小游戏）：只列还盖着的格子，
+                    // 标识 `Cell:x,y`。占卜次数用完后格子不可点，「继续」按钮亮起。
+                    //
+                    // 不能走兜底：兜底最多收 24 个可点节点，网格比这大，且收进来的
+                    // 多是不带语义的 `@Control@…`。2026-10-01 首次遇到时 runner 对
+                    // 第 0 个反复点击，局面不变，判定卡住停机。
+                    var sphere = GamePaths.Get(top, "_entity");
+                    if (GamePaths.Bool(sphere, "IsFinished") ?? false) break;
+                    bool canDivine = (GamePaths.Int(sphere, "DivinationCount") ?? 0) > 0;
+                    foreach (var c in FindAll(top, CrystalSphereCell))
+                    {
+                        var cell = GamePaths.Get(c, "Entity");
+                        if (!(GamePaths.Bool(cell, "IsHidden") ?? false)) continue;
+                        if (!(GamePaths.Bool(c, "Visible") ?? false)) continue;
+                        result.Add(new Option {
+                            Node = c,
+                            Id = $"Cell:{GamePaths.Int(cell, "X")},{GamePaths.Int(cell, "Y")}",
+                            Available = canDivine,
+                        });
+                    }
+                    break;
+
                 default:
                     // 兜底：认不出的界面，就把所有可点、可见、启用的按钮按**节点名**
                     // 列出来。节点名本身是有语义（Continue / SingleplayerButton /
@@ -639,6 +664,13 @@ namespace Sts2Bridge
                     // 这样发射后不管的，异常交给它记日志；动作是否生效由上层的
                     // 「等局面稳定」判定。
                     RunSafely(GamePaths.Call(node, "OnSelected"));
+                    return null;
+
+                case CrystalSphereScreen:
+                    // 格子的 Released 信号接在界面私有的 OnCellClicked(cell) 上
+                    // （检查占卜次数 → 模型层 CellClicked）。游戏自己的 AutoSlay
+                    // 是发 Released 信号；直接调这个入口等效，也不必在反射里拼信号参数。
+                    RunSafely(GamePaths.Call(top, "OnCellClicked", node));
                     return null;
 
                 default:

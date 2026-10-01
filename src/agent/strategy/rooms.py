@@ -185,6 +185,23 @@ def treasure(state: dict) -> Decision:
     return _proceed_or_wait(state, "宝箱已拿完")
 
 
+def crystal_sphere(state: dict) -> Decision:
+    """水晶球开格子小游戏：没有格子内容的信息，从网格中心往外开；占卜用完后按继续。"""
+    cells = []
+    for o in _options(state):
+        try:
+            x, y = map(int, str(o.get("id", "")).removeprefix("Cell:").split(","))
+        except ValueError:
+            continue
+        cells.append((x, y, o["i"]))
+    if cells:
+        cx = sum(c[0] for c in cells) / len(cells)
+        cy = sum(c[1] for c in cells) / len(cells)
+        x, y, i = min(cells, key=lambda c: ((c[0] - cx) ** 2 + (c[1] - cy) ** 2, c[1], c[0]))
+        return Decision("pick", i, f"水晶球：开格子 ({x},{y})")
+    return _proceed_or_wait(state, "水晶球占卜已用完")
+
+
 def relic_choice(state: dict) -> Decision:
     options = _options(state)
     relics = [o for o in options if o.get("id") in db().relics]

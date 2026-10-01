@@ -162,3 +162,15 @@ def test_route_takes_elite_once_deck_has_grown():
     s["player"]["hp"] = 55
     i, why = route.best_move(s)
     assert i == 0, why
+
+
+def test_crystal_sphere_opens_cells_then_proceeds():
+    cells = [{"i": k, "id": f"Cell:{x},{y}", "available": True}
+             for k, (x, y) in enumerate((x, y) for y in range(3) for x in range(3))]
+    s = base_state(screen={"type": "NCrystalSphereScreen", "options": cells, "can_proceed": False})
+    d = runner.decide(s, runner.Memory())
+    assert d.action == "pick" and d.arg == 4, d.why          # 正中 (1,1)
+    for c in cells:
+        c["available"] = False                                 # 占卜用完
+    s["screen"]["can_proceed"] = True
+    assert runner.decide(s, runner.Memory()).action == "proceed"
