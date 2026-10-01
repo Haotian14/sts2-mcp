@@ -56,6 +56,21 @@ TAGS = {
 }
 _TAG_RE = {k: re.compile(v) for k, v in TAGS.items()}
 
+# 来源件：真正「产出」这条线资源的牌 / 遗物。同标签但不匹配这里的，是收益件
+# （幻影之刃、精准、爆发……），没有来源时是一张空过的牌。
+# 只列来源可能缺席的线；起始牌组天然自带来源的机制（弃牌、召唤、星辉）不列。
+_NUM = r"(?:\[blue\])?(?:\{[^}]*\}|\d+|X\S*)(?:\[/blue\])?"
+PRODUCERS = {
+    "shiv": rf"(?i)\badd {_NUM} [^.]*?\bShiv",
+    "poison": rf"(?i)\bapply {_NUM} \[gold\]Poison",
+    "doom": rf"(?i)\bapply (?:{_NUM}|that much) \[gold\]Doom|\bApply \[gold\]Doom\[/gold\] equal",
+    "exhaust": r"(?<!you )\[gold\]Exhaust\[/gold\]|\bExhaust up to",
+    "orb": r"\[gold\]Channel(?:\[/gold\]| Lightning)",
+}
+_PRODUCER_RE = {k: re.compile(v) for k, v in PRODUCERS.items()}
+# 收益件缺来源的扣分：一个来源都没有 / 只有一个。越往后越难补上来源，每章加重
+PAYOFF_NO_SOURCE, PAYOFF_ONE_SOURCE, PAYOFF_PER_ACT = -0.8, -0.3, 0.4
+
 
 @dataclass
 class DeckContext:
@@ -81,6 +96,29 @@ class DeckContext:
 def tags_of(card_id: str) -> set[str]:
     text = db().card(card_id).get("text") or ""
     return {k for k, r in _TAG_RE.items() if r.search(text)}
+
+
+def produces(card_id: str) -> set[str]:
+    """这张牌是哪些线的来源件。自带「消耗」关键词的牌本身就是消耗的燃料。"""
+    d = db().card(card_id)
+    text = d.get("text") or ""
+    out = {k for k, r in _PRODUCER_RE.items() if r.search(text)}
+    if "Exhaust" in (d.get("keywords") or []):
+        out.add("exhaust")
+    return out
+
+
+def payoffs_of(card_id: str) -> set[str]:
+    """这张牌是哪些线的收益件：带标签、该线有来源之分、自己又不产出。"""
+    return (tags_of(card_id) & PRODUCERS.keys()) - produces(card_id)
+
+
+def sources_of(tag: str, ctx: DeckContext, exclude: str | None = None) -> int:
+    """牌组（含起始牌）和遗物里，这条线有几个来源。"""
+    n = sum(1 for c in ctx.ids() if c != exclude and tag in produces(c))
+    r = _PRODUCER_RE[tag]
+    n += sum(1 for rid in ctx.relics if r.search((db().relics.get(rid) or {}).get("text") or ""))
+    return n
 
 
 def is_basic(card_id: str) -> bool:
@@ -130,14 +168,20 @@ def value_in_deck(card_id: str, ctx: DeckContext) -> float:
     ids = ctx.ids()
     others = [c for c in ids if c != cid]
 
-    # 社区构筑：牌组里已有同一构筑的定义牌 → 顺着走
+    # 收益件缺前置：按最缺的那条线算（刀刃陷阱同时是小刀和消耗的收益件，不重复扣）
+    payoff = payoffs_of(cid)
+    worst = min((sources_of(t, ctx, exclude=cid) for t in payoff), default=99)
+
+    # 社区构筑：牌组里已有同一构筑的定义牌 → 顺着走。
+    # 收益件一个来源都没有时不算：精准 + 幻影之刃凑在一起仍然一把刀都没有。
     key = d.get("key")
-    for build in db().archetypes.get(ctx.character.lower(), []):
+    for build in db().archetypes.get(ctx.character.lower(), []) if worst > 0 else []:
         if key in build["cards"]:
             have = sum(1 for c in set(others) if db().card(c).get("key") in build["cards"])
             value += 0.35 * min(have, 2)
 
-    # 机制标签协同（起始牌不算：静默的打击不构成「小刀流」）
+    # 机制标签协同（起始牌不算：静默的打击不构成「小刀流」）。
+    # 收益件只跟来源件协同。
     mine = tags_of(cid)
     if mine:
         counts: dict[str, int] = {}
@@ -145,8 +189,15 @@ def value_in_deck(card_id: str, ctx: DeckContext) -> float:
             if is_basic(c):
                 continue
             for t in tags_of(c) & mine:
+                if t in payoff and t not in produces(c):
+                    continue
                 counts[t] = counts.get(t, 0) + 1
         value += 0.12 * sum(min(n, 4) for n in counts.values())
+
+    if worst == 0:
+        value += PAYOFF_NO_SOURCE - PAYOFF_PER_ACT * (ctx.act - 1)
+    elif worst == 1:
+        value += PAYOFF_ONE_SOURCE
 
     # 牌组缺口
     effects = d.get("effects") or []

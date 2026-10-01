@@ -119,3 +119,23 @@ def test_runner_dispatch():
 def test_deck_context_counts_upgrades():
     ctx = DeckContext("Silent", ["Adrenaline+", "StrikeSilent"])
     assert ctx.ids() == ["Adrenaline", "StrikeSilent"]
+
+
+def test_payoff_needs_source():
+    # 没有小刀源时，幻影之刃是空过的牌；有了刀刃之舞 / 忍者卷轴才值钱
+    from agent.strategy.deck import value_in_deck
+    bare = DeckContext("Silent", list(STARTER))
+    with_cards = DeckContext("Silent", STARTER + ["BladeDance", "CloakAndDagger"])
+    with_relic = DeckContext("Silent", list(STARTER), relics=["NinjaScroll"])
+    v0 = value_in_deck("PhantomBlades", bare)
+    assert value_in_deck("PhantomBlades", with_cards) > v0 + 0.8
+    assert value_in_deck("PhantomBlades", with_relic) > v0 + 0.4
+    # 来源件本身不受影响
+    assert value_in_deck("BladeDance", bare) == value_in_deck("BladeDance", DeckContext("Silent", list(STARTER)))
+
+
+def test_payoffs_do_not_count_each_other_as_synergy():
+    from agent.strategy.deck import value_in_deck
+    alone = DeckContext("Silent", list(STARTER))
+    with_other_payoff = DeckContext("Silent", STARTER + ["Accuracy"])
+    assert value_in_deck("PhantomBlades", with_other_payoff) <= value_in_deck("PhantomBlades", alone)
