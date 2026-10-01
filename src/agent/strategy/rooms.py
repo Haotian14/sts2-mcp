@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 
 from ..gamedata import db
 from . import deck as deckval
@@ -235,7 +236,33 @@ EVENT_RULES: list[tuple[str, str]] = [
     (r"遗物|relic", "relic"),
     (r"药水|potion", "potion"),
     (r"战斗|fight|combat", "fight"),
+    (rf"占卜{_NUM}次|{_NUM} divinations?", "divination"),
 ]
+
+# 「获得一张 X」：X 是卡名时按这张牌放进当前牌组的估值算（z 分 × 3，与除卡同一量级）。
+# 诅咒牌常常只写名字不写「诅咒」—— 2026-10-01 水晶球事件「获得一张债务」被估成 0，
+# 胜过付 61 金（当时手握 324 金）。
+_GAIN_PREFIX = r"(?:获得|加入|得到|obtain|add)\s*(?:一张|\d+张|a |an |\d+ )?\s*"
+
+
+@lru_cache(maxsize=1)
+def _card_names() -> list[tuple[str, str]]:
+    """(小写卡名, 卡牌 id)，长名在前，免得「打击」抢先匹配「先制打击」。"""
+    names = []
+    for cid, d in db().cards.items():
+        for n in (d.get("name_zh"), d.get("name")):
+            if n and len(n) >= 2:
+                names.append((n.lower(), cid))
+    return sorted(names, key=lambda t: -len(t[0]))
+
+
+def gained_cards(text: str) -> list[str]:
+    found, rest = [], text.lower()
+    for name, cid in _card_names():
+        if re.search(_GAIN_PREFIX + re.escape(name), rest):
+            found.append(cid)
+            rest = rest.replace(name, " ")
+    return found
 
 
 def event_value(option: dict, state: dict) -> tuple[float, list[str]]:
@@ -282,6 +309,14 @@ def event_value(option: dict, state: dict) -> tuple[float, list[str]]:
             value += 3
         elif kind == "fight":
             value -= 6 * hp_w
+        elif kind == "divination":
+            value += 1.5 * num(m)
+    for cid in gained_cards(text):
+        is_curse = db().card(cid).get("type") == "Curse"
+        if is_curse and "curse" in notes:
+            continue            # 文本已写明「诅咒」，上面扣过了
+        value += 3 * deckval.value_in_deck(cid, ctx)
+        notes.append(f"card:{cid}")
     if option.get("relic") and "relic" not in notes:
         value += 10 + deckval.relic_value(option["relic"]) * 4
         notes.append("relic")

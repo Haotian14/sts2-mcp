@@ -243,8 +243,10 @@ def value_in_deck(card_id: str, ctx: DeckContext) -> float:
         value += SCALING_GAP * min(3, max(0, SCALING_TARGET[act_i] - sum(map(is_scaling, real))))
 
     # 重复与费用曲线
+    # 重复递增扣分：第二张常常还行，第三张同名的过牌 / 功能牌多半是累赘
+    # （第二局拿了 3 张「早有准备」）
     copies = ids.count(cid)
-    value -= 0.3 * copies
+    value -= 0.3 * copies + 0.2 * copies * (copies - 1)
     cost = d.get("cost")
     if isinstance(cost, int) and cost >= 2:
         heavy = sum(1 for c in others if isinstance(db().card(c).get("cost"), int) and db().card(c)["cost"] >= 2)

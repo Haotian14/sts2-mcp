@@ -174,3 +174,22 @@ def test_crystal_sphere_opens_cells_then_proceeds():
         c["available"] = False                                 # 占卜用完
     s["screen"]["can_proceed"] = True
     assert runner.decide(s, runner.Memory()).action == "proceed"
+
+
+def test_event_gaining_curse_card_is_negative():
+    # 水晶球：「获得一张债务」（诅咒，文本里没有「诅咒」二字）不该胜过付金币
+    s = base_state(screen={"type": "NEventRoom", "options": [
+        {"i": 0, "id": "CRYSTAL_SPHERE.pages.INITIAL.options.UNCOVER_FUTURE",
+         "title": "揭幕未来", "text": "支付61金币。占卜3次。"},
+        {"i": 1, "id": "CRYSTAL_SPHERE.pages.INITIAL.options.PAYMENT_PLAN",
+         "title": "分期付款", "text": "获得一张债务。占卜6次。"}]})
+    s["run"]["gold"] = 324
+    d = rooms.event(s)
+    assert d.arg == 0, d.why
+
+
+def test_third_copy_penalized():
+    from agent.strategy.deck import value_in_deck
+    one = DeckContext("Silent", STARTER + ["Prepared"])
+    two = DeckContext("Silent", STARTER + ["Prepared", "Prepared"])
+    assert value_in_deck("Prepared", one) - value_in_deck("Prepared", two) > 0.6
