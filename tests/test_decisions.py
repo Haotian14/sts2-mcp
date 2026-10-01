@@ -193,3 +193,22 @@ def test_third_copy_penalized():
     one = DeckContext("Silent", STARTER + ["Prepared"])
     two = DeckContext("Silent", STARTER + ["Prepared", "Prepared"])
     assert value_in_deck("Prepared", one) - value_in_deck("Prepared", two) > 0.6
+
+
+def test_runner_ignores_game_over_left_from_previous_run():
+    # 启动时停在上一局的终局界面：应当去开新局，而不是算作「打完 1 局」
+    over = base_state(run={"game_over": True, "total_floor": 35}, screen={"type": "NGameOverScreen", "options": [
+        {"i": 0, "id": "返回主菜单", "available": True}]})
+    fresh = base_state(in_run=False, screen={"type": "NMainMenu", "options": []})
+
+    class Stub:
+        def __init__(self):
+            self.calls = 0
+        def state(self):
+            return over if self.calls == 0 else fresh
+        def act(self, *a, **k):
+            self.calls += 1
+            return {"ok": True, "state": fresh}
+
+    out = runner.play(Stub(), max_steps=3, new_run="silent", max_runs=1)
+    assert out["stopped"] != "已打完 1 局", out["stopped"]

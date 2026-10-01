@@ -197,6 +197,9 @@ def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
     """一路打下去，直到局结束（不开新局时）、出故障、打满 max_runs 局，或走满 max_steps 步。"""
     mem = Memory()
     state = bridge.state()
+    # 启动时就停在终局界面：那一局属于上一次运行，已经记过、也不算本次打完的局。
+    # 否则 `--runs 1` 会 0 步就报「已打完 1 局」，并往 runs.jsonl 里重复记一行。
+    mem.run_logged = bool((state.get("run") or {}).get("game_over"))
     log: list[str] = []
     waits = repeats = 0
     last_sig = None
