@@ -11,13 +11,19 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from functools import lru_cache
 
 from ..gamedata import db
 
 MAX_PATHS = 20000
-DAMAGE_SCALE = 0.7
+# 社区平均掉血的折算。原为 0.7；四局迭代里实际掉血偏高，取 0.8（再高会连 55/70 血都不打精英）
+DAMAGE_SCALE = 0.8
+# 尾部风险：战斗掉血波动大，按 P(死) ≈ exp(−血量 / (TAIL × 期望掉血)) 计死亡代价。
+# 只看期望值时，31/70 血进第一章精英（期望约 20）看着安全，迭代第 4 局就这样死在第 8 层
+TAIL = 0.55
+DEATH_COST = 250.0
 # 打一场牌组就强一点（多一张牌、精英还多一件遗物），后面的战斗掉血随之下降。
 # 不算这一项时「少打架」永远最安全：首局第一章一个精英没打，牌组到第二章打不动。
 GROWTH_PER_FIGHT, GROWTH_PER_ELITE, GROWTH_FLOOR = 0.04, 0.08, 0.7
@@ -101,6 +107,8 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
     else:
         dmg, reward = 0.0, 1.0
     cost = dmg * _loss_weight(hp - dmg / 2, v.max_hp)
+    if dmg > 0 and room in ("Monster", "Elite"):
+        cost += DEATH_COST * math.exp(-max(hp, 0.0) / (TAIL * dmg))
     return reward - cost, hp - dmg, gold
 
 

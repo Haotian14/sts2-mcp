@@ -252,3 +252,12 @@ def test_shop_buys_key_card_over_early_removal():
     s["run"]["gold"] = 119
     d = rooms.shop(s, set())
     assert d.arg == 1, d.why
+
+
+def test_route_skips_elite_at_low_hp_midact():
+    # 迭代第 4 局：31/70 血、本章已打过 5 场，仍去打精英，死在第 8 层
+    s = base_state(map=two_way_map("Elite", "Monster"))
+    s["run"]["floor"] = 7
+    s["player"]["hp"] = 31
+    i, why = route.best_move(s)
+    assert i == 1, why
