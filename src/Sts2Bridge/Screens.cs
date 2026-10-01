@@ -50,6 +50,7 @@ namespace Sts2Bridge
         private const string GameOverScreen  = "NGameOverScreen";
         private const string CrystalSphereScreen = "NCrystalSphereScreen";
         private const string CrystalSphereCell   = "NCrystalSphereCell";
+        private const string BundleScreen        = "NChooseABundleSelectionScreen";
 
         /// <summary>
         /// 覆盖层栈顶界面，没有则 null。须在主线程调用。
@@ -442,6 +443,26 @@ namespace Sts2Bridge
                     // 让上层等待，而不是猜一个节点去点。
                     AddGameOverButton(result, GamePaths.Get(top, "_continueButton"), "继续");
                     AddGameOverButton(result, GamePaths.Get(top, "_mainMenuButton"), "返回主菜单");
+                    break;
+
+                case BundleScreen:
+                    // 卡牌包多选一（开局事件「卷轴箱」等）：每个 NCardBundle 的 Bundle 是
+                    // 卡牌模型列表，点它的 Hitbox 选中，再点 NConfirmButton 确认
+                    // （游戏 AutoSlay 的 ChooseABundleScreenHandler 同样两步）。
+                    foreach (var bundle in FindAll(top, "NCardBundle"))
+                    {
+                        var ids = new List<string>();
+                        foreach (var card in GamePaths.Enumerate(GamePaths.Get(bundle, "Bundle")))
+                            ids.Add(GamePaths.Id(card) ?? "?");
+                        result.Add(new Option {
+                            Node = GamePaths.Get(bundle, "Hitbox"),
+                            Id = "Bundle:" + string.Join("|", ids),
+                            Available = true,
+                        });
+                    }
+                    foreach (var confirm in FindAll(top, "NConfirmButton"))
+                        if (Shown(confirm) && (GamePaths.Bool(confirm, "IsEnabled") ?? false))
+                            result.Add(new Option { Node = confirm, Id = "Confirm", Available = true });
                     break;
 
                 case CrystalSphereScreen:

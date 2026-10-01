@@ -203,6 +203,27 @@ def crystal_sphere(state: dict) -> Decision:
     return _proceed_or_wait(state, "水晶球占卜已用完")
 
 
+def bundle_choice(state: dict) -> Decision:
+    """卡牌包多选一：按包里每张牌放进当前牌组的估值之和挑；选中后点确认。"""
+    options = _options(state)
+    confirm = _find(options, "Confirm")
+    if confirm:
+        return Decision("pick", confirm["i"], "确认卡牌包")
+    ctx = deck_context(state)
+    scored = []
+    for o in options:
+        oid = str(o.get("id", ""))
+        if not oid.startswith("Bundle:"):
+            continue
+        cards = oid.removeprefix("Bundle:").split("|")
+        scored.append((sum(deckval.value_in_deck(c, ctx) for c in cards), cards, o))
+    if not scored:
+        return _proceed_or_wait(state, "卡牌包已选")
+    scored.sort(key=lambda t: t[0], reverse=True)
+    line = "；".join(f"{'、'.join(db().name(c) for c in cards)} {v:+.2f}" for v, cards, _ in scored)
+    return Decision("pick", scored[0][2]["i"], f"卡牌包：{line}")
+
+
 def relic_choice(state: dict) -> Decision:
     options = _options(state)
     relics = [o for o in options if o.get("id") in db().relics]

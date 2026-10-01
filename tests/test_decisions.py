@@ -212,3 +212,13 @@ def test_runner_ignores_game_over_left_from_previous_run():
 
     out = runner.play(Stub(), max_steps=3, new_run="silent", max_runs=1)
     assert out["stopped"] != "已打完 1 局", out["stopped"]
+
+
+def test_bundle_choice_picks_best_then_confirms():
+    s = base_state(screen={"type": "NChooseABundleSelectionScreen", "options": [
+        {"i": 0, "id": "Bundle:Slice|Slice|Slice", "available": True},
+        {"i": 1, "id": "Bundle:Adrenaline|Backflip|Footwork", "available": True}]})
+    d = runner.decide(s, runner.Memory())
+    assert d.action == "pick" and d.arg == 1, d.why
+    s["screen"]["options"].append({"i": 2, "id": "Confirm", "available": True})
+    assert runner.decide(s, runner.Memory()).arg == 2
