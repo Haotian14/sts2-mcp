@@ -243,3 +243,12 @@ def test_discard_keeps_cards_planned_this_turn():
     planned = choices._planned_cards(s)
     dropped = s["choice"]["options"][idx[0]]["id"]
     assert planned[dropped] == 0, (why, planned)
+
+
+def test_shop_buys_key_card_over_early_removal():
+    s = base_state(screen={"type": "NMerchantRoom", "options": [
+        {"i": 0, "id": "MerchantCardRemovalEntry", "cost": 75, "available": True},
+        {"i": 1, "id": "CloakAndDagger", "cost": 50, "available": True}]})
+    s["run"]["gold"] = 119
+    d = rooms.shop(s, set())
+    assert d.arg == 1, d.why

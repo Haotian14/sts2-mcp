@@ -82,6 +82,9 @@ _SCALING_SELF_POWERS = {"StrengthPower", "FocusPower"}
 DEFENSE_TARGET = (2, 4, 5)
 SCALING_TARGET = (1, 3, 4)
 DEFENSE_GAP, SCALING_GAP = 0.25, 0.2
+# 输出件：攻击牌，以及小刀 / 毒的来源。第一章打精英靠的就是前期输出
+OFFENSE_TARGET = (4, 4, 4)
+OFFENSE_GAP = 0.3
 
 
 @dataclass
@@ -138,6 +141,10 @@ def is_defense(card_id: str) -> bool:
     if any(e.get("op") == "block" for e in d.get("effects") or []):
         return True
     return bool(_DEFENSE_RE.search(d.get("text") or ""))
+
+
+def is_offense(card_id: str) -> bool:
+    return db().card(card_id).get("type") == "Attack" or bool(produces(card_id) & {"shiv", "poison"})
 
 
 def is_scaling(card_id: str) -> bool:
@@ -231,16 +238,21 @@ def value_in_deck(card_id: str, ctx: DeckContext) -> float:
     is_aoe = any(e.get("op") == "attack" and e.get("to") == "all" for e in effects)
     if is_aoe and not any(_is_aoe(c) for c in others) and ctx.act <= 2:
         value += 0.4
-    if d.get("type") == "Attack" and ctx.act == 1:
-        real_attacks = sum(1 for c in others if db().card(c).get("type") == "Attack" and not is_basic(c))
-        if real_attacks < 3:
-            value += 0.3
     act_i = min(max(ctx.act, 1), 3) - 1
     real = [c for c in others if not is_basic(c)]
-    if is_defense(cid):
-        value += DEFENSE_GAP * min(3, max(0, DEFENSE_TARGET[act_i] - sum(map(is_defense, real))))
-    if is_scaling(cid) and worst > 0:
-        value += SCALING_GAP * min(3, max(0, SCALING_TARGET[act_i] - sum(map(is_scaling, real))))
+
+    def gap(applies: bool, weight: float, target: tuple, pred) -> float:
+        if not applies:
+            return 0.0
+        return weight * min(3, max(0, target[act_i] - sum(map(pred, real))))
+
+    # 三种缺口取最大的一项，其余各打 25%：一张牌同时补两种缺口不该吃两份加分
+    # （迭代局里灵动步法既算防御又算成长，压过所有攻击牌，第 11 层牌组几乎没有输出）
+    gaps = sorted([gap(is_offense(cid), OFFENSE_GAP, OFFENSE_TARGET, is_offense),
+                   gap(is_defense(cid), DEFENSE_GAP, DEFENSE_TARGET, is_defense),
+                   gap(is_scaling(cid) and worst > 0, SCALING_GAP, SCALING_TARGET, is_scaling)],
+                  reverse=True)
+    value += gaps[0] + 0.25 * (gaps[1] + gaps[2])
 
     # 重复与费用曲线
     # 重复递增扣分：第二张常常还行，第三张同名的过牌 / 功能牌多半是累赘

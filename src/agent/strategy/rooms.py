@@ -148,8 +148,11 @@ def shop(state: dict, bought: set[str]) -> Decision:
         if any(k in oid for k in REMOVAL_IDS):
             worst = deckval.removal_order(ctx.deck, ctx)[0] if ctx.deck else None
             badness = -deckval.value_in_deck(worst, ctx) if worst else 0
+            # 与买牌同一单位（z 分 − 费用/150），另加一点精简牌组的偏好。原先固定 +2.0，
+            # 除卡永远压过买牌：迭代局第 5 层牌组只有 2 张非起始牌，仍花 100 金删打击
             if badness > 0.8:
-                candidates.append((2.0 + badness, o, f"除卡（删 {db().name(worst)}）", "negative"))
+                # 打击 −1.6 这类是「先删谁」的排序分，当边际价值用偏高，打六折
+                candidates.append((0.6 * badness - cost / 150 + 0.3, o, f"除卡（删 {db().name(worst)}）", "negative"))
         elif oid in db().cards:
             v = deckval.value_in_deck(oid, ctx)
             if v >= deckval.skip_threshold(ctx) + 0.5:
