@@ -47,6 +47,7 @@ class Memory:
     run_logged: bool = False
     # 逐层轨迹（到达每层时的血量 / 金币 / 房间），局终写进 runs.jsonl，供基线统计
     trail: list[dict] = field(default_factory=list)
+    encounter: str | None = None  # 最近一场战斗的遭遇战 id（终局状态里已没有 combat 段）
 
     def at(self, floor: int | None) -> None:
         if floor != self.floor:
@@ -291,10 +292,14 @@ def _track(state: dict, mem: Memory, note: Callable[[str], None]) -> None:
     floor = run.get("total_floor")
     if not state.get("in_run") or run.get("game_over") or floor is None:
         return
+    enc = (state.get("combat") or {}).get("encounter")
+    if state.get("in_combat") and enc:
+        mem.encounter = enc
     if mem.trail and mem.trail[-1]["floor"] == floor:
         return
     entry = {"floor": floor, "hp": player.get("hp"), "max_hp": player.get("max_hp"),
-             "gold": run.get("gold"), "room": run.get("room")}
+             "gold": run.get("gold"), "room": run.get("room"),
+             "potions": [p for p in state.get("potions") or [] if p]}
     mem.trail.append(entry)
     note(f"[{floor}] 到达 {entry['room']} — 血 {entry['hp']}/{entry['max_hp']} 金 {entry['gold']}")
 
@@ -312,9 +317,10 @@ def _record_run_end(state: dict, mem: Memory) -> bool:
     line = {"t": time.strftime("%Y-%m-%d %H:%M:%S"), "character": player.get("character"),
             "floor": run.get("total_floor"), "act": run.get("act"), "hp": player.get("hp"),
             "ascension": run.get("ascension"), "deck": state.get("deck"), "relics": state.get("relics"),
-            "room": run.get("room"), "encounter": (state.get("combat") or {}).get("encounter"),
+            "room": run.get("room"),
+            "encounter": (state.get("combat") or {}).get("encounter") or mem.encounter,
             "trail": mem.trail}
-    mem.trail = []
+    mem.trail, mem.encounter = [], None
     try:
         os.makedirs(LOG_DIR, exist_ok=True)
         with open(os.path.join(LOG_DIR, "runs.jsonl"), "a", encoding="utf-8") as f:
