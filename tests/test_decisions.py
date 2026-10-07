@@ -309,3 +309,14 @@ def test_trail_records_each_floor_once(tmp_path, monkeypatch):
     row = json.loads((tmp_path / "runs.jsonl").read_text(encoding="utf-8").splitlines()[-1])
     assert row["encounter"] == "PHROG_PARASITE_ELITE" and row["trail"][1]["hp"] == 41
     assert mem.trail == []
+
+
+def test_event_without_text_options_leaves():
+    # 假商人：货架上是不能直接买的 Hitbox 和返回按钮，应该退出而不是反复点 Hitbox
+    shelf = base_state(screen={"type": "NEventRoom", "options": [
+        {"i": k, "id": "Hitbox", "available": True} for k in range(6)] + [
+        {"i": 6, "id": "BackButton", "available": True}]})
+    assert rooms.event(shelf).arg == 6
+    lobby = base_state(screen={"type": "NEventRoom", "options": [
+        {"i": 0, "id": "MerchantButton", "available": True}, {"i": 1, "id": "前进", "available": True}]})
+    assert rooms.event(lobby).arg == 1

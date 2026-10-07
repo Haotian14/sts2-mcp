@@ -347,10 +347,21 @@ def event_value(option: dict, state: dict) -> tuple[float, list[str]]:
     return value, notes
 
 
+# 事件里没有文本的通用按钮（假商人的货架、事件内嵌的小界面）：按这个顺序找出口
+LEAVE_IDS = ("BackButton", "Back", "前进", "继续", "Proceed", "Continue", "离开", "Leave")
+
+
 def event(state: dict) -> Decision:
     options = _options(state)
     if not options:
         return _proceed_or_wait(state, "事件已结束")
+    # 全是没有文本的通用按钮时估值全为 0，原先会盲点第一个：基线后的实验局在「假商人」
+    # 事件里点开货架，反复点不能买的 Hitbox，被判卡住。这类界面直接找出口离开。
+    if not any(o.get("title") or o.get("text") for o in options):
+        for leave in LEAVE_IDS:
+            o = next((o for o in options if str(o.get("id", "")) == leave), None)
+            if o:
+                return Decision("pick", o["i"], f"事件里没有可估值的选项，离开（{leave}）")
     scored = sorted(((event_value(o, state), o) for o in options), key=lambda t: t[0][0], reverse=True)
     (v, notes), o = scored[0]
     title = o.get("title") or o.get("id")
