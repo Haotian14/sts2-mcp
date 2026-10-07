@@ -45,6 +45,8 @@ class Memory:
     hint: str | None = None
     rested: bool = False          # 休息点每层只能用一次；用过之后按钮仍显示可用
     run_logged: bool = False
+    # 逐层轨迹（到达每层时的血量 / 金币 / 房间），局终写进 runs.jsonl，供基线统计
+    trail: list[dict] = field(default_factory=list)
 
     def at(self, floor: int | None) -> None:
         if floor != self.floor:
@@ -179,7 +181,10 @@ def _menu(state: dict, character: str) -> Decision:
 def _signature(state: dict) -> tuple:
     run, player = state.get("run") or {}, state.get("player") or {}
     return (run.get("total_floor"), run.get("gold"), player.get("hp"), player.get("block"),
-            screen_of(state).get("type"), len(screen_of(state).get("options") or []),
+            # 选项 id 而不只是个数：主菜单时间线流程（揭示 → 关闭 → 确认 → 返回）全停在
+            # NMainMenu、选项个数恰好相同，只比个数会被误判「局面没变」而停机（基线第 4 局）
+            screen_of(state).get("type"),
+            tuple(str(o.get("id")) for o in screen_of(state).get("options") or []),
             len(state.get("hand") or []), (state.get("combat") or {}).get("energy"),
             tuple(e.get("hp") for e in state.get("enemies") or []),
             state.get("awaiting_choice"), (state.get("map") or {}).get("can_move"))
@@ -223,6 +228,7 @@ def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
 
     finished = 0
     for step in range(max_steps):
+        _track(state, mem, note)
         if _record_run_end(state, mem):
             finished += 1
             if max_runs is not None and finished >= max_runs:
@@ -279,6 +285,20 @@ def _summary(state: dict, log: list[str], steps: int, reason: str) -> dict[str, 
             "log_tail": log[-40:]}
 
 
+def _track(state: dict, mem: Memory, note: Callable[[str], None]) -> None:
+    """到达新的一层时记一笔血量与金币。只记录，不参与任何决策。"""
+    run, player = state.get("run") or {}, state.get("player") or {}
+    floor = run.get("total_floor")
+    if not state.get("in_run") or run.get("game_over") or floor is None:
+        return
+    if mem.trail and mem.trail[-1]["floor"] == floor:
+        return
+    entry = {"floor": floor, "hp": player.get("hp"), "max_hp": player.get("max_hp"),
+             "gold": run.get("gold"), "room": run.get("room")}
+    mem.trail.append(entry)
+    note(f"[{floor}] 到达 {entry['room']} — 血 {entry['hp']}/{entry['max_hp']} 金 {entry['gold']}")
+
+
 def _record_run_end(state: dict, mem: Memory) -> bool:
     """本局刚结束时记一行，返回 True；其余时候返回 False。"""
     run = state.get("run") or {}
@@ -291,7 +311,10 @@ def _record_run_end(state: dict, mem: Memory) -> bool:
     player = state.get("player") or {}
     line = {"t": time.strftime("%Y-%m-%d %H:%M:%S"), "character": player.get("character"),
             "floor": run.get("total_floor"), "act": run.get("act"), "hp": player.get("hp"),
-            "ascension": run.get("ascension"), "deck": state.get("deck"), "relics": state.get("relics")}
+            "ascension": run.get("ascension"), "deck": state.get("deck"), "relics": state.get("relics"),
+            "room": run.get("room"), "encounter": (state.get("combat") or {}).get("encounter"),
+            "trail": mem.trail}
+    mem.trail = []
     try:
         os.makedirs(LOG_DIR, exist_ok=True)
         with open(os.path.join(LOG_DIR, "runs.jsonl"), "a", encoding="utf-8") as f:

@@ -261,3 +261,29 @@ def test_route_skips_elite_at_low_hp_midact():
     s["player"]["hp"] = 31
     i, why = route.best_move(s)
     assert i == 1, why
+
+
+def test_signature_distinguishes_menu_steps_with_same_option_count():
+    a = base_state(in_run=False, screen={"type": "NMainMenu", "options": [{"i": 0, "id": "Timeline:Close"}]})
+    b = base_state(in_run=False, screen={"type": "NMainMenu", "options": [{"i": 0, "id": "Back"}]})
+    assert runner._signature(a) != runner._signature(b)
+
+
+def test_trail_records_each_floor_once(tmp_path, monkeypatch):
+    monkeypatch.setattr(runner, "LOG_DIR", str(tmp_path))
+    mem, lines = runner.Memory(), []
+    s = base_state()
+    s["run"]["room"] = "MonsterRoom"
+    runner._track(s, mem, lines.append)
+    runner._track(s, mem, lines.append)               # 同一层不重复记
+    s2 = base_state(run={"act": 1, "floor": 4, "total_floor": 4, "gold": 120, "room": "EliteRoom"})
+    s2["player"]["hp"] = 41
+    runner._track(s2, mem, lines.append)
+    assert [e["floor"] for e in mem.trail] == [3, 4] and len(lines) == 2
+    over = base_state(run={"game_over": True, "total_floor": 4, "act": 1, "room": "EliteRoom"},
+                      combat={"encounter": "PHROG_PARASITE_ELITE"})
+    assert runner._record_run_end(over, mem)
+    import json
+    row = json.loads((tmp_path / "runs.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert row["encounter"] == "PHROG_PARASITE_ELITE" and row["trail"][1]["hp"] == 41
+    assert mem.trail == []
