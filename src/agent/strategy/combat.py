@@ -43,6 +43,20 @@ DRAW_W = 1.4          # 抽 1 张（还有能量打它）
 DEBUFF_EARLY = 0.03   # 减益 / 能力越早上越好的微小偏好，只用来打破平局
 DRAW_EARLY = 0.05     # 每抽 1 张、每早一步的偏好
 POTION_KEEP = {"monster": 6.0, "elite": 2.5, "boss": 0.0}
+# 抽取结果里缺效果（火焰药水、爆炸安瓿……）或被标成「复杂」的药水原先一律用不了：
+# exp1 死在 Boss 的 6 场里 4 场一瓶药水没用，有局领了 3 瓶整局用 0 瓶。
+# 能直接建模的在这里补上；其余复杂药水（随机给牌、过牌等）给一个通用价值 ——
+# 高于精英 / Boss 的保留成本、低于普通怪的，于是留给硬仗用
+POTION_EFFECTS = {
+    "FirePotion": [{"op": "attack", "to": "enemy", "var": "Damage"}],
+    "PotionShapedRock": [{"op": "attack", "to": "enemy", "var": "Damage"}],
+    "ExplosiveAmpoule": [{"op": "attack", "to": "all", "var": "Damage"}],
+    "FoulPotion": [{"op": "attack", "to": "all", "var": "Damage"}, {"op": "lose_hp", "var": "Damage"}],
+    "FlexPotion": [{"op": "str_turn", "var": "StrengthPower"}],
+    "SpeedPotion": [{"op": "dex_turn", "var": "DexterityPower"}],
+    "FruitJuice": [{"op": "max_hp", "var": "MaxHp"}],
+}
+GENERIC_POTION_VALUE = 4.0
 
 # 能力的长期价值：每层每回合约等于多少分。没列出的己方能力按能力牌的社区估值折算。
 SELF_POWER_PER_TURN = {
@@ -204,6 +218,10 @@ def _var(card: Card, name: Any, x: int) -> int:
 
 
 def _per_hit(card: Card, foe: Foe, node: Node, ctx: Ctx, var: Any, x: int) -> int:
+    if card.type == "Potion":
+        # 药水伤害不吃力量 / 虚弱 / 精准，只吃易伤
+        dmg = _var(card, var, x)
+        return int(dmg * 1.5) if foe.vulnerable or foe.vuln_add > 0 else dmg
     if card.i is not None and card.damage_vs and 0 <= foe.i < len(card.damage_vs):
         dmg = card.damage_vs[foe.i]
         already_vuln = foe.vulnerable
@@ -358,6 +376,12 @@ def _apply_effects(n: Node, ctx: Ctx, card: Card, effects: list[dict], tgt: Foe 
                 n.future += 0.4 if "Sly" in (worst.defn.get("keywords") or []) else 0.0
         elif op == "lose_hp":
             n.hp_cost += _var(card, e.get("var"), x)
+        elif op == "str_turn":      # 只管本回合（肌肉药水），不计长期价值
+            n.str_gain += _var(card, e.get("var"), x)
+        elif op == "dex_turn":
+            n.dex_gain += _var(card, e.get("var"), x)
+        elif op == "max_hp":
+            n.future += 1.2 * _var(card, e.get("var"), x)
         elif op == "heal":
             n.future += 0.5 * _var(card, e.get("var"), x)
 
@@ -417,10 +441,10 @@ def _label(card: Card, tgt: Foe | None) -> str:
 def use_potion(node: Node, ctx: Ctx, slot: int, target: Foe | None) -> Node | None:
     pid = node.potions[slot]
     d = db().potions.get(pid or "") or {}
-    if not pid or d.get("usage") not in (None, "CombatOnly", "AnyTime") or d.get("complex"):
+    if not pid or d.get("usage") not in (None, "CombatOnly", "AnyTime"):
         return None
-    effects = d.get("effects") or []
-    if not effects:
+    effects = POTION_EFFECTS.get(pid) or ([] if d.get("complex") else d.get("effects") or [])
+    if not effects and not d.get("complex"):
         return None
     n = _clone(node)
     n.potions[slot] = None
@@ -430,7 +454,10 @@ def use_potion(node: Node, ctx: Ctx, slot: int, target: Foe | None) -> Node | No
     # 药水的 GainBlock 目标写作 target（AnyPlayer），在抽取结果里是 "enemy"/"other"：按自身处理
     fixed = [dict(e, to="self") if e.get("op") == "apply" and d.get("targettype") in ("AnyPlayer", "Self")
              else e for e in effects]
-    _apply_effects(n, ctx, fake, fixed, tgt, 0)
+    if fixed:
+        _apply_effects(n, ctx, fake, fixed, tgt, 0)
+    else:
+        n.future += GENERIC_POTION_VALUE
     n.future -= POTION_KEEP.get(ctx.room, 4.0) + max(0.0, deckval.potion_value(pid))
     n.line.append(f"药水 {db().name(pid)}")
     if n.first is None:

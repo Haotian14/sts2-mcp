@@ -172,3 +172,18 @@ def test_burst_before_skill_not_attack():
               [enemy(0, 60, attack=14)], energy=2)
     plan = plan_turn(s)
     assert plan.line[:2] == ["爆发", "防御"], plan.why()
+
+
+def test_fire_potion_used_for_lethal():
+    """火焰药水原先缺效果数据，永远用不了。20 点能补上斩杀。"""
+    s = state([strike(0)], [enemy(0, 24, attack=20)], energy=1, hp=15, potions=("FirePotion", None))
+    plan = plan_turn(s)
+    assert any("火焰药水" in x for x in plan.line), plan.why()
+
+
+def test_complex_potion_used_in_boss_not_hallway():
+    """复杂药水（攻击药水）给通用价值：Boss 战用掉，普通怪留着。"""
+    boss = state([strike(0)], [enemy(0, 200, attack=10)], potions=("AttackPotion", None), encounter="SOUL_FYSH_BOSS")
+    assert any("攻击药水" in x for x in plan_turn(boss).line)
+    hall = state([strike(0)], [enemy(0, 200, attack=10)], potions=("AttackPotion", None))
+    assert not any("攻击药水" in x for x in plan_turn(hall).line)
