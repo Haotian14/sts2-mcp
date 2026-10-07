@@ -48,6 +48,7 @@ class Memory:
     # 逐层轨迹（到达每层时的血量 / 金币 / 房间），局终写进 runs.jsonl，供基线统计
     trail: list[dict] = field(default_factory=list)
     encounter: str | None = None  # 最近一场战斗的遭遇战 id（终局状态里已没有 combat 段）
+    ascension: int | None = None  # 开新局用的难度；None = 用游戏默认（通关后会默认更高一档）
 
     def at(self, floor: int | None) -> None:
         if floor != self.floor:
@@ -67,7 +68,7 @@ def decide(state: dict, mem: Memory, new_run: str | None = None) -> Decision:
     if run.get("game_over") or not state.get("in_run"):
         if not new_run:
             return Decision("stop", None, "本局已结束" if run.get("game_over") else "不在局中")
-        return _menu(state, new_run)
+        return _menu(state, new_run, mem.ascension)
 
     mem.at(run.get("total_floor"))
 
@@ -131,7 +132,7 @@ def _map(state: dict) -> Decision:
     return Decision("move", i, why)
 
 
-def _menu(state: dict, character: str) -> Decision:
+def _menu(state: dict, character: str, ascension: int | None = None) -> Decision:
     """终局 → 主菜单 → 单人 → 标准模式 → 选角色 → 确认。"""
     options = [o for o in screen_of(state).get("options") or [] if o.get("available") is not False]
 
@@ -155,6 +156,9 @@ def _menu(state: dict, character: str) -> Decision:
             return Decision("stop", None, f"角色 {character} 不在可选列表")
         if not target.get("selected"):
             return Decision("pick", target["i"], f"选择角色 {target.get('id')}")
+        current = screen_of(state).get("ascension")
+        if ascension is not None and current is not None and current != ascension:
+            return Decision("set_ascension", ascension, f"难度 {current} → {ascension}")
         o = find("确认", "confirm", "embark")
         return Decision("pick", o["i"], "确认开局") if o else Decision("wait", None, "等确认按钮")
     o = find("标准模式", "standard") or find("单人模式", "singleplayer")
@@ -207,13 +211,16 @@ def execute(bridge: Bridge, d: Decision) -> dict:
         return bridge.act("move", node=a)
     if d.action == "proceed":
         return bridge.act("proceed")
+    if d.action == "set_ascension":
+        return bridge.act("set_ascension", level=a)
     raise ValueError(f"不认识的动作 {d.action}")
 
 
 def play(bridge: Bridge, max_steps: int = 2000, new_run: str | None = None,
-         verbose: Callable[[str], None] | None = None, max_runs: int | None = None) -> dict[str, Any]:
+         verbose: Callable[[str], None] | None = None, max_runs: int | None = None,
+         ascension: int | None = None) -> dict[str, Any]:
     """一路打下去，直到局结束（不开新局时）、出故障、打满 max_runs 局，或走满 max_steps 步。"""
-    mem = Memory()
+    mem = Memory(ascension=ascension)
     state = bridge.state()
     # 启动时就停在终局界面：那一局属于上一次运行，已经记过、也不算本次打完的局。
     # 否则 `--runs 1` 会 0 步就报「已打完 1 局」，并往 runs.jsonl 里重复记一行。
@@ -280,6 +287,7 @@ def _summary(state: dict, log: list[str], steps: int, reason: str) -> dict[str, 
     run, player = state.get("run") or {}, state.get("player") or {}
     return {"stopped": reason, "steps": steps,
             "floor": run.get("total_floor"), "act": run.get("act"),
+            "ascension": run.get("ascension"), "victory": bool(run.get("victory")),
             "hp": f"{player.get('hp')}/{player.get('max_hp')}", "gold": run.get("gold"),
             "deck": [db().name(c) + ("+" if c.endswith("+") else "") for c in state.get("deck") or []],
             "relics": [db().name(r) for r in state.get("relics") or []],
@@ -316,6 +324,7 @@ def _record_run_end(state: dict, mem: Memory) -> bool:
     player = state.get("player") or {}
     line = {"t": time.strftime("%Y-%m-%d %H:%M:%S"), "character": player.get("character"),
             "floor": run.get("total_floor"), "act": run.get("act"), "hp": player.get("hp"),
+            "victory": bool(run.get("victory")),
             "ascension": run.get("ascension"), "deck": state.get("deck"), "relics": state.get("relics"),
             "room": run.get("room"),
             "encounter": (state.get("combat") or {}).get("encounter") or mem.encounter,

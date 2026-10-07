@@ -168,6 +168,9 @@ namespace Sts2Bridge
             w.Prop("room", GamePaths.Id(g.Obj(runState, "CurrentRoom")));
             w.Prop("location", g.Text(runState, "RunLocation"));
             w.Prop("game_over", g.Bool(runState, "IsGameOver") ?? false);
+            // 通关：终局界面同样以 CurrentRoom.IsVictoryRoom 判定胜负（NGameOverScreen）。
+            // 第三章 Boss 后的建筑师是结局演出，血量记为 0 —— 不看这个字段会把通关当成阵亡
+            w.Prop("victory", g.Bool(g.Obj(runState, "CurrentRoom"), "IsVictoryRoom") ?? false);
             w.Prop("gold", g.Int(player, "Gold"));
             w.EndObject();
         }

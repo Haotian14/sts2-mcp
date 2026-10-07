@@ -322,3 +322,23 @@ def test_event_without_text_options_leaves():
     lobby = base_state(screen={"type": "NEventRoom", "options": [
         {"i": 0, "id": "MerchantButton", "available": True}, {"i": 1, "id": "前进", "available": True}]})
     assert rooms.event(lobby).arg == 1
+
+
+def test_menu_sets_ascension_before_confirm():
+    chars = [{"i": 0, "id": "Ironclad", "selected": False}, {"i": 1, "id": "Silent", "selected": True},
+             {"i": 2, "id": "ConfirmButton", "available": True}]
+    s = base_state(in_run=False, screen={"type": "NMainMenu", "options": chars, "ascension": 7, "max_ascension": 7})
+    mem = runner.Memory(ascension=6)
+    d = runner.decide(s, mem, new_run="silent")
+    assert d.action == "set_ascension" and d.arg == 6, d.why
+    s["screen"]["ascension"] = 6
+    assert runner.decide(s, mem, new_run="silent").arg == 2      # 难度对了才确认
+    assert runner.decide(s, runner.Memory(), new_run="silent").arg == 2   # 不指定就用默认
+
+
+def test_victory_recorded(tmp_path, monkeypatch):
+    monkeypatch.setattr(runner, "LOG_DIR", str(tmp_path))
+    won = base_state(run={"game_over": True, "victory": True, "total_floor": 48, "act": 3, "room": "EventRoom"})
+    assert runner._record_run_end(won, runner.Memory())
+    import json
+    assert json.loads((tmp_path / "runs.jsonl").read_text(encoding="utf-8"))["victory"] is True

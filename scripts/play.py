@@ -26,6 +26,8 @@ def main() -> None:
     ap.add_argument("--advise", action="store_true")
     ap.add_argument("--new-run", default=None, help="不在局中/局结束时开新局用的角色")
     ap.add_argument("--runs", type=int, default=None, help="打满几局就停")
+    ap.add_argument("--ascension", type=int, default=None,
+                    help="开新局用的难度（对比实验要固定；不给则用游戏默认，通关后会自动升一档）")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -35,7 +37,7 @@ def main() -> None:
         print(d.action, d.arg, "—", d.why)
         return
     summary = runner.play(bridge, max_steps=args.steps, new_run=args.new_run, verbose=print,
-                          max_runs=args.runs)
+                          max_runs=args.runs, ascension=args.ascension)
     summary.pop("log_tail", None)
     print(json.dumps(summary, ensure_ascii=False, indent=1))
 

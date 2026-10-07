@@ -267,6 +267,15 @@ namespace Sts2Bridge
             // 宝箱没开、休息点没选之前它是灰的。
             var proceed = ProceedButtonOf(top);
             w.Prop("can_proceed", proceed != null && (GamePaths.Bool(proceed, "IsEnabled") ?? true));
+
+            // 选角色界面的难度面板：当前难度与已解锁的最高难度。通关后最高难度 +1，
+            // 新局默认取「偏好难度」与最高难度的较小者 —— 不固定的话对比实验会悄悄换难度
+            var panel = AscensionPanel(top);
+            if (panel != null)
+            {
+                w.Prop("ascension", GamePaths.Int(panel, "Ascension"));
+                w.Prop("max_ascension", GamePaths.Int(panel, "_maxAscension"));
+            }
             w.EndObject();
         }
 
@@ -560,6 +569,24 @@ namespace Sts2Bridge
                     Add(slot, "Epoch:" + (GamePaths.Id(GamePaths.Get(slot, "model")) ?? "?"));
             foreach (var back in FindAll(timeline, "NBackButton")) Add(back, "Back");
             return true;
+        }
+
+        private static object? AscensionPanel(object? top)
+        {
+            foreach (var panel in FindAll(top, "NAscensionPanel"))
+                if (Shown(panel)) return panel;
+            return null;
+        }
+
+        /// <summary>在选角色界面把难度设为 level（夹在 0 与已解锁最高难度之间）。须在主线程调用。</summary>
+        public static string? SetAscension(int level)
+        {
+            var panel = AscensionPanel(Context());
+            if (panel == null) return "当前不在选角色界面（找不到难度面板）";
+            int max = GamePaths.Int(panel, "_maxAscension") ?? 0;
+            if (level < 0 || level > max) return $"难度 {level} 超出范围（已解锁 0～{max}）";
+            GamePaths.Call(panel, "SetAscensionLevel", level);
+            return null;
         }
 
         private static bool Shown(object? node)
