@@ -35,10 +35,14 @@ def test_route_avoids_elite_when_low():
     assert i == 1, why
 
 
+GOOD5 = ["Adrenaline", "Backflip", "BladeDance", "Footwork", "LegSweep"]
+
+
 def test_route_takes_elite_when_healthy_later():
     s = base_state(map=two_way_map("Elite", "Monster"))
     s["run"]["floor"] = 8
     s["player"]["hp"] = 70
+    s["deck"] = STARTER + GOOD5
     i, why = route.best_move(s)
     assert i == 0, why
 
@@ -160,6 +164,24 @@ def test_route_takes_elite_once_deck_has_grown():
     s = base_state(map=m)
     s["run"]["floor"] = 3
     s["player"]["hp"] = 55
+    s["deck"] = STARTER + GOOD5 + ["CloakAndDagger", "Adrenaline", "BladeDance"]   # 8 张好牌：牌组已成型
+    i, why = route.best_move(s)
+    assert i == 0, why
+
+
+def test_route_skips_elite_with_starter_deck():
+    # 基线第一章精英死亡率约 21%：牌组没成型（只有起始牌）时，七成血也不该去赌精英
+    # （满血且精英后紧跟火堆时去打是合理的，回血能抵掉一部分）
+    s = base_state(map=two_way_map("Elite", "Monster"))
+    s["run"]["floor"] = 8
+    s["player"]["hp"] = 50
+    i, why = route.best_move(s)
+    assert i == 1, why
+
+
+def test_route_detours_to_shop_with_lots_of_gold():
+    s = base_state(map=two_way_map("Shop", "Unknown"))
+    s["run"]["gold"] = 350
     i, why = route.best_move(s)
     assert i == 0, why
 

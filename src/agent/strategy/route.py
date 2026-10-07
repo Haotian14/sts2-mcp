@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from ..gamedata import db
+from . import deck as deckval
 
 MAX_PATHS = 20000
 # 社区平均掉血的折算。原为 0.7；四局迭代里实际掉血偏高，取 0.8（再高会连 55/70 血都不打精英）
@@ -27,8 +28,17 @@ DEATH_COST = 250.0
 # 打一场牌组就强一点（多一张牌、精英还多一件遗物），后面的战斗掉血随之下降。
 # 不算这一项时「少打架」永远最安全：首局第一章一个精英没打，牌组到第二章打不动。
 GROWTH_PER_FIGHT, GROWTH_PER_ELITE, GROWTH_FLOOR = 0.04, 0.08, 0.7
-# 精英奖励（血量当量）：遗物越早拿到，生效的战斗越多
-ELITE_REWARD = (34.0, 30.0, 24.0)
+# 精英奖励（血量当量）：遗物越早拿到，生效的战斗越多。风险按牌组强度与尾部风险
+# 如实计算后，原先 34 抵不过一场精英的代价，牌组成型、血量健康也不打
+ELITE_REWARD = (42.0, 34.0, 26.0)
+# 精英掉血看牌组强度：基线 9 局约 14 场精英死了 3 场（约 21%），社区致死率只有 4%～11% ——
+# 我们第一章的牌组明显弱于社区平均，按社区平均（还打八折）估精英是系统性低估。
+# 系数 = 1.3 − 0.06 × 好牌张数，夹在 [0.85, 1.3]；好牌 = 非起始牌且社区基准分 ≥ 0.3
+ELITE_WEAK, ELITE_PER_GOOD, ELITE_STRONG = 1.3, 0.06, 0.85
+GOOD_CARD = 0.3
+# 商店：按预计花费计分并带来成长（买到的牌和遗物让后面的战斗更好打）。
+# 基线死时平均剩 120 金，有局第 18 层攥着 590 金 —— 只算一次性分数时商店常被绕开
+SHOP_SPEND_CAP, SHOP_MIN_GOLD, SHOP_GROWTH_PER_GOLD = 250.0, 60.0, 0.0004
 # 普通怪：一次卡牌奖励 + 金币。问号房多是事件，收益更不确定，略低于普通怪 ——
 # 两者收益相同时问号房（掉血只有三成多）会永远压过普通怪，第二章就一场架都不打
 MONSTER_REWARD = (8.0, 8.0, 6.0)
@@ -47,8 +57,7 @@ def expected_damage(room: str, act: int) -> float:
     vals = [e["avg_damage"] for e in db().encounters.values()
             if e.get("room") == kind and e.get("act") == act and e.get("avg_damage") is not None]
     if vals:
-        # 社区平均含大量弱势对局；成型牌组实际掉血明显更少
-        return DAMAGE_SCALE * sum(vals) / len(vals)
+        return sum(vals) / len(vals)        # 社区原值；各类房间的折算在 _step 里乘
     return FALLBACK_DAMAGE[room][min(act, 3) - 1]
 
 
@@ -61,6 +70,7 @@ class RunView:
     floor: int                   # 本章第几层
     deck_size: int
     potions_free: int
+    good_cards: int = 0
 
 
 def _loss_weight(hp: float, max_hp: int) -> float:
@@ -73,12 +83,11 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
     reward = 0.0
     shrink = max(GROWTH_FLOOR, 1.0 - growth)
     if room == "Monster":
-        dmg = expected_damage("Monster", v.act) * shrink
+        dmg = DAMAGE_SCALE * expected_damage("Monster", v.act) * shrink
         reward = MONSTER_REWARD[min(v.act, 3) - 1]
         gold += 15
     elif room == "Elite":
-        # 牌组还没成型时精英更危险：本章小怪打得越少，掉血越多
-        dmg = expected_damage("Elite", v.act) * (1.35 if fights < 2 and v.act == 1 else 1.0) * shrink
+        dmg = expected_damage("Elite", v.act) * elite_factor(v) * shrink
         reward = ELITE_REWARD[min(v.act, 3) - 1]   # 遗物 + 更好的卡牌奖励
         gold += 30
     elif room == "RestSite":
@@ -92,17 +101,17 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
             reward = 8.0              # 升级一张牌
     elif room == "Shop":
         dmg = 0.0
-        # 钱越多商店越值：原先封顶 12，迭代局攥着 276 金整章没进过商店
-        reward = gold / 16.0 + (3.0 if v.deck_size >= 15 else 0.0)
-        gold = max(0.0, gold - 150)
+        spend = shop_spend(gold)
+        reward = spend / 12.0 + (3.0 if v.deck_size >= 15 else 0.0)
+        gold -= spend
     elif room == "Treasure":
         dmg, reward = 0.0, 13.0
     elif room == "Unknown":
-        dmg = 0.35 * expected_damage("Monster", v.act) * shrink
+        dmg = 0.35 * DAMAGE_SCALE * expected_damage("Monster", v.act) * shrink
         reward = UNKNOWN_REWARD
     elif room == "Boss":
         # Boss 躲不掉：不按「打死/没打死」截断，只按到达时的血量计风险
-        dmg = expected_damage("Boss", v.act) * shrink
+        dmg = DAMAGE_SCALE * expected_damage("Boss", v.act) * shrink
         return -dmg * _loss_weight(hp - dmg / 2, v.max_hp) - max(0.0, dmg - hp) * 3, hp, gold
     else:
         dmg, reward = 0.0, 1.0
@@ -110,6 +119,14 @@ def _step(room: str, hp: float, v: RunView, gold: float, fights: int,
     if dmg > 0 and room in ("Monster", "Elite"):
         cost += DEATH_COST * math.exp(-max(hp, 0.0) / (TAIL * dmg))
     return reward - cost, hp - dmg, gold
+
+
+def elite_factor(v: RunView) -> float:
+    return min(ELITE_WEAK, max(ELITE_STRONG, ELITE_WEAK - ELITE_PER_GOOD * v.good_cards))
+
+
+def shop_spend(gold: float) -> float:
+    return min(gold, SHOP_SPEND_CAP) if gold >= SHOP_MIN_GOLD else 0.0
 
 
 def best_move(state: dict) -> tuple[int | None, str]:
@@ -162,6 +179,8 @@ def _best_from(start, graph, v: RunView) -> tuple[float, list[str]]:
             return
         f2 = fights + (1 if room in ("Monster", "Elite") else 0)
         g2 = growth + {"Monster": GROWTH_PER_FIGHT, "Elite": GROWTH_PER_ELITE}.get(room, 0.0)
+        if room == "Shop":
+            g2 += SHOP_GROWTH_PER_GOLD * shop_spend(gold)
         for child in nxt:
             dfs(child, hp2, gold2, f2, g2, total, path)
 
@@ -176,9 +195,12 @@ def _fights_so_far(v: RunView) -> int:
 def _view(state: dict) -> RunView:
     run, player = state.get("run") or {}, state.get("player") or {}
     potions = state.get("potions") or []
+    act = run.get("act") or 1
+    deck = state.get("deck") or []
+    good = sum(1 for c in deck if not deckval.is_basic(c) and deckval.base_value(c, act) >= GOOD_CARD)
     return RunView(hp=player.get("hp") or 1, max_hp=player.get("max_hp") or 1,
-                   gold=run.get("gold") or 0, act=run.get("act") or 1, floor=run.get("floor") or 0,
-                   deck_size=len(state.get("deck") or []), potions_free=sum(1 for p in potions if not p))
+                   gold=run.get("gold") or 0, act=act, floor=run.get("floor") or 0,
+                   deck_size=len(deck), potions_free=sum(1 for p in potions if not p), good_cards=good)
 
 
 def _short(room: str) -> str:
